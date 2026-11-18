@@ -27,11 +27,20 @@
   "id": "trio-paineis-romanos",
   "nome": "Trio de Painéis Romanos",
   "categoria": "arcos-e-paineis",
-  "resumo": "Três painéis romanos de alturas diferentes, em três cores à escolha.",
+  "resumo": "Três painéis romanos de alturas diferentes, todos brancos ou em três cores.",
   "modelo3d": {
     "id": "trio-romanos"
   },
   "combinacoes": [
+    {
+      "id": "branco",
+      "nome": "Tudo branco",
+      "cores": [
+        "branco",
+        "branco",
+        "branco"
+      ]
+    },
     {
       "id": "branco-rosa-salvia",
       "nome": "Branco, rosa e sálvia",
@@ -69,7 +78,7 @@
       ]
     }
   ],
-  "cor": "branco-rosa-salvia",
+  "cor": "branco",
   "medidas": {
     "l": 245,
     "a": 190,
@@ -80,5 +89,5 @@
     "Painel 80 × 150 cm",
     "Painel 70 × 120 cm"
   ],
-  "fundo": "champanhe"
+  "fundo": "lilas"
 }

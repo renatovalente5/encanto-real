@@ -32,17 +32,17 @@
     "id": "mesa-ripas"
   },
   "cores": [
-    "madeira",
     "branco",
+    "madeira",
     "rosa",
     "salvia",
     "preto"
   ],
-  "cor": "madeira",
+  "cor": "branco",
   "medidas": {
     "l": 64,
     "a": 56,
     "p": 64
   },
-  "fundo": "champanhe"
+  "fundo": "verde"
 }

@@ -19,10 +19,10 @@ const F = {
 };
 
 const categorias = [
-  { id: 'arcos-e-paineis', nome: 'Arcos e painéis', frase: 'O fundo da festa: arcos em degrau, painéis romanos e redondos.', capa: 'arco-triplo-real' },
-  { id: 'cilindros-e-mesas', nome: 'Cilindros e mesas', frase: 'Onde pousam o bolo, os doces e as flores.', capa: 'trio-cilindros' },
-  { id: 'figuras-e-letras', nome: 'Figuras e letras', frase: 'O nome, a idade e o tema, recortados em MDF.', capa: 'coroa-real' },
-  { id: 'cenarios', nome: 'Cenários completos', frase: 'Peças que já combinam, num só aluguer e com desconto.', capa: 'cenario-encanto' },
+  { id: 'arcos-e-paineis', nome: 'Arcos e painéis', frase: 'O fundo da festa: arcos em degrau, painéis romanos e redondos.', capa: 'arco-triplo-real', capaCor: 'branco', fundo: 'rosa' },
+  { id: 'cilindros-e-mesas', nome: 'Cilindros e mesas', frase: 'Onde pousam o bolo, os doces e as flores.', capa: 'trio-cilindros', capaCor: 'branco', fundo: 'azul' },
+  { id: 'figuras-e-letras', nome: 'Figuras e letras', frase: 'O nome, a idade e o tema, recortados em MDF.', capa: 'coroa-real', capaCor: 'branco', fundo: 'verde' },
+  { id: 'cenarios', nome: 'Cenários completos', frase: 'Peças que já combinam, num só aluguer e com desconto.', capa: 'cenario-encanto', capaCor: 'base', fundo: 'salvia' },
 ];
 
 const ocasioes = [
@@ -79,7 +79,7 @@ const produtos = [
   }),
   p({
     id: 'trio-paineis-romanos', nome: 'Trio de Painéis Romanos', categoria: 'arcos-e-paineis',
-    resumo: 'Três painéis romanos de alturas diferentes, em três cores à escolha.',
+    resumo: 'Três painéis romanos de alturas diferentes, todos brancos ou em três cores.',
     modelo3d: { id: 'trio-romanos' }, combinacoes: [
       { id: 'branco-rosa-salvia', nome: 'Branco, rosa e sálvia', cores: ['branco', 'rosa', 'salvia'] },
       { id: 'azul-branco-azul', nome: 'Azul, branco e azul', cores: ['azul', 'branco', 'azul'] },
@@ -291,6 +291,26 @@ const produtos = [
     selo: 'Poupa 15 €', vista: { az: 20, el: 8, margem: 0.08 }, fundo: 'champanhe',
   }),
 ];
+
+// 18 nov 2026 (o Renato: «a cor default deve ser o branco… em todas»): o branco é a cor de arranque e a primeira de
+// todas as peças; nas combinações entra «Tudo branco» à cabeça. Os cenários ficam com as cores do tema. Os fundos dos
+// cartões passaram a cores onde o branco se lê (nada de branco sobre creme).
+const FUNDOS_BRANCO = {
+  'arco-triplo-real': 'rosa', 'painel-redondo': 'salvia', 'trio-paineis-romanos': 'lilas', 'arco-duplo': 'azul', 'arco-simples': 'rosa', 'arco-iris-boho': 'salvia', 'painel-romano': 'lilas',
+  'trio-cilindros': 'rosa', 'cilindro-vazado': 'lilas', 'aparador-arco': 'azul', 'boleira': 'salvia', 'cilindro': 'rosa', 'mesa-ripas': 'verde',
+  'coroa-real': 'verde', 'numero-gigante': 'rosa', 'borboleta-rendada': 'lilas', 'letras-love': 'verde', 'lua-e-estrela': 'azul', 'nome-personalizado': 'salvia', 'nuvem': 'rosa',
+};
+for (const prod of produtos) {
+  if (prod.categoria === 'cenarios') continue;
+  if (prod.combinacoes) {
+    if (!prod.combinacoes.some((c) => c.id === 'branco')) prod.combinacoes.unshift({ id: 'branco', nome: 'Tudo branco', cores: Array(prod.combinacoes[0].cores.length).fill('branco') });
+    prod.cor = 'branco';
+  } else if (prod.cores) {
+    prod.cores = ['branco', ...prod.cores.filter((c) => c !== 'branco')];
+    prod.cor = 'branco';
+  }
+  if (FUNDOS_BRANCO[prod.id]) prod.fundo = FUNDOS_BRANCO[prod.id];
+}
 
 const cupoes = [
   { codigo: 'BEMVINDO10', tipo: 'percentagem', valor: 10, minimo: 30, descricao: '10 % na primeira encomenda', primeiraEncomenda: true, validade: '2027-12-31' },

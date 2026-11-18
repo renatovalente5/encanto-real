@@ -45,11 +45,11 @@
     "salvia",
     "verde"
   ],
-  "cor": "dourado",
+  "cor": "branco",
   "medidas": {
     "l": 70,
     "a": 35,
     "p": 14
   },
-  "fundo": "champanhe"
+  "fundo": "salvia"
 }

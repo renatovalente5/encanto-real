@@ -37,11 +37,11 @@
     "salvia",
     "dourado"
   ],
-  "cor": "dourado",
+  "cor": "branco",
   "medidas": {
     "l": 32,
     "a": 18,
     "p": 32
   },
-  "fundo": "areia"
+  "fundo": "salvia"
 }

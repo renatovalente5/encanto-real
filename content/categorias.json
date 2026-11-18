@@ -4,8 +4,8 @@
     "nome": "Arcos e painéis",
     "frase": "O fundo da festa: arcos em degrau, painéis romanos e redondos.",
     "capa": "arco-triplo-real",
-    "capaCor": "rosa",
-    "fundo": "champanhe"
+    "capaCor": "branco",
+    "fundo": "rosa"
   },
   {
     "id": "cilindros-e-mesas",
@@ -20,7 +20,7 @@
     "nome": "Figuras e letras",
     "frase": "O nome, a idade e o tema, recortados em MDF.",
     "capa": "coroa-real",
-    "capaCor": "dourado",
+    "capaCor": "branco",
     "fundo": "verde"
   },
   {
@@ -29,6 +29,6 @@
     "frase": "Peças que já combinam, num só aluguer e com desconto.",
     "capa": "cenario-encanto",
     "capaCor": "base",
-    "fundo": "rosa"
+    "fundo": "salvia"
   }
 ]

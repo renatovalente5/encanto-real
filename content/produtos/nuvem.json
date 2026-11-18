@@ -34,11 +34,11 @@
     "rosa",
     "lilas"
   ],
-  "cor": "azul",
+  "cor": "branco",
   "medidas": {
     "l": 100,
     "a": 53,
     "p": 16
   },
-  "fundo": "azul"
+  "fundo": "rosa"
 }

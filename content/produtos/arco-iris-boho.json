@@ -30,6 +30,16 @@
   },
   "combinacoes": [
     {
+      "id": "branco",
+      "nome": "Tudo branco",
+      "cores": [
+        "branco",
+        "branco",
+        "branco",
+        "branco"
+      ]
+    },
+    {
       "id": "boho",
       "nome": "Boho (terracota, mostarda, sálvia)",
       "cores": [
@@ -60,11 +70,11 @@
       ]
     }
   ],
-  "cor": "boho",
+  "cor": "branco",
   "medidas": {
     "l": 200,
     "a": 102,
     "p": 24
   },
-  "fundo": "areia"
+  "fundo": "salvia"
 }

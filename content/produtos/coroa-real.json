@@ -29,12 +29,12 @@
     "id": "coroa"
   },
   "cores": [
-    "dourado",
     "branco",
+    "dourado",
     "rosa",
     "lilas"
   ],
-  "cor": "dourado",
+  "cor": "branco",
   "medidas": {
     "l": 76,
     "a": 66,

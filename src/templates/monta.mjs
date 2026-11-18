@@ -92,7 +92,7 @@ export function gerarMonta(ctx) {
       ${grupoEscolha(ctx, { grupo: 'pedestais', titulo: 'Os pedestais', n: 2, lista: ESCOLHAS.pedestais, atual: 'os-dois' })}
       <div class="monta__cor" data-cor-de="pedestais">${amostras(ctx, 'pedestais', 'trio-cilindros', 'branco')}</div>
       ${grupoEscolha(ctx, { grupo: 'mesa', titulo: 'A mesa', n: 3, lista: ESCOLHAS.mesa, atual: 'mesa-ripas' })}
-      <div class="monta__cor" data-cor-de="mesa">${amostras(ctx, 'mesa', 'mesa-ripas', 'madeira')}</div>
+      <div class="monta__cor" data-cor-de="mesa">${amostras(ctx, 'mesa', 'mesa-ripas', 'branco')}</div>
       ${grupoEscolha(ctx, { grupo: 'detalhes', titulo: 'Os detalhes', n: 4, lista: ESCOLHAS.detalhes, atual: [], tipo: 'checkbox' })}
       <div class="monta__total" data-monta-total>
         <div class="monta__soma"><span data-monta-pecas>4 peças</span><strong data-monta-preco>—</strong><small>aluguer por evento · caução <span data-monta-caucao>—</span></small></div>

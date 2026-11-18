@@ -40,11 +40,11 @@
     "salvia",
     "verde"
   ],
-  "cor": "salvia",
+  "cor": "branco",
   "medidas": {
     "l": 100,
     "a": 200,
     "p": 5
   },
-  "fundo": "areia"
+  "fundo": "rosa"
 }

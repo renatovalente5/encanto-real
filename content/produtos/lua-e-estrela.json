@@ -45,12 +45,12 @@
     }
   ],
   "cores": [
-    "dourado",
     "branco",
+    "dourado",
     "azul",
     "rosa"
   ],
-  "cor": "dourado",
+  "cor": "branco",
   "medidas": {
     "l": 110,
     "a": 84,
