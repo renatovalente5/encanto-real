@@ -1,0 +1,64 @@
+{
+  "ocasioes": [
+    "baby-shower",
+    "batizado",
+    "aniversario"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 15,
+    "caucao": 15,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 45,
+    "prazo": 10
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 18,
+    "el": 10
+  },
+  "id": "lua-e-estrela",
+  "nome": "Lua e Estrela",
+  "categoria": "figuras-e-letras",
+  "resumo": "Lua crescente e estrela, cada uma na sua base. Vendem-se juntas.",
+  "cena3d": [
+    {
+      "modelo": "lua",
+      "opcoes": {},
+      "pos": [
+        -0.3,
+        0,
+        0
+      ]
+    },
+    {
+      "modelo": "estrela",
+      "opcoes": {},
+      "pos": [
+        0.35,
+        0,
+        0.1
+      ]
+    }
+  ],
+  "cores": [
+    "dourado",
+    "branco",
+    "azul",
+    "rosa"
+  ],
+  "cor": "dourado",
+  "medidas": {
+    "l": 110,
+    "a": 84,
+    "p": 16
+  },
+  "conteudo": [
+    "Lua 52 × 84 cm",
+    "Estrela 60 × 60 cm"
+  ],
+  "fundo": "azul"
+}

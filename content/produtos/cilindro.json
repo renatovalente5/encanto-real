@@ -1,0 +1,97 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 12,
+    "caucao": 15,
+    "stock": 6
+  },
+  "venda": {
+    "preco": 45,
+    "prazo": 8
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 20,
+    "el": 16
+  },
+  "id": "cilindro",
+  "nome": "Cilindro",
+  "categoria": "cilindros-e-mesas",
+  "resumo": "O pedestal para o bolo, os doces ou um arranjo de flores. Três alturas.",
+  "modelo3d": {
+    "id": "cilindro"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "branco",
+  "tamanhos": [
+    {
+      "id": "p",
+      "nome": "P · 50 cm",
+      "opcoes3d": {
+        "diametro": 0.4,
+        "altura": 0.5
+      },
+      "medidas": {
+        "l": 40,
+        "a": 50,
+        "p": 40
+      },
+      "aluguer": 12,
+      "venda": 45
+    },
+    {
+      "id": "m",
+      "nome": "M · 70 cm",
+      "opcoes3d": {
+        "diametro": 0.5,
+        "altura": 0.7
+      },
+      "medidas": {
+        "l": 50,
+        "a": 70,
+        "p": 50
+      },
+      "aluguer": 15,
+      "venda": 55
+    },
+    {
+      "id": "g",
+      "nome": "G · 90 cm",
+      "opcoes3d": {
+        "diametro": 0.6,
+        "altura": 0.9
+      },
+      "medidas": {
+        "l": 60,
+        "a": 90,
+        "p": 60
+      },
+      "aluguer": 18,
+      "venda": 65
+    }
+  ],
+  "medidas": {
+    "l": 50,
+    "a": 70,
+    "p": 50
+  },
+  "fundo": "azul"
+}

@@ -1,0 +1,55 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": null,
+  "venda": {
+    "preco": 32,
+    "prazo": 7,
+    "porLetra": 3,
+    "letrasIncluidas": 5
+  },
+  "selo": "Personalizado",
+  "destaque": false,
+  "vista": {
+    "az": 20,
+    "el": 12
+  },
+  "id": "nome-personalizado",
+  "nome": "Nome em MDF",
+  "categoria": "figuras-e-letras",
+  "resumo": "O nome da festa, recortado à medida. Escreve-o e vê-o em 3D antes de encomendar.",
+  "texto3d": {
+    "fonte": "/media/fontes-3d/Pacifico-Regular.ttf",
+    "texto": "Sofia",
+    "altura": 0.3,
+    "espessura": 0.02
+  },
+  "personalizavel": {
+    "maxLetras": 12,
+    "exemplo": "Sofia"
+  },
+  "cores": [
+    "branco",
+    "dourado",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "dourado",
+  "medidas": {
+    "l": 70,
+    "a": 35,
+    "p": 14
+  },
+  "fundo": "champanhe"
+}

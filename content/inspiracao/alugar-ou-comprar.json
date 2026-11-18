@@ -1,0 +1,19 @@
+{
+  "id": "alugar-ou-comprar",
+  "titulo": "Alugar ou comprar? Quando compensa cada um",
+  "resumo": "Para uma festa, o aluguer; para várias, a compra. E há um meio-termo.",
+  "data": "2026-11-12",
+  "capa": { "produto": "trio-cilindros", "cor": "salvia" },
+  "blocos": [
+    { "p": "Todas as peças da Encanto Real se alugam para o dia da festa ou se compram para ficar. A escolha depende de quantas vezes vai usar a peça e de onde a vai guardar." },
+    { "h": "Alugar: uma festa, sem preocupações" },
+    { "p": "No aluguer paga só o dia da festa. Levanta na véspera e devolve no dia a seguir, ou nós levamos e vamos buscar. Não precisa de lavar nada, e não tem de arranjar espaço em casa para um arco de 2 metros." },
+    { "p": "Se a festa for de segunda a quinta, o aluguer tem 15 % de desconto: são dias em que as peças estariam paradas." },
+    { "h": "Comprar: para quem faz festas muitas vezes" },
+    { "p": "Para decoradoras, salões de festas, restaurantes e famílias grandes, comprar compensa a partir de duas ou três festas. Fazemos cada peça por encomenda, com as medidas e as cores do catálogo, e a compra tem 14 dias para desistir e 3 anos de garantia." },
+    { "produtos": ["trio-cilindros", "cilindro-vazado", "mesa-ripas", "painel-redondo"] },
+    { "h": "O meio-termo" },
+    { "p": "Alugou e gostou? Se comprar a mesma peça até 30 dias depois da festa, descontamos o que pagou pelo aluguer." },
+    { "cta": ["Ver a loja", "/loja/"] }
+  ]
+}

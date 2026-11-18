@@ -1,0 +1,61 @@
+# A PRÉ-VISUALIZAÇÃO da loja Encanto Real, no GitHub Pages: https://renatovalente5.github.io/encanto-real/
+#
+# Cada envio para a main constrói o site com --base=/encanto-real (noindex, sem pagamentos ligados: o «Pagar»
+# abre uma janela de pré-visualização; a conta fica só no browser; os dados legais por escrever aparecem como
+# «[por confirmar: …]»). As três propostas da página inicial ficam em /propostas/a/, /b/ e /c/.
+# Quando houver domínio (encantoreal.pt), pagamentos e backoffice, o site passa para a Cloudflare.
+name: Pré-visualização
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pre-visualizacao
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Instalar o three.js e o opentype.js
+        run: npm ci --no-audit --no-fund
+      - name: Construir a pré-visualização
+        run: node src/build.mjs --base=/encanto-real --site=https://renatovalente5.github.io
+      - name: Conferir o que sai
+        run: |
+          set -euo pipefail
+          test -f _site/index.html || { echo "FALTA _site/index.html"; exit 1; }
+          test -f _site/404.html   || { echo "FALTA _site/404.html"; exit 1; }
+          grep -q 'name="robots" content="noindex' _site/index.html || { echo "a pré-visualização tem de ser noindex"; exit 1; }
+          grep -q 'data-base="/encanto-real"' _site/index.html || { echo "falta a base /encanto-real"; exit 1; }
+          for p in loja loja/arco-triplo-real finalizar conta/entrar monta propostas/b; do test -f "_site/$p/index.html" || { echo "FALTA $p"; exit 1; }; done
+          echo "ok: $(find _site -type f | wc -l | tr -d ' ') ficheiros"
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: ./_site
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - id: publicacao
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4

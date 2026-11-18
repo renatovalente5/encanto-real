@@ -1,0 +1,100 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "comunhao"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 85,
+    "caucao": 80,
+    "stock": 1
+  },
+  "venda": {
+    "preco": 270,
+    "prazo": 14
+  },
+  "selo": "Poupa 16 €",
+  "destaque": false,
+  "vista": {
+    "az": 20,
+    "el": 8,
+    "margem": 0.08
+  },
+  "id": "cenario-princesa",
+  "nome": "Cenário Princesa",
+  "categoria": "cenarios",
+  "resumo": "Arco duplo rosa, coroa dourada, trio de cilindros e boleira. Reinar é obrigatório.",
+  "cena3d": [
+    {
+      "modelo": "arco-duplo",
+      "opcoes": {
+        "cor": "rosa"
+      },
+      "pos": [
+        0,
+        0,
+        -0.3
+      ]
+    },
+    {
+      "modelo": "trio-cilindros",
+      "opcoes": {
+        "cores": [
+          "branco",
+          "rosa",
+          "branco"
+        ]
+      },
+      "pos": [
+        -0.35,
+        0,
+        0.35
+      ],
+      "rot": 0.1
+    },
+    {
+      "modelo": "coroa",
+      "opcoes": {
+        "largura": 0.55
+      },
+      "pos": [
+        0.85,
+        0,
+        0.55
+      ],
+      "rot": -0.2
+    },
+    {
+      "modelo": "boleira",
+      "opcoes": {
+        "cor": "dourado"
+      },
+      "pos": [
+        -0.77,
+        0.9,
+        0.17
+      ]
+    }
+  ],
+  "componentes": [
+    {
+      "id": "arco-duplo",
+      "cor": "rosa"
+    },
+    {
+      "id": "trio-cilindros",
+      "cor": "branco"
+    },
+    {
+      "id": "coroa-real",
+      "cor": "dourado"
+    },
+    {
+      "id": "boleira",
+      "cor": "dourado"
+    }
+  ],
+  "cores": null,
+  "fundo": "rosa"
+}

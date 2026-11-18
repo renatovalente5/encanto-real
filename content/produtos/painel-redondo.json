@@ -1,0 +1,80 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 35,
+    "caucao": 35,
+    "stock": 3
+  },
+  "venda": {
+    "preco": 75,
+    "prazo": 10
+  },
+  "selo": null,
+  "destaque": true,
+  "vista": {
+    "az": 26,
+    "el": 8
+  },
+  "id": "painel-redondo",
+  "nome": "Painel Redondo",
+  "categoria": "arcos-e-paineis",
+  "resumo": "O painel redondo de sempre, com o cavalete escondido atrás. Dois tamanhos.",
+  "modelo3d": {
+    "id": "painel-redondo"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "salvia",
+  "tamanhos": [
+    {
+      "id": "150",
+      "nome": "Ø 1,50 m",
+      "opcoes3d": {
+        "diametro": 1.5
+      },
+      "medidas": {
+        "l": 150,
+        "a": 153,
+        "p": 3
+      },
+      "aluguer": 35,
+      "venda": 75
+    },
+    {
+      "id": "200",
+      "nome": "Ø 2,00 m",
+      "opcoes3d": {
+        "diametro": 2
+      },
+      "medidas": {
+        "l": 200,
+        "a": 203,
+        "p": 3
+      },
+      "aluguer": 45,
+      "venda": 95
+    }
+  ],
+  "medidas": {
+    "l": 150,
+    "a": 153,
+    "p": 3
+  },
+  "fundo": "salvia"
+}

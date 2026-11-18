@@ -1,0 +1,46 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "comunhao",
+    "casamento"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 15,
+    "caucao": 15,
+    "stock": 3
+  },
+  "venda": {
+    "preco": 45,
+    "prazo": 10
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 18,
+    "el": 8
+  },
+  "id": "borboleta-rendada",
+  "nome": "Borboleta Rendada",
+  "categoria": "figuras-e-letras",
+  "resumo": "Borboleta recortada como renda, de pé numa base. Linda à frente de um painel.",
+  "modelo3d": {
+    "id": "borboleta"
+  },
+  "cores": [
+    "branco",
+    "rosa",
+    "lilas",
+    "dourado",
+    "salvia"
+  ],
+  "cor": "branco",
+  "medidas": {
+    "l": 90,
+    "a": 78,
+    "p": 16
+  },
+  "fundo": "rosa"
+}

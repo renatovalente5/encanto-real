@@ -1,0 +1,83 @@
+{
+  "ocasioes": [
+    "casamento",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 110,
+    "caucao": 120,
+    "stock": 1
+  },
+  "venda": {
+    "preco": 300,
+    "prazo": 16
+  },
+  "selo": "Poupa 15 €",
+  "destaque": false,
+  "vista": {
+    "az": 16,
+    "el": 8,
+    "margem": 0.08
+  },
+  "id": "cenario-amor",
+  "nome": "Cenário Amor",
+  "categoria": "cenarios",
+  "resumo": "Arco triplo marfim, letras LOVE e aparador em arco. Para o «sim» e para o copo-d’água.",
+  "cena3d": [
+    {
+      "modelo": "arco-triplo",
+      "opcoes": {
+        "cor": "marfim"
+      },
+      "pos": [
+        0,
+        0,
+        -0.5
+      ]
+    },
+    {
+      "modelo": "aparador-arco",
+      "opcoes": {
+        "cor": "branco"
+      },
+      "pos": [
+        -0.15,
+        0,
+        0.2
+      ]
+    },
+    {
+      "texto": {
+        "fonte": "/media/fontes-3d/DMSerifDisplay-Regular.ttf",
+        "texto": "LOVE",
+        "altura": 0.5,
+        "espessura": 0.05,
+        "comBase": false,
+        "cor": "dourado"
+      },
+      "pos": [
+        1.05,
+        0,
+        0.55
+      ],
+      "rot": -0.25
+    }
+  ],
+  "componentes": [
+    {
+      "id": "arco-triplo-real",
+      "cor": "marfim"
+    },
+    {
+      "id": "aparador-arco",
+      "cor": "branco"
+    },
+    {
+      "id": "letras-love",
+      "cor": "dourado"
+    }
+  ],
+  "cores": null,
+  "fundo": "champanhe"
+}

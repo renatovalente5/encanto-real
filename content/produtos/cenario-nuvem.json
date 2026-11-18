@@ -1,0 +1,96 @@
+{
+  "ocasioes": [
+    "baby-shower",
+    "batizado",
+    "cha-revelacao"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 75,
+    "caucao": 70,
+    "stock": 1
+  },
+  "venda": {
+    "preco": 210,
+    "prazo": 14
+  },
+  "selo": "Poupa 12 €",
+  "destaque": true,
+  "vista": {
+    "az": 18,
+    "el": 8,
+    "margem": 0.08
+  },
+  "id": "cenario-nuvem",
+  "nome": "Cenário Nuvem",
+  "categoria": "cenarios",
+  "resumo": "Trio de painéis em azul e branco, nuvem, lua e estrela. Para dar as boas-vindas.",
+  "cena3d": [
+    {
+      "modelo": "trio-romanos",
+      "opcoes": {
+        "cores": [
+          "azul",
+          "branco",
+          "azul"
+        ]
+      },
+      "pos": [
+        0,
+        0,
+        -0.3
+      ]
+    },
+    {
+      "modelo": "nuvem",
+      "opcoes": {
+        "cor": "branco",
+        "largura": 0.8
+      },
+      "pos": [
+        -0.75,
+        0,
+        0.45
+      ],
+      "rot": 0.2
+    },
+    {
+      "modelo": "lua",
+      "opcoes": {
+        "altura": 0.6
+      },
+      "pos": [
+        0.65,
+        0,
+        0.45
+      ]
+    },
+    {
+      "modelo": "estrela",
+      "opcoes": {
+        "altura": 0.42
+      },
+      "pos": [
+        1.05,
+        0,
+        0.6
+      ]
+    }
+  ],
+  "componentes": [
+    {
+      "id": "trio-paineis-romanos",
+      "cor": "azul-branco-azul"
+    },
+    {
+      "id": "nuvem",
+      "cor": "branco"
+    },
+    {
+      "id": "lua-e-estrela",
+      "cor": "dourado"
+    }
+  ],
+  "cores": null,
+  "fundo": "azul"
+}

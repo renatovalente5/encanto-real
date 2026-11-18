@@ -1,0 +1,56 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 40,
+    "caucao": 40,
+    "stock": 3
+  },
+  "venda": {
+    "preco": 150,
+    "prazo": 10
+  },
+  "selo": "Mais alugado",
+  "destaque": true,
+  "vista": {
+    "az": 18,
+    "el": 14
+  },
+  "id": "trio-cilindros",
+  "nome": "Trio de Cilindros",
+  "categoria": "cilindros-e-mesas",
+  "resumo": "P, M e G na mesma cor (ou em três). O par perfeito de qualquer arco.",
+  "modelo3d": {
+    "id": "trio-cilindros"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "rosa",
+  "trioDeCores": true,
+  "medidas": {
+    "l": 160,
+    "a": 90,
+    "p": 60
+  },
+  "conteudo": [
+    "Cilindro Ø 60 × 90 cm",
+    "Cilindro Ø 50 × 70 cm",
+    "Cilindro Ø 40 × 50 cm"
+  ],
+  "fundo": "rosa"
+}

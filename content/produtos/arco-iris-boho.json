@@ -1,0 +1,70 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "baby-shower",
+    "cha-revelacao",
+    "batizado"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 30,
+    "caucao": 30,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 70,
+    "prazo": 12
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 22,
+    "el": 12
+  },
+  "id": "arco-iris-boho",
+  "nome": "Arco-Íris Boho",
+  "categoria": "arcos-e-paineis",
+  "resumo": "Quatro faixas em cores de terra (ou pastel) sobre um plinto. Para o chão ou para a mesa.",
+  "modelo3d": {
+    "id": "arco-iris"
+  },
+  "combinacoes": [
+    {
+      "id": "boho",
+      "nome": "Boho (terracota, mostarda, sálvia)",
+      "cores": [
+        "terracota",
+        "mostarda",
+        "salvia",
+        "marfim"
+      ]
+    },
+    {
+      "id": "pastel",
+      "nome": "Pastel (rosa, lilás, azul)",
+      "cores": [
+        "rosa",
+        "lilas",
+        "azul",
+        "marfim"
+      ]
+    },
+    {
+      "id": "classico",
+      "nome": "Clássico (branco e dourado)",
+      "cores": [
+        "dourado",
+        "branco",
+        "dourado",
+        "branco"
+      ]
+    }
+  ],
+  "cor": "boho",
+  "medidas": {
+    "l": 200,
+    "a": 102,
+    "p": 24
+  },
+  "fundo": "areia"
+}

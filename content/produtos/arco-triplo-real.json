@@ -1,0 +1,50 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 45,
+    "caucao": 40,
+    "stock": 3
+  },
+  "venda": {
+    "preco": 98,
+    "prazo": 12
+  },
+  "selo": "Mais alugado",
+  "destaque": true,
+  "vista": {
+    "az": 32,
+    "el": 9
+  },
+  "id": "arco-triplo-real",
+  "nome": "Arco Triplo Real",
+  "categoria": "arcos-e-paineis",
+  "resumo": "Três arcos em degrau, abertos ao centro. Emoldura a mesa do bolo e todas as fotografias.",
+  "modelo3d": {
+    "id": "arco-triplo"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "branco",
+  "medidas": {
+    "l": 140,
+    "a": 220,
+    "p": 15
+  },
+  "fundo": "rosa"
+}

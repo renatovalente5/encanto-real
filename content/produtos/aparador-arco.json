@@ -1,0 +1,50 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 35,
+    "caucao": 40,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 95,
+    "prazo": 14
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 30,
+    "el": 14
+  },
+  "id": "aparador-arco",
+  "nome": "Aparador em Arco",
+  "categoria": "cilindros-e-mesas",
+  "resumo": "Mesa de cantos redondos, numa só peça. A mesa do bolo que também é cenário.",
+  "modelo3d": {
+    "id": "aparador-arco"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "lilas",
+  "medidas": {
+    "l": 120,
+    "a": 85,
+    "p": 42
+  },
+  "fundo": "lilas"
+}

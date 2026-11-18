@@ -1,0 +1,48 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 25,
+    "caucao": 30,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 78,
+    "prazo": 14
+  },
+  "selo": "Novo",
+  "destaque": true,
+  "vista": {
+    "az": 18,
+    "el": 14
+  },
+  "id": "cilindro-vazado",
+  "nome": "Cilindro Vazado",
+  "categoria": "cilindros-e-mesas",
+  "resumo": "Ripas em curva, com cintura. Leve à vista e firme para o bolo.",
+  "modelo3d": {
+    "id": "cilindro-vazado"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "salvia",
+    "dourado"
+  ],
+  "cor": "branco",
+  "medidas": {
+    "l": 54,
+    "a": 90,
+    "p": 54
+  },
+  "fundo": "lilas"
+}

@@ -1,0 +1,50 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 30,
+    "caucao": 30,
+    "stock": 3
+  },
+  "venda": {
+    "preco": 65,
+    "prazo": 10
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 30,
+    "el": 9
+  },
+  "id": "arco-simples",
+  "nome": "Arco Simples",
+  "categoria": "arcos-e-paineis",
+  "resumo": "O arco aberto clássico, para a entrada, para o bolo ou para um par de balões.",
+  "modelo3d": {
+    "id": "arco-simples"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "salvia",
+  "medidas": {
+    "l": 100,
+    "a": 200,
+    "p": 5
+  },
+  "fundo": "areia"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "encanto-real",
+  "private": true,
+  "type": "module",
+  "description": "Loja online da Encanto Real — decoração de festas (venda e aluguer de peças em MDF).",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "renders": "node scripts/renders.mjs",
+    "testar": "node scripts/testar.mjs"
+  },
+  "devDependencies": {
+    "opentype.js": "^1.3.4",
+    "three": "^0.170.0"
+  }
+}

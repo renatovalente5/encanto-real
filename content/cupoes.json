@@ -1,0 +1,39 @@
+[
+  {
+    "codigo": "BEMVINDO10",
+    "tipo": "percentagem",
+    "valor": 10,
+    "minimo": 30,
+    "descricao": "10 % na primeira encomenda",
+    "primeiraEncomenda": true,
+    "validade": "2027-12-31"
+  },
+  {
+    "codigo": "NATAL15",
+    "tipo": "percentagem",
+    "valor": 15,
+    "minimo": 0,
+    "categorias": [
+      "cenarios"
+    ],
+    "descricao": "15 % nos cenários completos até 31 de dezembro",
+    "validade": "2026-12-31"
+  },
+  {
+    "codigo": "FESTA5",
+    "tipo": "valor",
+    "valor": 5,
+    "minimo": 40,
+    "descricao": "5 € de desconto a partir de 40 €",
+    "validade": "2027-03-31"
+  },
+  {
+    "codigo": "VOLTA10",
+    "tipo": "percentagem",
+    "valor": 10,
+    "minimo": 30,
+    "descricao": "10 % na próxima festa, para quem já encomendou",
+    "soClientes": true,
+    "validade": "2027-12-31"
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "ocasioes": [
+    "casamento",
+    "empresa",
+    "aniversario"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 45,
+    "caucao": 50,
+    "stock": 1
+  },
+  "venda": {
+    "preco": 120,
+    "prazo": 14
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 24,
+    "el": 9
+  },
+  "id": "letras-love",
+  "nome": "Letras LOVE",
+  "categoria": "figuras-e-letras",
+  "resumo": "Quatro letras de um metro, de pé. Para casamentos, pedidos e aniversários de namoro.",
+  "texto3d": {
+    "fonte": "/media/fontes-3d/DMSerifDisplay-Regular.ttf",
+    "texto": "LOVE",
+    "altura": 1,
+    "espessura": 0.06,
+    "comBase": false
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "dourado",
+    "rosa",
+    "verde"
+  ],
+  "cor": "marfim",
+  "medidas": {
+    "l": 270,
+    "a": 100,
+    "p": 6
+  },
+  "fundo": "verde"
+}

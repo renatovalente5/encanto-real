@@ -1,0 +1,44 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "cha-revelacao",
+    "comunhao"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 15,
+    "caucao": 15,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 42,
+    "prazo": 10
+  },
+  "selo": null,
+  "destaque": true,
+  "vista": {
+    "az": 20,
+    "el": 10
+  },
+  "id": "coroa-real",
+  "nome": "Coroa Real",
+  "categoria": "figuras-e-letras",
+  "resumo": "A coroa da casa, em dourado. Para princesas, reis e rainhas de qualquer idade.",
+  "modelo3d": {
+    "id": "coroa"
+  },
+  "cores": [
+    "dourado",
+    "branco",
+    "rosa",
+    "lilas"
+  ],
+  "cor": "dourado",
+  "medidas": {
+    "l": 76,
+    "a": 66,
+    "p": 16
+  },
+  "fundo": "verde"
+}

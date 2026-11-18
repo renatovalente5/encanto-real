@@ -1,0 +1,50 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 38,
+    "caucao": 35,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 85,
+    "prazo": 12
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 30,
+    "el": 9
+  },
+  "id": "arco-duplo",
+  "nome": "Arco Duplo",
+  "categoria": "arcos-e-paineis",
+  "resumo": "Dois degraus e uma abertura generosa. Leve de montar, forte na fotografia.",
+  "modelo3d": {
+    "id": "arco-duplo"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "rosa",
+  "medidas": {
+    "l": 120,
+    "a": 210,
+    "p": 10
+  },
+  "fundo": "champanhe"
+}

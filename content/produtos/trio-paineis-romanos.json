@@ -1,0 +1,84 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 60,
+    "caucao": 50,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 140,
+    "prazo": 14
+  },
+  "selo": "Novo",
+  "destaque": true,
+  "vista": {
+    "az": 24,
+    "el": 10
+  },
+  "id": "trio-paineis-romanos",
+  "nome": "Trio de Painéis Romanos",
+  "categoria": "arcos-e-paineis",
+  "resumo": "Três painéis romanos de alturas diferentes, em três cores à escolha.",
+  "modelo3d": {
+    "id": "trio-romanos"
+  },
+  "combinacoes": [
+    {
+      "id": "branco-rosa-salvia",
+      "nome": "Branco, rosa e sálvia",
+      "cores": [
+        "branco",
+        "rosa",
+        "salvia"
+      ]
+    },
+    {
+      "id": "azul-branco-azul",
+      "nome": "Azul, branco e azul",
+      "cores": [
+        "azul",
+        "branco",
+        "azul"
+      ]
+    },
+    {
+      "id": "lilas-rosa-marfim",
+      "nome": "Lilás, rosa e marfim",
+      "cores": [
+        "lilas",
+        "rosa",
+        "marfim"
+      ]
+    },
+    {
+      "id": "marfim-verde-marfim",
+      "nome": "Marfim e verde-real",
+      "cores": [
+        "marfim",
+        "verde",
+        "marfim"
+      ]
+    }
+  ],
+  "cor": "branco-rosa-salvia",
+  "medidas": {
+    "l": 245,
+    "a": 190,
+    "p": 3
+  },
+  "conteudo": [
+    "Painel 95 × 190 cm",
+    "Painel 80 × 150 cm",
+    "Painel 70 × 120 cm"
+  ],
+  "fundo": "champanhe"
+}

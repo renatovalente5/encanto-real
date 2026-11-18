@@ -1,0 +1,21 @@
+{
+  "nome": "Encanto Real",
+  "frase": "Decoração de festas",
+  "descricao": "Arcos, painéis, cilindros e figuras em MDF para festas. Alugue para o dia da festa ou compre para ficar. Entrega e montagem no Norte de Portugal.",
+  "url": "https://encantoreal.pt",
+  "localidade": "Esposende",
+  "regiao": "Norte de Portugal",
+  "email": null,
+  "telefone": null,
+  "whatsapp": null,
+  "instagram": null,
+  "facebook": null,
+  "empresa": {
+    "nome": null,
+    "nif": null,
+    "morada": null,
+    "codigoPostal": null,
+    "localidade": "Esposende"
+  },
+  "preVisualizacao": true
+}

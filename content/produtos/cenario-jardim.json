@@ -1,0 +1,121 @@
+{
+  "ocasioes": [
+    "batizado",
+    "baby-shower",
+    "aniversario",
+    "comunhao",
+    "casamento"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 99,
+    "caucao": 90,
+    "stock": 1
+  },
+  "venda": {
+    "preco": 290,
+    "prazo": 14
+  },
+  "selo": "Poupa 23 €",
+  "destaque": true,
+  "vista": {
+    "az": 18,
+    "el": 8,
+    "margem": 0.08
+  },
+  "id": "cenario-jardim",
+  "nome": "Cenário Jardim",
+  "categoria": "cenarios",
+  "resumo": "Painel redondo em sálvia, cilindro vazado, dois cilindros e a borboleta rendada.",
+  "cena3d": [
+    {
+      "modelo": "painel-redondo",
+      "opcoes": {
+        "cor": "salvia",
+        "diametro": 2
+      },
+      "pos": [
+        0,
+        0,
+        -0.4
+      ]
+    },
+    {
+      "modelo": "cilindro-vazado",
+      "opcoes": {
+        "cor": "branco"
+      },
+      "pos": [
+        -0.5,
+        0,
+        0.2
+      ]
+    },
+    {
+      "modelo": "cilindro",
+      "opcoes": {
+        "cor": "marfim",
+        "diametro": 0.5,
+        "altura": 0.7
+      },
+      "pos": [
+        0.25,
+        0,
+        0.3
+      ]
+    },
+    {
+      "modelo": "cilindro",
+      "opcoes": {
+        "cor": "branco",
+        "diametro": 0.4,
+        "altura": 0.5
+      },
+      "pos": [
+        0.72,
+        0,
+        0.5
+      ]
+    },
+    {
+      "modelo": "borboleta",
+      "opcoes": {
+        "cor": "branco",
+        "largura": 0.6
+      },
+      "pos": [
+        -1,
+        0,
+        0.6
+      ],
+      "rot": 0.3
+    }
+  ],
+  "componentes": [
+    {
+      "id": "painel-redondo",
+      "cor": "salvia",
+      "tamanho": "200"
+    },
+    {
+      "id": "cilindro-vazado",
+      "cor": "branco"
+    },
+    {
+      "id": "cilindro",
+      "cor": "marfim",
+      "tamanho": "m"
+    },
+    {
+      "id": "cilindro",
+      "cor": "branco",
+      "tamanho": "p"
+    },
+    {
+      "id": "borboleta-rendada",
+      "cor": "branco"
+    }
+  ],
+  "cores": null,
+  "fundo": "salvia"
+}

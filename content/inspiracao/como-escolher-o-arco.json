@@ -1,0 +1,20 @@
+{
+  "id": "como-escolher-o-arco",
+  "titulo": "Como escolher o arco certo para a festa",
+  "resumo": "Simples, duplo ou triplo: o tamanho da sala, a mesa do bolo e as fotografias decidem.",
+  "data": "2026-11-18",
+  "capa": { "produto": "arco-triplo-real", "cor": "rosa" },
+  "blocos": [
+    { "p": "O arco é a peça que aparece em todas as fotografias da festa. Antes de escolher a cor, vale a pena medir três coisas: a altura da sala, a largura da mesa do bolo e o espaço que fica à frente para as pessoas se juntarem." },
+    { "h": "1. A altura da sala" },
+    { "p": "O Arco Triplo Real tem 2,20 m de altura. Numa sala com o teto a 2,50 m fica imponente, mas sem ar por cima. Se o teto for baixo, o Arco Duplo (2,10 m) ou o Arco Simples (2,00 m) respiram melhor e deixam espaço para um arco de balões." },
+    { "h": "2. A largura da mesa" },
+    { "p": "Uma mesa ou um aparador deve ficar um pouco mais estreito do que o arco, para que o arco a emoldure. O Aparador em Arco tem 1,20 m e cabe à frente do arco triplo (1,40 m). Com uma mesa redonda de ripas, o arco pode ser mais largo, porque a mesa fica de lado." },
+    { "produtos": ["arco-simples", "arco-duplo", "arco-triplo-real", "aparador-arco"] },
+    { "h": "3. As fotografias" },
+    { "p": "Os degraus do arco triplo criam sombras suaves que dão relevo às fotografias, mesmo com o telemóvel. Para fotografias de grupo, deixe pelo menos 1,5 m livres à frente do arco." },
+    { "h": "4. A cor" },
+    { "p": "Branco e marfim combinam com tudo e ficam bem em batizados e casamentos. Rosa, lilás e azul-bebé pedem balões no mesmo tom. Se tem dúvidas, monte o cenário em 3D e troque as cores até gostar." },
+    { "cta": ["Monta o teu cenário", "/monta/"] }
+  ]
+}

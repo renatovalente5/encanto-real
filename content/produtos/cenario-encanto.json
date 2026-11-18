@@ -1,0 +1,86 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 89,
+    "caucao": 80,
+    "stock": 2
+  },
+  "venda": {
+    "preco": 280,
+    "prazo": 14
+  },
+  "selo": "Poupa 16 €",
+  "destaque": true,
+  "vista": {
+    "az": 22,
+    "el": 8,
+    "margem": 0.08
+  },
+  "id": "cenario-encanto",
+  "nome": "Cenário Encanto",
+  "categoria": "cenarios",
+  "resumo": "Arco triplo, trio de cilindros e mesa de ripas: o cenário que mais se pede.",
+  "cena3d": [
+    {
+      "modelo": "arco-triplo",
+      "opcoes": {
+        "cor": "branco"
+      },
+      "pos": [
+        0,
+        0,
+        -0.35
+      ]
+    },
+    {
+      "modelo": "trio-cilindros",
+      "opcoes": {
+        "cores": [
+          "rosa",
+          "rosa",
+          "rosa"
+        ]
+      },
+      "pos": [
+        -0.55,
+        0,
+        0.35
+      ],
+      "rot": 0.15
+    },
+    {
+      "modelo": "mesa-ripas",
+      "opcoes": {},
+      "pos": [
+        0.85,
+        0,
+        0.45
+      ]
+    }
+  ],
+  "componentes": [
+    {
+      "id": "arco-triplo-real",
+      "cor": "branco"
+    },
+    {
+      "id": "trio-cilindros",
+      "cor": "rosa"
+    },
+    {
+      "id": "mesa-ripas",
+      "cor": "madeira"
+    }
+  ],
+  "cores": null,
+  "fundo": "rosa"
+}

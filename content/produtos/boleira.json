@@ -1,0 +1,47 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 8,
+    "caucao": 10,
+    "stock": 6
+  },
+  "venda": {
+    "preco": 26,
+    "prazo": 7
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 18,
+    "el": 24
+  },
+  "id": "boleira",
+  "nome": "Boleira",
+  "categoria": "cilindros-e-mesas",
+  "resumo": "Suporte de bolo com pé, lacado ou dourado.",
+  "modelo3d": {
+    "id": "boleira"
+  },
+  "cores": [
+    "branco",
+    "rosa",
+    "salvia",
+    "dourado"
+  ],
+  "cor": "dourado",
+  "medidas": {
+    "l": 32,
+    "a": 18,
+    "p": 32
+  },
+  "fundo": "areia"
+}

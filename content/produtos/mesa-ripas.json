@@ -1,0 +1,48 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF e pinho, verniz mate ou lacado",
+  "aluguer": {
+    "preco": 20,
+    "caucao": 25,
+    "stock": 4
+  },
+  "venda": {
+    "preco": 62,
+    "prazo": 12
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 20,
+    "el": 16
+  },
+  "id": "mesa-ripas",
+  "nome": "Mesa de Ripas",
+  "categoria": "cilindros-e-mesas",
+  "resumo": "Mesa redonda em ripas, em madeira natural ou lacada. Para os doces e as lembranças.",
+  "modelo3d": {
+    "id": "mesa-ripas"
+  },
+  "cores": [
+    "madeira",
+    "branco",
+    "rosa",
+    "salvia",
+    "preto"
+  ],
+  "cor": "madeira",
+  "medidas": {
+    "l": 64,
+    "a": 56,
+    "p": 64
+  },
+  "fundo": "champanhe"
+}

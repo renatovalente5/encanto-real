@@ -1,0 +1,23 @@
+{
+  "id": "paletas-para-festas",
+  "titulo": "Quatro paletas para festas que ficam bem nas fotografias",
+  "resumo": "Rosa e dourado, sálvia e marfim, lilás e branco, branco total: o mesmo cenário em quatro festas diferentes.",
+  "data": "2026-11-05",
+  "capa": { "cena": "palco-salvia" },
+  "blocos": [
+    { "p": "O mesmo cenário (arco triplo, cilindros, mesa de ripas e um arco de balões) muda por completo com a cor. Estas são as quatro paletas que mais funcionam nas fotografias." },
+    { "h": "Rosa e dourado" },
+    { "cena": "palco-rosa", "legenda": "Arco triplo rosa, cilindros brancos e boleira dourada." },
+    { "p": "A paleta clássica dos primeiros aniversários e dos batizados de menina. O dourado aparece só nos pormenores: a boleira, a coroa, a lua." },
+    { "h": "Sálvia e marfim" },
+    { "cena": "palco-salvia", "legenda": "Arco triplo em verde-sálvia com cilindros marfim." },
+    { "p": "Calma e natural, fica bem em batizados, baby showers e casamentos no campo. Combina com flores secas e madeira." },
+    { "h": "Lilás e branco" },
+    { "cena": "palco-lilas", "legenda": "Arco triplo lilás com cilindros brancos." },
+    { "p": "Para festas de tema borboleta ou jardim encantado. Junte a Borboleta Rendada em branco à frente do arco." },
+    { "h": "Branco total" },
+    { "cena": "palco-branco", "legenda": "Tudo em branco, com balões marfim e dourados." },
+    { "p": "O fundo mais elegante para casamentos, pedidos e eventos de empresa: as cores ficam nas flores e no bolo." },
+    { "cta": ["Montar o meu cenário", "/monta/"] }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower",
+    "cha-revelacao",
+    "casamento",
+    "comunhao",
+    "empresa"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 25,
+    "caucao": 25,
+    "stock": 4
+  },
+  "venda": {
+    "preco": 55,
+    "prazo": 10
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 28,
+    "el": 9
+  },
+  "id": "painel-romano",
+  "nome": "Painel Romano",
+  "categoria": "arcos-e-paineis",
+  "resumo": "Painel cheio com o topo em arco. Sozinho ou em trio, em cores diferentes.",
+  "modelo3d": {
+    "id": "painel-romano"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde"
+  ],
+  "cor": "lilas",
+  "medidas": {
+    "l": 90,
+    "a": 180,
+    "p": 3
+  },
+  "fundo": "lilas"
+}

@@ -1,0 +1,56 @@
+{
+  "oficina": {
+    "nome": "Esposende (a confirmar)",
+    "horario": "Seg. a sáb., com hora marcada"
+  },
+  "zonas": [
+    {
+      "id": "z1",
+      "nome": "Zona 1",
+      "descricao": "Esposende, Barcelos, Póvoa de Varzim",
+      "preco": 15
+    },
+    {
+      "id": "z2",
+      "nome": "Zona 2",
+      "descricao": "Viana do Castelo, Vila do Conde, Braga, Famalicão",
+      "preco": 25
+    },
+    {
+      "id": "z3",
+      "nome": "Zona 3",
+      "descricao": "Porto, Maia, Matosinhos, Guimarães, Ponte de Lima",
+      "preco": 40
+    }
+  ],
+  "montagem": 20,
+  "envioCompra": {
+    "nome": "Transportadora (peças vendidas)",
+    "preco": 19,
+    "gratisAcima": 150
+  },
+  "aluguer": {
+    "levantamento": "na véspera da festa",
+    "devolucao": "no dia a seguir",
+    "antecedenciaMinimaDias": 3,
+    "folgaDias": 1,
+    "atrasoPorDia": 15,
+    "sinal": 50,
+    "restoDiasAntes": 7,
+    "cancelamento": {
+      "total": 30,
+      "metade": 7
+    }
+  },
+  "gratisZona1Acima": 150,
+  "janelas": [
+    {
+      "id": "manha",
+      "nome": "Manhã (9h–13h)"
+    },
+    {
+      "id": "tarde",
+      "nome": "Tarde (14h–19h)"
+    }
+  ]
+}

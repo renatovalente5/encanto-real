@@ -1,0 +1,50 @@
+{
+  "ocasioes": [
+    "aniversario"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 15,
+    "caucao": 15,
+    "stock": 10
+  },
+  "venda": {
+    "preco": 40,
+    "prazo": 8
+  },
+  "selo": null,
+  "destaque": true,
+  "vista": {
+    "az": 24,
+    "el": 8
+  },
+  "id": "numero-gigante",
+  "nome": "Número Gigante",
+  "categoria": "figuras-e-letras",
+  "resumo": "A idade em grande: um metro de altura, de 0 a 9.",
+  "texto3d": {
+    "fonte": "/media/fontes-3d/LilitaOne-Regular.ttf",
+    "texto": "1",
+    "altura": 1,
+    "espessura": 0.05,
+    "comBase": false
+  },
+  "digitos": true,
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "lilas",
+    "azul",
+    "salvia",
+    "verde",
+    "dourado"
+  ],
+  "cor": "rosa",
+  "medidas": {
+    "l": 60,
+    "a": 100,
+    "p": 5
+  },
+  "fundo": "rosa"
+}

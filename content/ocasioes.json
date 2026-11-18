@@ -1,0 +1,30 @@
+[
+  {
+    "id": "aniversario",
+    "nome": "Aniversário"
+  },
+  {
+    "id": "batizado",
+    "nome": "Batizado"
+  },
+  {
+    "id": "baby-shower",
+    "nome": "Baby shower"
+  },
+  {
+    "id": "cha-revelacao",
+    "nome": "Chá revelação"
+  },
+  {
+    "id": "casamento",
+    "nome": "Casamento"
+  },
+  {
+    "id": "comunhao",
+    "nome": "Comunhão"
+  },
+  {
+    "id": "empresa",
+    "nome": "Empresas"
+  }
+]

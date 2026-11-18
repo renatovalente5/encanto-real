@@ -1,0 +1,44 @@
+{
+  "ocasioes": [
+    "baby-shower",
+    "batizado",
+    "cha-revelacao",
+    "aniversario"
+  ],
+  "material": "MDF lacado, acabamento acetinado",
+  "aluguer": {
+    "preco": 12,
+    "caucao": 15,
+    "stock": 3
+  },
+  "venda": {
+    "preco": 35,
+    "prazo": 8
+  },
+  "selo": null,
+  "destaque": false,
+  "vista": {
+    "az": 20,
+    "el": 10
+  },
+  "id": "nuvem",
+  "nome": "Nuvem",
+  "categoria": "figuras-e-letras",
+  "resumo": "Nuvem fofa em MDF, de pé numa base. Para baby showers e batizados.",
+  "modelo3d": {
+    "id": "nuvem"
+  },
+  "cores": [
+    "branco",
+    "azul",
+    "rosa",
+    "lilas"
+  ],
+  "cor": "azul",
+  "medidas": {
+    "l": 100,
+    "a": 53,
+    "p": 16
+  },
+  "fundo": "azul"
+}
