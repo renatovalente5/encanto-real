@@ -42,7 +42,7 @@
   --largura: 1320px;
   --recuo: max(var(--margem), calc((100vw - var(--largura)) / 2));
   --vao: clamp(12px, 1.6vw, 20px);
-  --seccao: clamp(44px, 5.6vw, 80px);
+  --seccao: clamp(44px, 5vw, 72px);
   --suave: cubic-bezier(.22, 1, .36, 1);
   color-scheme: light;
 }
@@ -292,7 +292,8 @@ a.mosaico__azulejo:hover img { scale: 1.05; }
 
 /* --------------------------------------------------------------------------------------- capa B «Veludo» */
 .inicio--b .topo { background: var(--verde); }
-.capa--veludo { background: radial-gradient(90% 120% at 78% 40%, #6A774D 0%, var(--verde) 46%, #46512F 100%); color: var(--champanhe); padding-block: clamp(28px, 4vw, 56px); }
+.capa--veludo { background: radial-gradient(90% 120% at 78% 40%, #6A774D 0%, var(--verde) 46%, #46512F 100%); color: var(--champanhe); padding-block: clamp(18px, 2.8vw, 40px); }
+.capa--veludo .visor3d { aspect-ratio: 1.2; }
 .capa--veludo .capa__interior { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: center; gap: clamp(20px, 4vw, 56px); }
 .capa--veludo .capa__titulo { color: var(--champanhe); font-size: clamp(44px, 6vw, 82px); }
 .capa--veludo .sobretitulo { color: var(--champanhe); opacity: .9; }
@@ -303,6 +304,7 @@ a.mosaico__azulejo:hover img { scale: 1.05; }
 .visor3d { position: relative; aspect-ratio: 1; width: 100%; touch-action: pan-y; cursor: grab; }
 .visor3d:active { cursor: grabbing; }
 .visor3d__poster, .visor3d__tela { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+.visor3d__poster { object-fit: contain; }
 .visor3d--pronto .visor3d__poster { opacity: 0; transition: opacity .6s; pointer-events: none; }
 .paletas { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
 .paleta { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 8px; border-radius: 999px; border: 1.5px solid rgba(246, 228, 185, .35); background: rgba(46, 53, 32, .25); color: var(--champanhe); font-weight: 600; }
@@ -312,7 +314,7 @@ a.mosaico__azulejo:hover img { scale: 1.05; }
 .capa__dica .icone { width: 18px; height: 18px; }
 .visor3d--mexido + .paletas + .capa__dica { visibility: hidden; }
 @media (max-width: 379px) { .paletas { flex-wrap: wrap !important; } }
-@media (max-width: 899px) { .paletas { gap: 6px; flex-wrap: nowrap; } .paleta { padding: 0 11px 0 6px; gap: 6px; font-size: 15px; } .paleta__amostra { width: 22px; height: 22px; } .capa--veludo .capa__interior { grid-template-columns: minmax(0, 1fr); } .capa--veludo .confianca { display: none; } .visor3d { aspect-ratio: 1.1; } .capa--veludo .capa__titulo { font-size: clamp(38px, 10.5vw, 52px); } }
+@media (max-width: 899px) { .paletas { gap: 6px; flex-wrap: nowrap; } .paleta { padding: 0 11px 0 6px; gap: 6px; font-size: 15px; } .paleta__amostra { width: 22px; height: 22px; } .capa--veludo .capa__interior { grid-template-columns: minmax(0, 1fr); } .capa--veludo .confianca { display: none; } .capa--veludo .visor3d { aspect-ratio: 1.2; } .capa--veludo .capa__titulo { font-size: clamp(38px, 10.5vw, 52px); } }
 
 /* --------------------------------------------------------------------------------------- capa C «Palco» */
 .capa--palco { padding-top: clamp(36px, 6vw, 80px); text-align: center; }
