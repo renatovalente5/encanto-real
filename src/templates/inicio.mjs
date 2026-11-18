@@ -98,8 +98,9 @@ function capaMontra(ctx) {
 // ------------------------------------------------------------------------------------------- capa B
 // Verde da marca de ponta a ponta, com o cenário em 3D à direita: roda com o dedo e muda de cor ao vivo.
 function capaVeludo(ctx) {
+  // o branco abre o cenário e vem em primeiro (pedido do Renato, 18 nov 2026)
   const paletas = [
-    ['rosa', 'Rosa', '#E9BDBB'], ['salvia', 'Sálvia', '#A7B596'], ['lilas', 'Lilás', '#C9BADB'], ['branco', 'Branco', '#F3F1EC'],
+    ['branco', 'Branco', '#F3F1EC'], ['rosa', 'Rosa', '#E9BDBB'], ['salvia', 'Sálvia', '#A7B596'], ['lilas', 'Lilás', '#C9BADB'],
   ];
   return h`<section class="capa capa--veludo">
   <div class="capa__interior contentor">
@@ -115,7 +116,7 @@ function capaVeludo(ctx) {
     </div>
     <div class="capa__palco" data-palco-3d>
       <div class="visor3d" data-visor>
-        ${imgCena(ctx, 'palco-rosa', 'quadrado', { sizes: '(min-width: 1000px) 46vw, 92vw', prioridade: true, alt: 'Cenário montado: arco triplo rosa, balões, cilindros e mesa de ripas', classe: 'visor3d__poster' })}
+        ${imgCena(ctx, 'palco-branco', 'quadrado', { sizes: '(min-width: 1000px) 46vw, 92vw', prioridade: true, alt: 'Cenário montado: arco triplo branco, balões, cilindros e mesa de ripas', classe: 'visor3d__poster' })}
       </div>
       <div class="paletas" role="radiogroup" aria-label="Cor do cenário">
         ${paletas.map(([id, nome, hex], i) => h`<button type="button" class="paleta" role="radio" aria-checked="${i === 0 ? 'true' : 'false'}" data-paleta="${id}" style="--amostra:${hex}"><span class="paleta__amostra"></span>${nome}</button>`)}

@@ -76,7 +76,7 @@ export function gerarMonta(ctx) {
     <div class="monta__palco">
       <div class="monta__palco-fixo">
         <div class="visor3d visor3d--monta" data-visor>
-          ${imgCena(ctx, 'palco-rosa', 'quadrado', { sizes: '(min-width: 1000px) 56vw, 100vw', prioridade: true, alt: 'Cenário de exemplo: arco triplo rosa, balões, cilindros e mesa de ripas', classe: 'visor3d__poster' })}
+          ${imgCena(ctx, 'palco-branco', 'quadrado', { sizes: '(min-width: 1000px) 56vw, 100vw', prioridade: true, alt: 'Cenário de exemplo: arco triplo branco, balões, cilindros e mesa de ripas', classe: 'visor3d__poster' })}
         </div>
         <div class="monta__ferramentas">
           <label class="interruptor"><input type="checkbox" data-baloes checked><span>Balões de exemplo</span></label>
@@ -88,7 +88,7 @@ export function gerarMonta(ctx) {
     </div>
     <form class="monta__escolhas" data-monta-form>
       ${grupoEscolha(ctx, { grupo: 'fundo', titulo: 'O fundo', n: 1, lista: ESCOLHAS.fundo, atual: 'arco-triplo' })}
-      <div class="monta__cor" data-cor-de="fundo">${amostras(ctx, 'fundo', 'arco-triplo-real', 'rosa')}</div>
+      <div class="monta__cor" data-cor-de="fundo">${amostras(ctx, 'fundo', 'arco-triplo-real', 'branco')}</div>
       ${grupoEscolha(ctx, { grupo: 'pedestais', titulo: 'Os pedestais', n: 2, lista: ESCOLHAS.pedestais, atual: 'os-dois' })}
       <div class="monta__cor" data-cor-de="pedestais">${amostras(ctx, 'pedestais', 'trio-cilindros', 'branco')}</div>
       ${grupoEscolha(ctx, { grupo: 'mesa', titulo: 'A mesa', n: 3, lista: ESCOLHAS.mesa, atual: 'mesa-ripas' })}

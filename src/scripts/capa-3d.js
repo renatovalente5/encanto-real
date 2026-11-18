@@ -5,7 +5,7 @@ const zona = document.querySelector('[data-palco-3d]');
 const contentor = zona?.querySelector('[data-visor]');
 const botoes = zona ? [...zona.querySelectorAll('[data-paleta]')] : [];
 let visor = null;
-let paletaAtual = 'rosa';
+let paletaAtual = 'branco';
 let cenas = null;
 
 function escolher(id) {
