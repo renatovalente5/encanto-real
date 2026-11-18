@@ -77,7 +77,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .pilula-opcao input:checked + span { border-color: var(--verde); background: var(--azulejo-salvia); }
 .pilula-opcao input:focus-visible + span { outline: 2.5px solid var(--verde); outline-offset: 2px; }
 .pilulas--digitos { gap: 8px; }
-.pilula-opcao--digito span { width: 46px; justify-content: center; padding: 0; font: 400 22px/1 var(--serifa); }
+.pilula-opcao--digito span { width: 46px; justify-content: center; padding: 0; font: 700 19px/1 var(--sans); font-variant-numeric: lining-nums tabular-nums; }
 .pilulas--pequenas .pilula { min-height: 40px; padding: 0 14px; font-size: 15px; }
 
 /* campo da data da festa */
@@ -99,7 +99,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .modo:has(input:checked) { border-color: var(--verde); background: var(--azulejo-salvia); box-shadow: inset 0 0 0 1px var(--verde); }
 .modo:has(input:focus-visible) { outline: 2.5px solid var(--verde); outline-offset: 2px; }
 .modo__nome { font-weight: 600; font-size: 15px; color: var(--tinta-2); }
-.modo__preco strong { font: 400 28px/1.1 var(--serifa); color: var(--tinta); }
+.modo__preco strong { font: 700 26px/1.15 var(--sans); letter-spacing: -.01em; font-variant-numeric: lining-nums tabular-nums; color: var(--tinta); }
 .modo__preco small { font-size: 13px; color: var(--tinta-2); }
 .modos--compacto { display: inline-grid; grid-template-columns: auto auto; gap: 0; padding: 4px; border-radius: 999px; background: var(--areia); }
 .modos--compacto .modo { padding: 0 18px; min-height: 42px; place-content: center; border: 0; border-radius: 999px; background: transparent; font-weight: 600; font-size: 15px; }
@@ -182,7 +182,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .ficha__titulo { font: 400 clamp(34px, 3.8vw, 52px)/1.05 var(--serifa); margin: 10px 0 12px; }
 .ficha__resumo { color: var(--tinta-2); font-size: 17px; margin-bottom: 22px; }
 .compra { display: grid; gap: 22px; }
-.compra__preco-unico strong { font: 400 34px/1 var(--serifa); }
+.compra__preco-unico strong { font: 700 30px/1.1 var(--sans); letter-spacing: -.01em; font-variant-numeric: lining-nums tabular-nums; }
 .compra__preco-unico small { color: var(--tinta-2); margin-left: 4px; }
 .opcao { display: block; border: 0; padding: 0; margin: 0; min-width: 0; }
 .opcao legend { float: left; width: 100%; padding: 0; margin-bottom: 10px; font-weight: 600; font-size: 15px; }
@@ -472,7 +472,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .monta__total { position: sticky; bottom: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 16px; border-radius: var(--raio-g); background: var(--verde); color: var(--champanhe); z-index: 6; box-shadow: var(--sombra-forte); }
 .monta__soma { display: grid; line-height: 1.25; }
 .monta__soma span { font-size: 14px; opacity: .9; }
-.monta__soma strong { font: 400 36px/1.05 var(--serifa); }
+.monta__soma strong { font: 700 32px/1.1 var(--sans); letter-spacing: -.01em; font-variant-numeric: lining-nums tabular-nums; }
 .monta__soma small { font-size: 13px; opacity: .9; }
 .monta__total .campo-data { background: rgba(255, 255, 255, .1); border-color: rgba(246, 228, 185, .35); color: var(--champanhe); }
 .monta__total .campo-data .icone, .monta__total .campo-data small { color: var(--champanhe); }
