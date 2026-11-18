@@ -5,6 +5,7 @@ import { u, cartao, imgProduto, srcProduto, fundoDe, pagina, linhaInfo } from '.
 import { euros, precoDesde, precoUnitario, podeAlugar, podeComprar } from '../scripts/regras.js';
 import { ACABAMENTOS } from '../3d/acabamentos.js';
 import { opcoesDeCor } from '../lib/dados.mjs';
+import { entradaCatalogo } from '../lib/catalogo.mjs';
 
 // ------------------------------------------------------------------------------------------- a loja
 function barraDaLoja(ctx, { categoria }) {
@@ -227,7 +228,7 @@ function paginaProduto(ctx, prod) {
     ? produtos.filter((p) => p.categoria === 'cenarios' && p.id !== prod.id)
     : [...produtos.filter((p) => p.categoria !== prod.categoria && p.categoria !== 'cenarios' && (p.ocasioes || []).some((o) => (prod.ocasioes || []).includes(o))), ...produtos.filter((p) => p.categoria === 'cenarios' && p.componentes?.some((c) => c.id === prod.id))]
   ).slice(0, 8);
-  const dadosFicha = { id: prod.id, cor: prod.cor, fundo: prod.fundo };
+  const dadosFicha = entradaCatalogo(prod, { nomeCat: { [cat.id]: cat.nome } });
   const precoOferta = podeComprar(prod) ? precoDesde(prod, 'compra') : precoDesde(prod, 'aluguer');
   const corpo = h`<div class="ficha contentor" data-ficha data-id="${prod.id}">
   <nav class="migalhas" aria-label="Está aqui">

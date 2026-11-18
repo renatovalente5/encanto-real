@@ -9,7 +9,7 @@ import { carregar } from './lib/dados.mjs';
 import { paginaInicio } from './templates/inicio.mjs';
 import { PAGINAS } from './templates/paginas.mjs';
 import { ACABAMENTOS } from './3d/acabamentos.js';
-import { euros, precoDesde, podeAlugar } from './scripts/regras.js';
+import { entradaCatalogo } from './lib/catalogo.mjs';
 
 const RAIZ = resolve(fileURLToPath(import.meta.url), '../..');
 const arg = (n, padrao) => (process.argv.find((a) => a.startsWith(`--${n}=`)) || '').split('=')[1] ?? padrao;
@@ -54,15 +54,7 @@ function catalogoJson(ctx) {
   const nomeOc = Object.fromEntries(ocasioes.map((o) => [o.id, o.nome]));
   return {
     v: ctx.versao,
-    produtos: produtos.map((p) => ({
-      id: p.id, nome: p.nome, resumo: p.resumo, categoria: p.categoria, categoriaNome: nomeCat[p.categoria],
-      ocasioes: p.ocasioes, ocasioesNomes: (p.ocasioes || []).map((o) => nomeOc[o]),
-      cor: p.cor, cores: p.cores || null, combinacoes: p.combinacoes || null, tamanhos: p.tamanhos || null,
-      aluguer: p.aluguer, venda: p.venda, personalizavel: p.personalizavel || null, digitos: p.digitos || false,
-      componentes: p.componentes || null, poupanca: p.poupanca || 0, fundo: p.fundo, selo: p.selo,
-      medidas: p.medidas,
-      precoTexto: podeAlugar(p) ? `${euros(precoDesde(p, 'aluguer'))}/evento` : euros(precoDesde(p, 'compra')),
-    })),
+    produtos: produtos.map((p) => entradaCatalogo(p, { nomeCat, nomeOc })),
     categorias, ocasioes, cupoes, entregas,
     acabamentos: Object.fromEntries(Object.entries(ACABAMENTOS).map(([k, a]) => [k, { nome: a.nome, hex: a.hex }])),
   };

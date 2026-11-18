@@ -8,7 +8,8 @@ import { cartaoHtml, pintarFavoritosEm } from './cartoes.js';
 
 const ficha = document.querySelector('[data-ficha]');
 const form = ficha?.querySelector('[data-compra]');
-const { id } = JSON.parse(document.getElementById('dados-ficha')?.textContent || '{}');
+// os dados da peça vêm na própria página: a ficha funciona ao primeiro toque, sem esperar pela rede
+const prodDaPagina = JSON.parse(document.getElementById('dados-ficha')?.textContent || 'null');
 
 function diasUteisDepois(n, de = new Date()) {
   const d = new Date(de);
@@ -17,9 +18,8 @@ function diasUteisDepois(n, de = new Date()) {
   return iso(d);
 }
 
-async function iniciar() {
-  const cat = await catalogo();
-  const prod = cat.porId[id];
+function iniciar() {
+  const prod = prodDaPagina;
   if (!prod || !form) return;
   const $ = (s) => form.querySelector(s);
   const imagem = ficha.querySelector('.galeria__imagem');
@@ -240,15 +240,19 @@ async function iniciar() {
     } catch { /* cancelado */ }
   });
 
-  // ----------------------------------------------------------------- vistos há pouco
-  const vistos = guardado('vistos', []).filter((x) => x !== prod.id && cat.porId[x]);
-  guardar('vistos', [prod.id, ...vistos].slice(0, 12));
-  if (vistos.length) {
-    const sec = ficha.querySelector('[data-vistos]');
-    const lista = sec.querySelector('[data-vistos-lista]');
-    lista.innerHTML = vistos.slice(0, 8).map((x) => cartaoHtml(cat.porId[x])).join('');
-    pintarFavoritosEm(lista, guardado('favoritos', []));
-    sec.hidden = false;
+  // ----------------------------------------------------------------- vistos há pouco (o catálogo chega depois)
+  const anteriores = guardado('vistos', []).filter((x) => x !== prod.id);
+  guardar('vistos', [prod.id, ...anteriores].slice(0, 12));
+  if (anteriores.length) {
+    catalogo().then((cat) => {
+      const vistos = anteriores.filter((x) => cat.porId[x]);
+      if (!vistos.length) return;
+      const sec = ficha.querySelector('[data-vistos]');
+      const lista = sec.querySelector('[data-vistos-lista]');
+      lista.innerHTML = vistos.slice(0, 8).map((x) => cartaoHtml(cat.porId[x])).join('');
+      pintarFavoritosEm(lista, guardado('favoritos', []));
+      sec.hidden = false;
+    });
   }
 }
 
