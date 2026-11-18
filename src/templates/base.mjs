@@ -233,8 +233,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
 <link rel="icon" href="${u(ctx, '/media/marca/favicon-48.png')}" sizes="48x48" type="image/png">
 <link rel="icon" href="${u(ctx, '/media/marca/favicon-32.png')}" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="${u(ctx, '/media/marca/apple-touch-icon.png')}">
-<link rel="preload" href="${u(ctx, '/media/fontes/antic-didone-400-normal.woff2')}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="${u(ctx, '/media/fontes/urbanist-400-700-normal.woff2')}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${u(ctx, '/media/fontes/lexend-300-700-normal.woff2')}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${u(ctx, `/assets/site.css?v=${ctx.versao}`)}">
 ${ctx.temaCss ? `<link rel="stylesheet" href="${u(ctx, ctx.temaCss)}?v=${ctx.versao}">` : ''}
 ${cabecaExtra}
