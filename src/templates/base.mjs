@@ -89,7 +89,10 @@ export function cabecalho(ctx, { atual } = {}) {
   <div class="topo__barra contentor">
     <button class="topo__botao topo__menu" type="button" data-abrir="menu" aria-label="Abrir o menu" aria-haspopup="dialog">${icone('menu')}</button>
     <a class="topo__marca" href="${u(ctx, '/')}" aria-label="Encanto Real — página inicial">
-      <img src="${u(ctx, '/media/marca/assinatura-champanhe.png')}" width="1200" height="428" alt="Encanto Real">
+      <picture>
+        <source media="(max-width: 600px)" srcset="${u(ctx, '/media/marca/logotipo-compacto-champanhe.svg')}" width="398" height="145">
+        <img src="${u(ctx, '/media/marca/logotipo-horizontal-champanhe.svg')}" width="589" height="105" alt="Encanto Real">
+      </picture>
     </a>
     <nav class="topo__nav" aria-label="Principal">
       ${NAV.map((n) => h`<a href="${u(ctx, n.href)}"${attrs({ 'aria-current': atual === n.id ? 'page' : null })}>${n.nome}</a>`)}
@@ -123,7 +126,7 @@ export function rodape(ctx) {
   return h`<footer class="rodape">
   <div class="rodape__corpo contentor">
     <div class="rodape__marca">
-      <img src="${u(ctx, '/media/marca/logotipo-champanhe.png')}" width="1200" height="537" alt="Encanto Real — Decoração de Festas" loading="lazy">
+      <img src="${u(ctx, '/media/marca/logotipo-champanhe.svg')}" width="261" height="172" alt="Encanto Real — Decoração de Festas" loading="lazy">
       <p>Peças de festa feitas por nós, para alugar no dia da festa ou comprar para ficar.</p>
       ${redes.length ? h`<ul class="rodape__redes">${redes.map((r) => h`<li><a href="${r.href}" rel="noopener" aria-label="${r.nome}">${icone(r.icone)}</a></li>`)}</ul>` : ''}
     </div>
@@ -170,7 +173,7 @@ export function rodape(ctx) {
 export function gavetas(ctx) {
   const { categorias } = ctx.dados;
   return h`<dialog class="gaveta gaveta--menu" data-gaveta="menu" aria-label="Menu">
-  <div class="gaveta__topo"><img src="${u(ctx, '/media/marca/assinatura-champanhe.png')}" width="1200" height="428" alt="Encanto Real" class="gaveta__marca"><button class="topo__botao" type="button" data-fechar aria-label="Fechar o menu">${icone('fechar')}</button></div>
+  <div class="gaveta__topo"><img src="${u(ctx, '/media/marca/logotipo-horizontal-champanhe.svg')}" width="589" height="105" alt="Encanto Real" class="gaveta__marca"><button class="topo__botao" type="button" data-fechar aria-label="Fechar o menu">${icone('fechar')}</button></div>
   <nav class="gaveta__corpo menu-movel" aria-label="Menu">
     <ul class="menu-movel__principal">
       <li><a href="${u(ctx, '/loja/')}">Toda a loja</a></li>
@@ -230,6 +233,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
 <meta property="og:image:height" content="${og?.altura || 630}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#54603C">
+<link rel="icon" href="${u(ctx, '/media/marca/favicon.svg')}" type="image/svg+xml">
 <link rel="icon" href="${u(ctx, '/media/marca/favicon-48.png')}" sizes="48x48" type="image/png">
 <link rel="icon" href="${u(ctx, '/media/marca/favicon-32.png')}" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="${u(ctx, '/media/marca/apple-touch-icon.png')}">

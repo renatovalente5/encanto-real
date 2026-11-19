@@ -8,7 +8,7 @@ const AVISO = 'Pré-visualização: a conta fica guardada só neste browser. Na 
 function cartaoEntrada(ctx, { titulo, frase, corpo, rodape }) {
   return h`<div class="contentor entrada">
   <div class="entrada__caixa">
-    <img class="entrada__coroa" src="${u(ctx, '/media/marca/coroa-verde.png')}" width="524" height="309" alt="">
+    <img class="entrada__coroa" src="${u(ctx, '/media/marca/coroa-verde.svg')}" width="90" height="105" alt="">
     <h1 class="pagina__titulo">${titulo}</h1>
     ${frase ? h`<p class="pagina__frase">${frase}</p>` : ''}
     ${corpo}

@@ -62,7 +62,7 @@ function capaMontra(ctx) {
   ];
   const azulejo = (t, i, s) => {
     if (t.marca) {
-      return h`<div class="mosaico__azulejo mosaico__azulejo--marca"><img src="${u(ctx, '/media/marca/coroa-champanhe.png')}" width="524" height="309" alt="" loading="lazy"><strong>${t.marca}</strong><span>${t.linha}</span></div>`;
+      return h`<div class="mosaico__azulejo mosaico__azulejo--marca"><img src="${u(ctx, '/media/marca/coroa-champanhe.svg')}" width="90" height="105" alt="" loading="lazy"><strong>${t.marca}</strong><span>${t.linha}</span></div>`;
     }
     const classe = `mosaico__azulejo${t.alto ? ' mosaico__azulejo--alto' : ''}`;
     const prio = s === 0 && t.alto;

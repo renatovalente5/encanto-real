@@ -152,7 +152,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .vazio__icone .icone { width: 32px; height: 32px; }
 .vazio--pequeno { padding: 28px 16px; border-radius: 20px; background: var(--branco); border: 1px solid var(--linha); }
 .vazio--404 { min-height: 50vh; align-content: center; }
-.vazio__coroa { width: 120px; margin-bottom: 10px; }
+.vazio__coroa { width: 64px; margin-bottom: 10px; }
 .vazio__accoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px; margin-top: 18px; }
 
 /* --------------------------------------------------------------------------------------- ficha */
@@ -405,7 +405,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 /* --------------------------------------------------------------------------------------- entrar e conta */
 .entrada { display: grid; place-items: center; padding-block: clamp(24px, 5vw, 64px); }
 .entrada__caixa { width: min(460px, 100%); display: grid; gap: 10px; padding: clamp(22px, 4vw, 36px); border-radius: var(--raio-g); background: var(--branco); border: 1px solid var(--linha); }
-.entrada__coroa { width: 72px; margin-bottom: 4px; }
+.entrada__coroa { width: 40px; margin-bottom: 4px; }
 .entrada .pagina__titulo { font-size: clamp(27px, 3.2vw, 34px); }
 .formulario { display: grid; gap: 16px; margin-top: 10px; }
 .formulario--largo { max-width: 760px; }
