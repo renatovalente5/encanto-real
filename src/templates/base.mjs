@@ -90,8 +90,8 @@ export function cabecalho(ctx, { atual } = {}) {
     <button class="topo__botao topo__menu" type="button" data-abrir="menu" aria-label="Abrir o menu" aria-haspopup="dialog">${icone('menu')}</button>
     <a class="topo__marca" href="${u(ctx, '/')}" aria-label="Encanto Real — página inicial">
       <picture>
-        <source media="(max-width: 600px)" srcset="${u(ctx, '/media/marca/logotipo-compacto-champanhe.svg')}" width="398" height="145">
-        <img src="${u(ctx, '/media/marca/logotipo-horizontal-champanhe.svg')}" width="589" height="105" alt="Encanto Real">
+        <source media="(max-width: 600px)" srcset="${u(ctx, '/media/marca/logotipo-compacto-champanhe.svg')}" width="398" height="149">
+        <img src="${u(ctx, '/media/marca/logotipo-horizontal-champanhe.svg')}" width="597" height="109" alt="Encanto Real">
       </picture>
     </a>
     <nav class="topo__nav" aria-label="Principal">
@@ -126,7 +126,7 @@ export function rodape(ctx) {
   return h`<footer class="rodape">
   <div class="rodape__corpo contentor">
     <div class="rodape__marca">
-      <img src="${u(ctx, '/media/marca/logotipo-champanhe.svg')}" width="261" height="172" alt="Encanto Real — Decoração de Festas" loading="lazy">
+      <img src="${u(ctx, '/media/marca/logotipo-champanhe.svg')}" width="261" height="176" alt="Encanto Real — Decoração de Festas" loading="lazy">
       <p>Peças de festa feitas por nós, para alugar no dia da festa ou comprar para ficar.</p>
       ${redes.length ? h`<ul class="rodape__redes">${redes.map((r) => h`<li><a href="${r.href}" rel="noopener" aria-label="${r.nome}">${icone(r.icone)}</a></li>`)}</ul>` : ''}
     </div>
@@ -173,7 +173,7 @@ export function rodape(ctx) {
 export function gavetas(ctx) {
   const { categorias } = ctx.dados;
   return h`<dialog class="gaveta gaveta--menu" data-gaveta="menu" aria-label="Menu">
-  <div class="gaveta__topo"><img src="${u(ctx, '/media/marca/logotipo-horizontal-champanhe.svg')}" width="589" height="105" alt="Encanto Real" class="gaveta__marca"><button class="topo__botao" type="button" data-fechar aria-label="Fechar o menu">${icone('fechar')}</button></div>
+  <div class="gaveta__topo"><img src="${u(ctx, '/media/marca/logotipo-horizontal-champanhe.svg')}" width="597" height="109" alt="Encanto Real" class="gaveta__marca"><button class="topo__botao" type="button" data-fechar aria-label="Fechar o menu">${icone('fechar')}</button></div>
   <nav class="gaveta__corpo menu-movel" aria-label="Menu">
     <ul class="menu-movel__principal">
       <li><a href="${u(ctx, '/loja/')}">Toda a loja</a></li>

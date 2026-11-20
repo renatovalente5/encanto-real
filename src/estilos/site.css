@@ -112,7 +112,7 @@ main:focus { outline: none; }
 .topo__marca { display: block; flex: none; }
 .topo__marca picture { display: block; }
 .topo__barra > .topo__botao { flex: none; }
-.topo__marca img { height: 38px; width: auto; }
+.topo__marca img { height: 39.5px; width: auto; }
 .topo__nav { display: flex; gap: clamp(14px, 2vw, 28px); }
 .topo__nav a { position: relative; text-decoration: none; font-weight: 500; font-size: 16px; padding: 8px 0; white-space: nowrap; }
 .topo__nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: currentColor; scale: 0 1; transition: scale .3s var(--suave); }
@@ -136,7 +136,7 @@ main:focus { outline: none; }
   .topo__menu, .topo__lupa { display: inline-grid; }
   .topo__barra { gap: 4px; }
   .topo__marca { margin-inline: auto; }
-  .topo__marca img { height: 32px; }
+  .topo__marca img { height: 33px; }
   .topo__accoes { gap: 0; }
   .topo__favoritos { display: none; }
 }
@@ -178,7 +178,7 @@ dialog::backdrop { background: rgba(30, 34, 20, .42); backdrop-filter: blur(2px)
 .gaveta__topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 12px 12px 20px; border-bottom: 1px solid var(--linha); min-height: var(--topo); }
 .gaveta--menu .gaveta__topo { border-color: rgba(246, 228, 185, .2); }
 .gaveta__topo h2 { font: 600 21px/1.15 var(--titulos); letter-spacing: -.01em; }
-.gaveta__marca { height: 30px; width: auto; }
+.gaveta__marca { height: 31px; width: auto; }
 .gaveta__corpo { overflow: auto; overscroll-behavior: contain; }
 .menu-movel { padding: 12px 20px 32px; }
 .menu-movel__principal a { display: block; padding: 12px 0; font: 600 21px/1.2 var(--titulos); text-decoration: none; border-bottom: 1px solid rgba(246, 228, 185, .15); }
@@ -270,7 +270,7 @@ dialog::backdrop { background: rgba(30, 34, 20, .42); backdrop-filter: blur(2px)
 a.mosaico__azulejo:hover img { scale: 1.05; }
 .mosaico__azulejo--alto { grid-row: span 2; }
 .mosaico__azulejo--marca { display: grid; place-content: center; justify-items: center; gap: 6px; padding: 14px; text-align: center; background: var(--verde); color: var(--champanhe); }
-.mosaico__azulejo--marca img { width: 30%; height: auto; object-fit: contain; margin-bottom: 4px; }
+.mosaico__azulejo--marca img { width: 33%; height: auto; object-fit: contain; margin-bottom: 4px; }
 .mosaico__azulejo--marca strong { font: 600 clamp(17px, 1.7vw, 23px)/1.1 var(--titulos); }
 .mosaico__azulejo--marca span { font-size: 13px; opacity: .9; }
 .capa__controlos { display: flex; align-items: center; gap: 18px; margin-top: 30px; }

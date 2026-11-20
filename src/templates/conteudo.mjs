@@ -234,7 +234,7 @@ function paginaPrivacidade(ctx) {
 
 function pagina404(ctx) {
   const corpo = h`<div class="contentor vazio vazio--404">
-  <img src="${u(ctx, '/media/marca/coroa-verde.svg')}" width="90" height="105" alt="" class="vazio__coroa">
+  <img src="${u(ctx, '/media/marca/coroa-verde.svg')}" width="98" height="109" alt="" class="vazio__coroa">
   <h1 class="pagina__titulo">Esta página não existe</h1>
   <p class="pagina__frase">Pode ter mudado de sítio. As peças estão todas na loja.</p>
   <div class="vazio__accoes"><a class="botao botao--verde" href="${u(ctx, '/loja/')}">Ir à loja</a><a class="ligacao-seta" href="${u(ctx, '/')}">Página inicial ${icone('seta')}</a></div>
