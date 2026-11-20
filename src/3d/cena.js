@@ -25,7 +25,14 @@ export async function montar(item, raiz = '') {
     const f = await fonte(raiz + item.texto.fonte);
     obj = P.textoMdf({ ...item.texto, fonte: f });
   } else {
-    obj = P.criar(item.modelo, item.opcoes || {});
+    const opcoes = { ...(item.opcoes || {}) };
+    // peças com textos gravados ou em relevo: as letras carregam-se antes de montar
+    const letras = P.LETRAS[item.modelo];
+    if (letras) {
+      opcoes.fontes = {};
+      for (const [k, url] of Object.entries(letras)) opcoes.fontes[k] = await fonte(raiz + url);
+    }
+    obj = P.criar(item.modelo, opcoes);
   }
   if (item.pos) obj.position.set(...item.pos);
   if (item.rot) obj.rotation.y = item.rot;

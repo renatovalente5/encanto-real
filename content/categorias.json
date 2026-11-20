@@ -24,6 +24,14 @@
     "fundo": "verde"
   },
   {
+    "id": "personalizados",
+    "nome": "Personalizados",
+    "frase": "O nome gravado em MDF: o primeiro ano, o primeiro Natal e os meses do bebé.",
+    "capa": "quadro-primeiro-ano",
+    "capaCor": "branco",
+    "fundo": "lilas"
+  },
+  {
     "id": "cenarios",
     "nome": "Cenários completos",
     "frase": "Peças que já combinam, num só aluguer e com desconto.",

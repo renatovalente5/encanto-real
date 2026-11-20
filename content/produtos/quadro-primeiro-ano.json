@@ -1,0 +1,54 @@
+{
+  "ocasioes": [
+    "aniversario",
+    "batizado",
+    "baby-shower"
+  ],
+  "material": "MDF lacado, com gravação a laser",
+  "aluguer": null,
+  "selo": null,
+  "destaque": false,
+  "venda": {
+    "preco": 45,
+    "prazo": 7
+  },
+  "vista": {
+    "az": 22,
+    "el": 9
+  },
+  "id": "quadro-primeiro-ano",
+  "nome": "Quadro do Primeiro Ano",
+  "categoria": "personalizados",
+  "resumo": "Treze molduras para a fotografia do primeiro dia e de cada mês, com o nome do bebé em relevo.",
+  "modelo3d": {
+    "id": "quadro-primeiro-ano"
+  },
+  "personalizavel": {
+    "maxLetras": 12,
+    "exemplo": "Sofia"
+  },
+  "cores": [
+    "branco",
+    "rosa",
+    "azul",
+    "lilas",
+    "salvia",
+    "dourado"
+  ],
+  "cor": "branco",
+  "rotuloCor": "Cor do nome",
+  "medidas": {
+    "l": 42,
+    "a": 56,
+    "p": 13
+  },
+  "conteudo": [
+    "Quadro de 42 × 54 cm com 13 molduras",
+    "Pés de madeira",
+    "O nome em relevo e os meses gravados"
+  ],
+  "vistas": {
+    "escala": false
+  },
+  "fundo": "rosa"
+}

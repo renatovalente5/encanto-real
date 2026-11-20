@@ -17,6 +17,8 @@ export function itensDe(prod, cor = corDe(prod), { tamanho = null, digito = null
   const comb = prod.combinacoes?.find((c) => c.id === cor);
   const opcoesTam = (tamanho && prod.tamanhos?.find((t) => t.id === tamanho)?.opcoes3d) || {};
   const opcoes = { ...(prod.modelo3d.opcoes || {}), ...opcoesTam };
+  // peças com o nome gravado ou em relevo (quadro, enfeite, balão): o nome escrito, ou o do exemplo
+  if (prod.personalizavel) opcoes.nome = texto || prod.personalizavel.exemplo;
   if (comb) opcoes.cores = comb.cores;
   else if (prod.modelo3d.id === 'trio-cilindros') opcoes.cores = [cor, cor, cor];
   else opcoes.cor = cor;

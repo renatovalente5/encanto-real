@@ -109,7 +109,7 @@ function iniciar() {
     }
     form.querySelectorAll('[data-so-modo]').forEach((el) => { el.hidden = el.dataset.soModo !== e.modo; });
     const notaPreco = form.querySelector('[data-nota-preco]');
-    if (notaPreco && prod.personalizavel) {
+    if (notaPreco && prod.personalizavel && prod.venda?.porLetra) {
       const n = (e.texto || '').replace(/\s+/g, '').length;
       notaPreco.textContent = n ? `com ${n} ${n === 1 ? 'letra' : 'letras'}` : '';
     }
@@ -206,7 +206,7 @@ function iniciar() {
       if (disponiveis(prod, nova) <= 0) return;
     }
     if (prod.personalizavel && !est.texto) {
-      erro.textContent = 'Escreva o nome que quer em MDF.';
+      erro.textContent = prod.venda?.porLetra ? 'Escreva o nome que quer em MDF.' : 'Escreva o nome que quer na peça.';
       erro.hidden = false;
       form.querySelector('[data-texto]').focus();
       return;

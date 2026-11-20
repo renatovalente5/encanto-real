@@ -26,12 +26,15 @@ export async function lerProdutos() {
 export { itensDe, coresDe, corDe } from '../src/3d/itens.js';
 import { itensDe, coresDe, corDe } from '../src/3d/itens.js';
 
+// uma peça pode mudar uma vista («vistas»: { frente: { az, el, rotulo } }) ou tirá-la (escala: false, nas
+// peças pequenas, onde a pessoa de 1,70 m não ajuda)
 export const VISTAS = {
   principal: (p) => ({ ...p.vista }),
-  frente: (p) => ({ az: 0, el: 4, margem: p.vista?.margem ?? 0.1 }),
-  lado: (p) => ({ az: 58, el: 14, margem: p.vista?.margem ?? 0.1 }),
+  frente: (p) => ({ az: 0, el: 4, margem: p.vista?.margem ?? 0.1, ...(p.vistas?.frente || {}) }),
+  lado: (p) => ({ az: 58, el: 14, margem: p.vista?.margem ?? 0.1, ...(p.vistas?.lado || {}) }),
   escala: () => ({ az: 0, el: 2, margem: 0.08, fov: 18 }),
 };
+export const temVista = (p, v) => p.vistas?.[v] !== false;
 
 async function main() {
   const produtos = (await lerProdutos()).filter((p) => !so.length || so.includes(p.id));
@@ -44,7 +47,7 @@ async function main() {
     const trabalhos = [];
     const cores = soPrincipal ? [corDe(prod)] : coresDe(prod);
     for (const cor of cores) trabalhos.push(['principal', cor]);
-    if (!soPrincipal) for (const v of ['frente', 'lado', 'escala']) trabalhos.push([v, corDe(prod)]);
+    if (!soPrincipal) for (const v of ['frente', 'lado', 'escala']) if (temVista(prod, v)) trabalhos.push([v, corDe(prod)]);
     for (const [vista, cor] of trabalhos) {
       const spec = { itens: itensDe(prod, cor), vista: VISTAS[vista](prod), tamanho: vista === 'escala' ? [2000, 1600] : TAMANHO, escala: vista === 'escala' };
       const png = await fazer(spec);

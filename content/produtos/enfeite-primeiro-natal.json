@@ -1,0 +1,54 @@
+{
+  "ocasioes": [
+    "batizado",
+    "baby-shower"
+  ],
+  "material": "MDF lacado, com gravação a laser",
+  "aluguer": null,
+  "selo": null,
+  "destaque": false,
+  "venda": {
+    "preco": 9,
+    "prazo": 5
+  },
+  "vista": {
+    "az": 16,
+    "el": 6
+  },
+  "id": "enfeite-primeiro-natal",
+  "nome": "Enfeite do Primeiro Natal",
+  "categoria": "personalizados",
+  "resumo": "Árvore de MDF com o nome gravado e a estrela dourada com o ano. Para pendurar na árvore de Natal.",
+  "modelo3d": {
+    "id": "enfeite-primeiro-natal",
+    "opcoes": {
+      "ano": 2026
+    }
+  },
+  "personalizavel": {
+    "maxLetras": 12,
+    "exemplo": "Tomás"
+  },
+  "cores": [
+    "branco",
+    "marfim",
+    "rosa",
+    "azul",
+    "salvia"
+  ],
+  "cor": "branco",
+  "medidas": {
+    "l": 14,
+    "a": 17,
+    "p": 1
+  },
+  "conteudo": [
+    "Árvore com o nome gravado",
+    "Estrela dourada com o ano",
+    "Fio de juta para pendurar"
+  ],
+  "vistas": {
+    "escala": false
+  },
+  "fundo": "verde"
+}

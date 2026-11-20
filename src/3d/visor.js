@@ -28,7 +28,8 @@ export async function criarVisor(contentor, { itens, vista = { az: 24, el: 10, m
   controlos.enablePan = false;
   controlos.enableZoom = false;
   controlos.rotateSpeed = 0.7;
-  controlos.minPolarAngle = THREE.MathUtils.degToRad(55);
+  // até 35° acima do horizonte; as peças deitadas (o balão com as nuvens) deixam ver mais de cima (vista.elMax)
+  controlos.minPolarAngle = THREE.MathUtils.degToRad(90 - (vista.elMax ?? 35));
   controlos.maxPolarAngle = THREE.MathUtils.degToRad(88);
 
   let grupoPecas = new THREE.Group();

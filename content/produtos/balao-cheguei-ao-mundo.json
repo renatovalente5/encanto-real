@@ -1,0 +1,62 @@
+{
+  "ocasioes": [
+    "baby-shower",
+    "batizado",
+    "aniversario"
+  ],
+  "material": "MDF lacado, com gravação a laser",
+  "aluguer": null,
+  "selo": null,
+  "destaque": false,
+  "venda": {
+    "preco": 35,
+    "prazo": 7
+  },
+  "vista": {
+    "az": 0,
+    "el": 55,
+    "elMax": 72
+  },
+  "id": "balao-cheguei-ao-mundo",
+  "nome": "Balão Cheguei ao Mundo",
+  "categoria": "personalizados",
+  "resumo": "O balão com o nome e doze nuvens gravadas, do primeiro mês ao primeiro ano. Para a fotografia de cada mês.",
+  "modelo3d": {
+    "id": "balao-meses"
+  },
+  "personalizavel": {
+    "maxLetras": 12,
+    "exemplo": "Leonor"
+  },
+  "cores": [
+    "branco",
+    "azul",
+    "rosa",
+    "lilas",
+    "salvia"
+  ],
+  "cor": "branco",
+  "rotuloCor": "Cor do balão",
+  "medidas": {
+    "l": 21,
+    "a": 31,
+    "p": 1
+  },
+  "conteudo": [
+    "Balão de 21 × 31 cm com o nome",
+    "12 nuvens de 11 × 6 cm, do 1.º mês ao 1.º ano"
+  ],
+  "vistas": {
+    "frente": {
+      "az": 0,
+      "el": 88,
+      "rotulo": "De cima"
+    },
+    "lado": {
+      "az": 36,
+      "el": 30
+    },
+    "escala": false
+  },
+  "fundo": "salvia"
+}

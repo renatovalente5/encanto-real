@@ -379,11 +379,11 @@ function contornoBorboleta() {
   return lado;
 }
 
-export function borboleta({ largura = 0.9, espessura = 0.02, cor = 'branco' } = {}) {
-  const k = largura; // escala
+// a silhueta da borboleta (sem recortes), com a largura k; desvioY sobe ou desce o desenho
+function silhuetaBorboleta(k, desvioY = 0.4) {
   const lado = contornoBorboleta();
   const s = new THREE.Shape();
-  const P = (x, y) => [x * k, (y + 0.4) * k];
+  const P = (x, y) => [x * k, (y + desvioY) * k];
   // lado direito, de baixo para cima
   s.moveTo(...P(lado[0][1], lado[0][2]));
   for (const seg of lado.slice(1)) {
@@ -401,6 +401,12 @@ export function borboleta({ largura = 0.9, espessura = 0.02, cor = 'branco' } = 
     inv.push([-x2, y2, -x1, y1, -x0, y0]);
   }
   for (const [a, b, c, d, e, f] of inv) s.bezierCurveTo(...P(a, b), ...P(c, d), ...P(e, f));
+  return { forma: s, P };
+}
+
+export function borboleta({ largura = 0.9, espessura = 0.02, cor = 'branco' } = {}) {
+  const k = largura; // escala
+  const { forma: s, P } = silhuetaBorboleta(k);
 
   // recortes: círculos junto à orla e gotas que saem do corpo
   const furos = [];
@@ -516,8 +522,9 @@ export function lua({ altura = 0.8, espessura = 0.022, cor = 'dourado' } = {}) {
   return g;
 }
 
-export function estrela({ altura = 0.6, pontas = 5, espessura = 0.022, cor = 'dourado' } = {}) {
-  const R = altura / 2, r = R * 0.48;
+// estrela de pontas arredondadas, centrada em (0, 0), com o raio R das pontas
+function formaEstrela(R, pontas = 5, interior = 0.48) {
+  const r = R * interior;
   const pts = [];
   for (let i = 0; i < pontas * 2; i++) {
     const a = Math.PI / 2 + (i * Math.PI) / pontas;
@@ -536,6 +543,12 @@ export function estrela({ altura = 0.6, pontas = 5, espessura = 0.022, cor = 'do
     s.quadraticCurveTo(p[0], p[1], b[0], b[1]);
   }
   s.closePath();
+  return s;
+}
+
+export function estrela({ altura = 0.6, pontas = 5, espessura = 0.022, cor = 'dourado' } = {}) {
+  const R = altura / 2;
+  const s = formaEstrela(R, pontas);
   const g = grupo('estrela', { l: altura, a: altura + 0.05, p: 0.16 });
   const h0 = baseFigura(g, altura * 0.42, cor);
   const m = malha(extrudir(s, espessura, 0.003, 24), cor);
@@ -583,6 +596,369 @@ export function textoMdf({ fonte, texto = 'Sofia', altura = 0.32, espessura = 0.
   m.position.y = h0;
   g.add(m);
   g.userData.texto = texto;
+  return g;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Personalizados: peças pequenas cortadas e gravadas a laser (o quadro do primeiro ano, o enfeite do
+// primeiro Natal, o balão com as nuvens dos meses). Os textos vêm gravados (castanho) ou em relevo.
+// ---------------------------------------------------------------------------------------------
+// as letras de cada modelo: o cena.js carrega-as antes de montar a peça e passa-as em opcoes.fontes
+export const LETRAS = {
+  'quadro-primeiro-ano': { escrita: '/media/fontes-3d/Yellowtail-Regular.ttf', nome: '/media/fontes-3d/Pacifico-Regular.ttf' },
+  'enfeite-primeiro-natal': { escrita: '/media/fontes-3d/Yellowtail-Regular.ttf', numeros: '/media/fontes-3d/DMSerifDisplay-Regular.ttf' },
+  'balao-meses': { escrita: '/media/fontes-3d/Yellowtail-Regular.ttf' },
+};
+
+const foscos = new Map();
+function fosco(chave, hex, rugosidade = 0.9) {
+  if (!foscos.has(chave)) foscos.set(chave, new THREE.MeshStandardMaterial({ color: new THREE.Color(hex), roughness: rugosidade, metalness: 0 }));
+  return foscos.get(chave);
+}
+const matGravado = () => fosco('gravado', '#6A452C', 0.92); // a marca do laser no MDF
+const matGravadoEscuro = () => fosco('gravado-escuro', '#3A2618', 0.8); // no dourado
+const matQueimado = () => fosco('queimado', '#3F2B1F', 0.88); // a borda do MDF branco cortado a laser
+const matJuta = () => fosco('juta', '#B08D63', 1);
+
+// MDF cortado a laser: a face na cor; a borda queimada no MDF branco (ou marfim), pintada nas outras cores
+function recorte(formas, espessura, acab, { borda = acab === 'branco' || acab === 'marfim', colorivel = true, curvas = 24 } = {}) {
+  const geo = extrudir(formas, espessura, Math.min(0.0005, espessura * 0.15), curvas);
+  const m = new THREE.Mesh(geo, borda ? [material(acab), matQueimado()] : material(acab));
+  m.castShadow = true;
+  m.receiveShadow = true;
+  m.userData.colorivel = colorivel;
+  return m;
+}
+
+// texto gravado: à flor da face (0,15 mm acima), sem sombra própria; (x, y) é o centro da caixa das letras.
+// Se não couber em larguraMax, encolhe.
+function gravar(fonte, texto, { altura, x = 0, y = 0, z = 0, larguraMax = Infinity, mat = matGravado() } = {}) {
+  if (!fonte || !texto) return null;
+  const { formas, caixa } = formasDeTexto(fonte, texto, altura);
+  if (!formas.length) return null;
+  const k = Math.min(1, larguraMax / Math.max(1e-6, caixa.max.x - caixa.min.x));
+  const geo = new THREE.ShapeGeometry(formas, 8);
+  geo.translate(-(caixa.min.x + caixa.max.x) / 2, -(caixa.min.y + caixa.max.y) / 2, 0);
+  geo.scale(k, k, 1);
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, y, z + 0.00015);
+  m.receiveShadow = true;
+  return m;
+}
+
+// texto em relevo (letras de MDF coladas), centrado em (x, y), com a face de trás em z
+function relevo(fonte, texto, { altura, espessura = 0.003, acab, x = 0, y = 0, z = 0, larguraMax = Infinity }) {
+  if (!fonte || !texto) return null;
+  const { formas, caixa } = formasDeTexto(fonte, texto, altura);
+  if (!formas.length) return null;
+  const k = Math.min(1, larguraMax / Math.max(1e-6, caixa.max.x - caixa.min.x));
+  const m = recorte(formas, espessura, acab, { curvas: 14 });
+  m.geometry.translate(-(caixa.min.x + caixa.max.x) / 2, -(caixa.min.y + caixa.max.y) / 2, 0);
+  m.geometry.scale(k, k, 1);
+  m.position.set(x, y, z);
+  return m;
+}
+
+function retanguloRedondo(w, h, r, cx = 0, cy = 0, Classe = THREE.Shape) {
+  const s = new Classe();
+  const x0 = cx - w / 2, x1 = cx + w / 2, y0 = cy - h / 2, y1 = cy + h / 2;
+  s.moveTo(x0 + r, y0);
+  s.lineTo(x1 - r, y0);
+  s.absarc(x1 - r, y0 + r, r, -Math.PI / 2, 0, false);
+  s.lineTo(x1, y1 - r);
+  s.absarc(x1 - r, y1 - r, r, 0, Math.PI / 2, false);
+  s.lineTo(x0 + r, y1);
+  s.absarc(x0 + r, y1 - r, r, Math.PI / 2, Math.PI, false);
+  s.lineTo(x0, y0 + r);
+  s.absarc(x0 + r, y0 + r, r, Math.PI, Math.PI * 1.5, false);
+  return s;
+}
+
+function circulo(cx, cy, r) {
+  const p = new THREE.Path();
+  p.absarc(cx, cy, r, 0, Math.PI * 2, true);
+  return p;
+}
+
+// forma simétrica: o lado direito em segmentos ['Q', cx, cy, x, y] ou ['L', x, y], do topo (no eixo) até
+// voltar ao eixo; o lado esquerdo é o mesmo, espelhado
+function formaSimetrica(inicio, segs) {
+  const s = new THREE.Shape();
+  s.moveTo(inicio[0], inicio[1]);
+  const pts = [inicio];
+  for (const g of segs) {
+    if (g[0] === 'Q') s.quadraticCurveTo(g[1], g[2], g[3], g[4]); else s.lineTo(g[1], g[2]);
+    pts.push(g[0] === 'Q' ? [g[3], g[4]] : [g[1], g[2]]);
+  }
+  for (let i = segs.length - 1; i >= 0; i--) {
+    const g = segs[i];
+    const [px, py] = pts[i];
+    if (g[0] === 'Q') s.quadraticCurveTo(-g[1], g[2], -px, py); else s.lineTo(-px, py);
+  }
+  return s;
+}
+
+// nuvem de placa (as nuvens dos meses): bolhas em cima, base direita; centrada em (0, 0)
+function formaNuvemPlaca(largura) {
+  const C = [[-0.30, -0.06, 0.15], [-0.10, 0.06, 0.22], [0.15, 0.08, 0.21], [0.33, -0.07, 0.14]];
+  const topo = (x) => {
+    let y = -Infinity;
+    for (const [cx, cy, r] of C) { const dx = x - cx; if (Math.abs(dx) <= r) y = Math.max(y, cy + Math.sqrt(r * r - dx * dx)); }
+    return y;
+  };
+  const L = C[0], R = C[C.length - 1];
+  const pts = [];
+  for (let i = 0; i <= 12; i++) { const a = -Math.PI / 2 + (i / 12) * (Math.PI / 2); pts.push([R[0] + R[2] * Math.cos(a), R[1] + R[2] * Math.sin(a)]); }
+  const x1 = R[0] + R[2], x0 = L[0] - L[2], N = 140;
+  for (let i = 1; i < N; i++) { const x = x1 - (i / N) * (x1 - x0); pts.push([x, topo(x)]); }
+  for (let i = 0; i <= 12; i++) { const a = Math.PI + (i / 12) * (Math.PI / 2); pts.push([L[0] + L[2] * Math.cos(a), L[1] + L[2] * Math.sin(a)]); }
+  const k = largura / (x1 - x0);
+  const cx = (x0 + x1) / 2, cy = (-0.21 + 0.29) / 2;
+  const s = new THREE.Shape();
+  pts.forEach(([x, y], i) => (i ? s.lineTo((x - cx) * k, (y - cy) * k) : s.moveTo((x - cx) * k, (y - cy) * k)));
+  s.closePath();
+  return s;
+}
+
+// a árvore do enfeite: três andares e o tronco; base em y = 0, topo em y = 0.142, largura ≈ 0.14
+function formaArvore() {
+  return formaSimetrica([0, 0.142], [
+    ['Q', 0.016, 0.130, 0.036, 0.117],
+    ['Q', 0.042, 0.113, 0.033, 0.111],
+    ['L', 0.022, 0.114],
+    ['Q', 0.033, 0.100, 0.051, 0.085],
+    ['Q', 0.057, 0.080, 0.047, 0.078],
+    ['L', 0.031, 0.082],
+    ['Q', 0.045, 0.063, 0.066, 0.043],
+    ['Q', 0.073, 0.037, 0.062, 0.035],
+    ['Q', 0.030, 0.030, 0.009, 0.023],
+    ['L', 0.0095, 0.006],
+    ['Q', 0.010, 0.0, 0.015, 0.0],
+    ['L', 0, 0],
+  ]);
+}
+
+// o balão de ar quente (a camada de cor): o envelope, as cordas com três vãos e o cesto; base do cesto em y = 0
+const BALAO = { cy: 0.205, r: 0.105, pescoco: [0.0415, 0.073], c1: [0.05, 0.10], c2: [0.105, 0.14] };
+function formaBalao() {
+  const { cy, r, pescoco: [px, py], c1, c2 } = BALAO;
+  const s = new THREE.Shape();
+  s.moveTo(-0.021, 0);
+  s.lineTo(0.021, 0);
+  s.quadraticCurveTo(0.026, 0, 0.0265, 0.005);
+  s.lineTo(0.029, 0.030);
+  s.lineTo(0.034, 0.030);
+  s.quadraticCurveTo(0.036, 0.030, 0.036, 0.032);
+  s.lineTo(0.036, 0.036);
+  s.quadraticCurveTo(0.036, 0.038, 0.034, 0.038);
+  s.lineTo(0.031, 0.038);
+  s.lineTo(px, py);
+  s.bezierCurveTo(c1[0], c1[1], c2[0], c2[1], r, cy);
+  s.absarc(0, cy, r, 0, Math.PI, false);
+  s.bezierCurveTo(-c2[0], c2[1], -c1[0], c1[1], -px, py);
+  s.lineTo(-0.031, 0.038);
+  s.lineTo(-0.034, 0.038);
+  s.quadraticCurveTo(-0.036, 0.038, -0.036, 0.036);
+  s.lineTo(-0.036, 0.032);
+  s.quadraticCurveTo(-0.036, 0.030, -0.034, 0.030);
+  s.lineTo(-0.029, 0.030);
+  s.lineTo(-0.0265, 0.005);
+  s.quadraticCurveTo(-0.026, 0, -0.021, 0);
+  // os vãos entre as quatro cordas
+  const vao = (pontos) => { const p = new THREE.Path(); pontos.forEach(([x, y], i) => (i ? p.lineTo(x, y) : p.moveTo(x, y))); p.closePath(); return p; };
+  s.holes.push(
+    vao([[0.0125, 0.041], [0.0278, 0.041], [0.0366, 0.0695], [0.016, 0.0695]]),
+    vao([[-0.0085, 0.041], [0.0085, 0.041], [0.012, 0.0695], [-0.012, 0.0695]]),
+    vao([[-0.0278, 0.041], [-0.0125, 0.041], [-0.016, 0.0695], [-0.0366, 0.0695]]),
+  );
+  return s;
+}
+
+// a meia-largura do envelope do balão à altura y
+function larguraBalao(y) {
+  const { cy, r, pescoco: [px, py], c1, c2 } = BALAO;
+  if (y >= cy) return Math.sqrt(Math.max(0, r * r - (y - cy) * (y - cy)));
+  if (y <= py) return px;
+  // a curva de baixo (Bézier) sobe sempre: procurar o t da altura y
+  const B = (t, a, b, c, d) => (1 - t) ** 3 * a + 3 * (1 - t) ** 2 * t * b + 3 * (1 - t) * t * t * c + t ** 3 * d;
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (B(m, py, c1[1], c2[1], cy) < y) lo = m; else hi = m; }
+  return B((lo + hi) / 2, px, c1[0], c2[0], r);
+}
+
+// os três gomos brancos por cima do envelope (o do meio em lente, os de lado em crescente)
+function gomosBalao() {
+  const s = 0.86, yc = 0.2, yMin = 0.094, folga = 0.007;
+  const wi = (y) => s * larguraBalao(yc + (y - yc) / s);
+  const yMax = yc + (BALAO.cy + BALAO.r - yc) * s - 0.0005;
+  const N = 90;
+  const meio = [], dir = [];
+  for (let i = 0; i <= N; i++) {
+    const y = yMin + (i / N) * (yMax - yMin);
+    const w = wi(y);
+    meio.push([Math.max(0, 0.38 * w - folga), y]);
+    dir.push([0.38 * w + folga, w, y]);
+  }
+  const poligono = (pts) => { const p = new THREE.Shape(); pts.forEach(([x, y], i) => (i ? p.lineTo(x, y) : p.moveTo(x, y))); p.closePath(); return p; };
+  const centro = poligono([...meio.filter(([x]) => x > 0), ...meio.filter(([x]) => x > 0).reverse().map(([x, y]) => [-x, y])]);
+  const lado = dir.filter(([a, b]) => b - a > 0.001);
+  const direito = poligono([...lado.map(([, b, y]) => [b, y]), ...lado.slice().reverse().map(([a, , y]) => [a, y])]);
+  const esquerdo = poligono([...lado.map(([a, , y]) => [-a, y]), ...lado.slice().reverse().map(([, b, y]) => [-b, y])]);
+  return [centro, direito, esquerdo];
+}
+
+const MESES_ROTULOS = ['1 mês', '2 meses', '3 meses', '4 meses', '5 meses', '6 meses', '7 meses', '8 meses', '9 meses', '10 meses', '11 meses', '1 ano'];
+
+export function quadroPrimeiroAno({ cor = 'branco', nome = 'Sofia', fontes = {} } = {}) {
+  const L = 0.42, A = 0.54, E = 0.005, M = 0.003; // placa e molduras
+  const F = fontes;
+  const g = grupo('quadro-primeiro-ano', { l: L, a: 0.56, p: 0.13 });
+  const q = new THREE.Group();
+  const add = (o) => o && q.add(o);
+  q.add(recorte(retanguloRedondo(L, A, 0.02, 0, A / 2), E, 'branco', { borda: false, colorivel: false, curvas: 32 }));
+  const molduraEm = (cx, cy, w, h) => {
+    const s = retanguloRedondo(w, h, 0.007);
+    s.holes.push(retanguloRedondo(w - 0.018, h - 0.018, 0.003, 0, 0, THREE.Path));
+    const m = recorte(s, M, 'branco', { borda: false, colorivel: false, curvas: 10 });
+    m.position.set(cx, cy, E);
+    q.add(m);
+  };
+  const etiqueta = (texto, cx, cy) => add(gravar(F.escrita, texto, { altura: 0.0085, x: cx, y: cy, z: E, larguraMax: 0.078 }));
+  // os doze meses: 4 colunas × 3 filas
+  const colunas = [-0.1485, -0.0495, 0.0495, 0.1485];
+  const filas = [0.276, 0.150, 0.024];
+  const fw = 0.080, fh = 0.098;
+  MESES_ROTULOS.forEach((r, i) => {
+    const cx = colunas[i % 4], y0 = filas[Math.floor(i / 4)];
+    molduraEm(cx, y0 + fh / 2, fw, fh);
+    etiqueta(r, cx, y0 + fh + 0.0115);
+  });
+  // o primeiro dia, ao alto e à esquerda; o título e o nome à direita
+  molduraEm(-0.127, 0.4525, 0.122, 0.089);
+  etiqueta('O meu primeiro dia', -0.127, 0.509);
+  add(gravar(F.escrita, 'O meu primeiro ano', { altura: 0.0135, x: 0.072, y: 0.501, z: E, larguraMax: 0.2 }));
+  add(relevo(F.nome, nome, { altura: 0.03, espessura: 0.004, acab: cor, x: 0.072, y: 0.446, z: E, larguraMax: 0.21 }));
+  // borboletas na cor do nome, pousadas nos cantos de algumas molduras
+  const borb = (x, y, w, rot, z = E + M) => {
+    const { forma } = silhuetaBorboleta(w, -0.08);
+    const m = recorte(forma, 0.003, cor, { curvas: 10 });
+    m.position.set(x, y, z);
+    m.rotation.z = rot;
+    q.add(m);
+  };
+  borb(-0.186, 0.495, 0.026, 0.35);
+  borb(-0.1865, 0.372, 0.024, 0.3);
+  borb(0.1865, 0.372, 0.024, -0.3);
+  borb(0.0115, 0.246, 0.024, 0.25);
+  borb(-0.1105, 0.120, 0.024, -0.3);
+  borb(0.1115, 0.120, 0.024, 0.3);
+  borb(0.183, 0.497, 0.034, -0.25, E);
+  // o quadro inclina-se para trás e assenta nos dois pés de madeira
+  q.rotation.x = -0.14;
+  q.position.set(0, 0.016, -E / 2);
+  g.add(q);
+  const pe = new THREE.Shape();
+  pe.moveTo(-0.045, 0);
+  pe.lineTo(0.075, 0);
+  pe.lineTo(0.075, 0.010);
+  pe.quadraticCurveTo(0.03, 0.02, 0.012, 0.042);
+  pe.lineTo(-0.012, 0.042);
+  pe.quadraticCurveTo(-0.03, 0.02, -0.045, 0.010);
+  pe.lineTo(-0.045, 0);
+  const geoPe = extrudir(pe, 0.008, 0.001, 16);
+  geoPe.translate(0, 0, -0.004);
+  geoPe.rotateY(Math.PI / 2);
+  for (const sx of [-0.13, 0.13]) {
+    const m = malha(geoPe, 'madeira');
+    m.userData.colorivel = false;
+    m.position.x = sx;
+    g.add(m);
+  }
+  return g;
+}
+
+export function enfeitePrimeiroNatal({ cor = 'branco', nome = 'Tomás', ano = 2026, fontes = {} } = {}) {
+  const E = 0.004;
+  const F = fontes;
+  const g = grupo('enfeite-primeiro-natal', { l: 0.14, a: 0.26, p: 0.02 });
+  const e = new THREE.Group();
+  const add = (o) => o && e.add(o);
+  const arvore = recorte(formaArvore(), E, cor, { curvas: 20 });
+  arvore.position.z = -E / 2;
+  e.add(arvore);
+  const zf = E / 2;
+  add(gravar(F.escrita, 'O meu', { altura: 0.0085, x: 0, y: 0.121, z: zf }));
+  add(gravar(F.escrita, 'primeiro', { altura: 0.0085, x: 0, y: 0.1015, z: zf, larguraMax: 0.05 }));
+  add(gravar(F.escrita, 'Natal', { altura: 0.0095, x: 0, y: 0.084, z: zf }));
+  add(gravar(F.escrita, nome, { altura: 0.0135, x: 0, y: 0.055, z: zf, larguraMax: 0.08 }));
+  // três estrelinhas de MDF branco coladas por cima
+  for (const [x, y, r] of [[-0.026, 0.118, 0.35], [0.034, 0.083, -0.2], [-0.041, 0.043, 0.15]]) {
+    const st = recorte(formaEstrela(0.0062), 0.003, 'branco', { colorivel: false, curvas: 6 });
+    st.position.set(x, y, zf);
+    st.rotation.z = r;
+    e.add(st);
+  }
+  // a estrela dourada com o ano, e o furo do fio na ponta de cima
+  const yEst = 0.151, rEst = 0.022;
+  const fe = formaEstrela(rEst, 5, 0.5);
+  fe.holes.push(circulo(0, 0.0148, 0.0021));
+  const est = recorte(fe, E, 'dourado', { borda: false, colorivel: false, curvas: 8 });
+  est.position.set(0, yEst, zf);
+  e.add(est);
+  add(gravar(F.numeros, String(ano), { altura: 0.0052, x: 0, y: yEst - 0.0012, z: zf + E, larguraMax: 0.017, mat: matGravadoEscuro() }));
+  // o fio de juta, a passar pelo furo
+  const H = new THREE.Vector3(0, yEst + 0.0148, zf + E / 2);
+  const curva = new THREE.CatmullRomCurve3([
+    [0, 0, 0.0035], [-0.004, 0.006, 0.002], [-0.007, 0.03, 0], [0, 0.058, 0], [0.007, 0.03, 0], [0.004, 0.006, -0.002], [0, 0, -0.0035],
+  ].map(([x, y, z]) => new THREE.Vector3(x, y, z).add(H)), true);
+  const fio = new THREE.Mesh(new THREE.TubeGeometry(curva, 140, 0.0014, 8, true), matJuta());
+  fio.castShadow = true;
+  e.add(fio);
+  // pendurado: fica um pouco acima do chão
+  e.position.y = 0.03;
+  g.add(e);
+  return g;
+}
+
+export function balaoMeses({ cor = 'azul', nome = 'Leonor', fontes = {}, nuvens = true } = {}) {
+  const E = 0.003;
+  const F = fontes;
+  const g = grupo('balao-meses', { l: 0.6, a: 0.02, p: 0.5 });
+  // o balão, desenhado ao alto (y para cima, a face para +z) e depois deitado
+  const b = new THREE.Group();
+  const add = (o) => o && b.add(o);
+  b.add(recorte(formaBalao(), E, cor, { curvas: 48 }));
+  for (const gomo of gomosBalao()) {
+    const m = recorte(gomo, E, 'branco', { colorivel: false, curvas: 4 });
+    m.position.z = E;
+    b.add(m);
+  }
+  const placa = recorte(formaNuvemPlaca(0.15), E, 'branco', { colorivel: false, curvas: 4 });
+  placa.position.set(0, 0.19, 2 * E);
+  b.add(placa);
+  add(gravar(F.escrita, 'Cheguei ao mundo', { altura: 0.0085, x: 0, y: 0.1985, z: 3 * E, larguraMax: 0.11 }));
+  add(gravar(F.escrita, nome, { altura: 0.0125, x: 0, y: 0.1765, z: 3 * E, larguraMax: 0.11 }));
+  b.rotation.x = -Math.PI / 2;
+  b.position.z = 0.155;
+  g.add(b);
+  // as doze nuvens dos meses à volta do balão, como num relógio: o 1.º mês à uma hora, o 1.º ano ao meio-dia
+  if (nuvens) {
+    const rx = 0.232, rz = 0.218;
+    const viradas = [0.05, -0.04, 0.03, -0.06, 0.04, -0.02, 0.05, -0.03, 0.04, -0.05, 0.03, -0.02];
+    MESES_ROTULOS.forEach((r, i) => {
+      const ang = Math.PI / 2 - (i + 1) * (Math.PI / 6);
+      const n = new THREE.Group();
+      n.add(recorte(formaNuvemPlaca(0.11), E, 'branco', { colorivel: false, curvas: 4 }));
+      const t = gravar(F.escrita, r, { altura: 0.0105, x: 0, y: -0.004, z: E, larguraMax: 0.08 });
+      if (t) n.add(t);
+      n.rotation.z = viradas[i];
+      const deitada = new THREE.Group();
+      deitada.add(n);
+      deitada.rotation.x = -Math.PI / 2;
+      deitada.position.set(rx * Math.cos(ang), 0, -rz * Math.sin(ang));
+      g.add(deitada);
+    });
+  }
   return g;
 }
 
@@ -716,6 +1092,9 @@ export const MODELOS = {
   'lua': (o) => lua(o),
   'estrela': (o) => estrela(o),
   'baloes': (o) => baloes(o),
+  'quadro-primeiro-ano': (o) => quadroPrimeiroAno(o),
+  'enfeite-primeiro-natal': (o) => enfeitePrimeiroNatal(o),
+  'balao-meses': (o) => balaoMeses(o),
 };
 
 export function criar(id, opcoes = {}) {

@@ -238,7 +238,8 @@ dialog::backdrop { background: rgba(30, 34, 20, .42); backdrop-filter: blur(2px)
 @media (max-width: 699px) { .seccao__cabeca { margin-bottom: 18px; } .seccao__cabeca .ligacao-seta { font-size: 15px; } }
 
 .categorias .categoria { display: block; text-decoration: none; }
-.categorias { --por-fila: 4 !important; }
+.categorias { --por-fila: 5 !important; }
+@media (max-width: 1199px) { .categorias { --por-fila: 4 !important; } }
 .categoria__imagem { display: block; aspect-ratio: 1; border-radius: var(--raio); background: var(--fundo); overflow: hidden; }
 .categoria__imagem img { width: 100%; height: 100%; object-fit: contain; transition: scale .6s var(--suave); }
 .categoria:hover .categoria__imagem img { scale: 1.05; }

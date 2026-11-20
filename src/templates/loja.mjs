@@ -116,7 +116,7 @@ function opcoesHtml(ctx, prod) {
   if (cores.length > 1) {
     const atual = cores.find((c) => c.id === prod.cor) || cores[0];
     out.push(h`<fieldset class="opcao">
-      <legend>${prod.combinacoes ? 'Combinação' : 'Cor'}: <strong data-nome-cor>${atual.nome}</strong></legend>
+      <legend>${prod.combinacoes ? 'Combinação' : (prod.rotuloCor || 'Cor')}: <strong data-nome-cor>${atual.nome}</strong></legend>
       <div class="amostras">
         ${cores.map((c) => h`<label class="amostra-opcao" title="${c.nome}">
           <input type="radio" name="cor" value="${c.id}"${attrs({ checked: c.id === atual.id })} data-nome="${c.nome}">
@@ -144,7 +144,7 @@ function opcoesHtml(ctx, prod) {
   }
   if (prod.personalizavel) {
     out.push(h`<div class="opcao">
-      <label class="opcao__rotulo" for="texto-nome">O nome <span class="opcao__nota">(até ${prod.personalizavel.maxLetras} letras; ${prod.venda.letrasIncluidas} incluídas, depois ${euros(prod.venda.porLetra)} cada)</span></label>
+      <label class="opcao__rotulo" for="texto-nome">O nome <span class="opcao__nota">(até ${prod.personalizavel.maxLetras} letras${prod.venda.porLetra ? `; ${prod.venda.letrasIncluidas} incluídas, depois ${euros(prod.venda.porLetra)} cada` : ''})</span></label>
       <input class="campo" id="texto-nome" name="texto" type="text" maxlength="${prod.personalizavel.maxLetras}" value="${prod.personalizavel.exemplo}" autocomplete="off" autocapitalize="words" spellcheck="false" data-texto required>
       <p class="opcao__ajuda">Veja-o em 3D antes de encomendar. Um nome feito à medida não tem devolução.</p>
     </div>`);
@@ -164,7 +164,7 @@ function compraHtml(ctx, prod) {
     <label class="modo"><input type="radio" name="modo" value="aluguer" checked><span class="modo__nome">Alugar</span><span class="modo__preco"><strong data-preco="aluguer">${euros(pa)}</strong> <small>por evento</small></span></label>
     <label class="modo"><input type="radio" name="modo" value="compra"><span class="modo__nome">Comprar</span><span class="modo__preco"><strong data-preco="compra">${euros(pv)}</strong> <small>fica para si</small></span></label>
   </div>` : h`<input type="hidden" name="modo" value="${alugar ? 'aluguer' : 'compra'}">
-  <p class="compra__preco-unico"><strong data-preco="${alugar ? 'aluguer' : 'compra'}">${euros(alugar ? pa : pv)}</strong> <small data-nota-preco>${alugar ? 'por evento' : prod.personalizavel ? `com ${prod.personalizavel.exemplo.length} letras` : ''}</small></p>`}
+  <p class="compra__preco-unico"><strong data-preco="${alugar ? 'aluguer' : 'compra'}">${euros(alugar ? pa : pv)}</strong> <small data-nota-preco>${alugar ? 'por evento' : prod.personalizavel && prod.venda.porLetra ? `com ${prod.personalizavel.exemplo.length} letras` : ''}</small></p>`}
   ${opcoesHtml(ctx, prod)}
   ${alugar ? h`<div class="data-festa" data-so-modo="aluguer">
     <span class="opcao__rotulo" id="rot-data">Data da festa</span>
@@ -223,7 +223,9 @@ function paginaProduto(ctx, prod) {
   const { categorias, porId, produtos, site } = ctx.dados;
   const cat = categorias.find((c) => c.id === prod.categoria);
   const alugar = podeAlugar(prod);
-  const vistas = [['principal', prod.cor], ['frente', prod.cor], ['lado', prod.cor], ['escala', prod.cor]];
+  // as vistas da galeria; uma peça pode tirar uma («vistas»: { escala: false }) ou dar-lhe outro nome
+  const vistas = ['principal', 'frente', 'lado', 'escala'].filter((v) => prod.vistas?.[v] !== false).map((v) => [v, prod.cor]);
+  const rotuloVista = (v) => prod.vistas?.[v]?.rotulo || { principal: 'Vista principal', frente: 'De frente', lado: 'De lado', escala: 'Ao lado de uma pessoa de 1,70 m' }[v];
   const relacionados = (prod.categoria === 'cenarios'
     ? produtos.filter((p) => p.categoria === 'cenarios' && p.id !== prod.id)
     : [...produtos.filter((p) => p.categoria !== prod.categoria && p.categoria !== 'cenarios' && (p.ocasioes || []).some((o) => (prod.ocasioes || []).includes(o))), ...produtos.filter((p) => p.categoria === 'cenarios' && p.componentes?.some((c) => c.id === prod.id))]
@@ -248,7 +250,7 @@ function paginaProduto(ctx, prod) {
           <p class="galeria__dica" data-dica-3d hidden>${icone('girar')} Arraste para rodar</p>
         </div>
         <ul class="galeria__miniaturas" aria-label="Fotografias">
-          ${vistas.map(([v, c], i) => h`<li><button type="button" data-vista="${v}" aria-pressed="${i === 0 ? 'true' : 'false'}" aria-label="${{ principal: 'Vista principal', frente: 'De frente', lado: 'De lado', escala: 'Ao lado de uma pessoa de 1,70 m' }[v]}"><img src="${srcProduto(ctx, prod.id, v, c, 480)}" alt="" loading="lazy" width="480" height="${v === 'escala' ? 384 : 600}"></button></li>`)}
+          ${vistas.map(([v, c], i) => h`<li><button type="button" data-vista="${v}" aria-pressed="${i === 0 ? 'true' : 'false'}" aria-label="${rotuloVista(v)}"><img src="${srcProduto(ctx, prod.id, v, c, 480)}" alt="" loading="lazy" width="480" height="${v === 'escala' ? 384 : 600}"></button></li>`)}
           <li><button type="button" data-vista="3d" aria-pressed="false" aria-label="Ver em 3D" class="miniatura-3d">${icone('cubo')}<span>3D</span></button></li>
         </ul>
       </div>
@@ -306,7 +308,7 @@ function paginaProduto(ctx, prod) {
   const url = `${site.url}/loja/${prod.id}/`;
   return pagina(ctx, {
     titulo: `${prod.nome}${alugar ? ' para alugar' : ''}${podeComprar(prod) && alugar ? ' ou comprar' : ''}`,
-    descricao: `${prod.resumo} ${alugar ? `Aluguer desde ${euros(precoDesde(prod, 'aluguer'))} por evento` : ''}${podeComprar(prod) ? `${alugar ? '; compra' : 'Compra'} ${euros(precoDesde(prod, 'compra'))}` : ''}. Entrega e montagem no Norte.`,
+    descricao: `${prod.resumo} ${alugar ? `Aluguer desde ${euros(precoDesde(prod, 'aluguer'))} por evento` : ''}${podeComprar(prod) ? `${alugar ? '; compra' : 'Compra'} ${euros(precoDesde(prod, 'compra'))}` : ''}.${alugar ? ' Entrega e montagem no Norte.' : ''}`,
     caminho: `/loja/${prod.id}/`,
     corpo,
     atual: prod.categoria === 'cenarios' ? 'cenarios' : 'loja',

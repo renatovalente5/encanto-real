@@ -22,6 +22,7 @@ const categorias = [
   { id: 'arcos-e-paineis', nome: 'Arcos e painéis', frase: 'O fundo da festa: arcos em degrau, painéis romanos e redondos.', capa: 'arco-triplo-real', capaCor: 'branco', fundo: 'rosa' },
   { id: 'cilindros-e-mesas', nome: 'Cilindros e mesas', frase: 'Onde pousam o bolo, os doces e as flores.', capa: 'trio-cilindros', capaCor: 'branco', fundo: 'azul' },
   { id: 'figuras-e-letras', nome: 'Figuras e letras', frase: 'O nome, a idade e o tema, recortados em MDF.', capa: 'coroa-real', capaCor: 'branco', fundo: 'verde' },
+  { id: 'personalizados', nome: 'Personalizados', frase: 'O nome gravado em MDF: o primeiro ano, o primeiro Natal e os meses do bebé.', capa: 'quadro-primeiro-ano', capaCor: 'branco', fundo: 'lilas' },
   { id: 'cenarios', nome: 'Cenários completos', frase: 'Peças que já combinam, num só aluguer e com desconto.', capa: 'cenario-encanto', capaCor: 'base', fundo: 'salvia' },
 ];
 
@@ -221,6 +222,36 @@ const produtos = [
     medidas: { l: 270, a: 100, p: 6 }, aluguer: { preco: 45, caucao: 50, stock: 1 }, venda: { preco: 120, prazo: 14 },
     vista: { az: 24, el: 9 }, fundo: 'areia',
   }),
+  // ------------------------------------------------------------------ personalizados (20 nov 2026: os modelos que a
+  // mãe do Kelvin mandou; só venda, com o nome gravado ou em relevo; preços de exemplo)
+  p({
+    id: 'quadro-primeiro-ano', nome: 'Quadro do Primeiro Ano', categoria: 'personalizados',
+    resumo: 'Treze molduras para a fotografia do primeiro dia e de cada mês, com o nome do bebé em relevo.',
+    modelo3d: { id: 'quadro-primeiro-ano' }, personalizavel: { maxLetras: 12, exemplo: 'Sofia' },
+    cores: ['branco', 'rosa', 'azul', 'lilas', 'salvia', 'dourado'], cor: 'branco', rotuloCor: 'Cor do nome',
+    ocasioes: ['aniversario', 'batizado', 'baby-shower'], material: 'MDF lacado, com gravação a laser',
+    medidas: { l: 42, a: 56, p: 13 }, conteudo: ['Quadro de 42 × 54 cm com 13 molduras', 'Pés de madeira', 'O nome em relevo e os meses gravados'],
+    venda: { preco: 45, prazo: 7 }, vista: { az: 22, el: 9 }, vistas: { escala: false }, fundo: 'rosa',
+  }),
+  p({
+    id: 'enfeite-primeiro-natal', nome: 'Enfeite do Primeiro Natal', categoria: 'personalizados',
+    resumo: 'Árvore de MDF com o nome gravado e a estrela dourada com o ano. Para pendurar na árvore de Natal.',
+    modelo3d: { id: 'enfeite-primeiro-natal', opcoes: { ano: 2026 } }, personalizavel: { maxLetras: 12, exemplo: 'Tomás' },
+    cores: ['branco', 'marfim', 'rosa', 'azul', 'salvia'], cor: 'branco',
+    ocasioes: ['batizado', 'baby-shower'], material: 'MDF lacado, com gravação a laser',
+    medidas: { l: 14, a: 17, p: 1 }, conteudo: ['Árvore com o nome gravado', 'Estrela dourada com o ano', 'Fio de juta para pendurar'],
+    venda: { preco: 9, prazo: 5 }, vista: { az: 16, el: 6 }, vistas: { escala: false }, fundo: 'verde',
+  }),
+  p({
+    id: 'balao-cheguei-ao-mundo', nome: 'Balão Cheguei ao Mundo', categoria: 'personalizados',
+    resumo: 'O balão com o nome e doze nuvens gravadas, do primeiro mês ao primeiro ano. Para a fotografia de cada mês.',
+    modelo3d: { id: 'balao-meses' }, personalizavel: { maxLetras: 12, exemplo: 'Leonor' },
+    cores: ['branco', 'azul', 'rosa', 'lilas', 'salvia'], cor: 'branco', rotuloCor: 'Cor do balão',
+    ocasioes: ['baby-shower', 'batizado', 'aniversario'], material: 'MDF lacado, com gravação a laser',
+    medidas: { l: 21, a: 31, p: 1 }, conteudo: ['Balão de 21 × 31 cm com o nome', '12 nuvens de 11 × 6 cm, do 1.º mês ao 1.º ano'],
+    venda: { preco: 35, prazo: 7 }, vista: { az: 0, el: 55, elMax: 72 },
+    vistas: { frente: { az: 0, el: 88, rotulo: 'De cima' }, lado: { az: 36, el: 30 }, escala: false }, fundo: 'salvia',
+  }),
   // ------------------------------------------------------------------ cenários completos
   p({
     id: 'cenario-encanto', nome: 'Cenário Encanto', categoria: 'cenarios',
@@ -299,7 +330,10 @@ const FUNDOS_BRANCO = {
   'arco-triplo-real': 'rosa', 'painel-redondo': 'salvia', 'trio-paineis-romanos': 'lilas', 'arco-duplo': 'azul', 'arco-simples': 'rosa', 'arco-iris-boho': 'salvia', 'painel-romano': 'lilas',
   'trio-cilindros': 'rosa', 'cilindro-vazado': 'lilas', 'aparador-arco': 'azul', 'boleira': 'salvia', 'cilindro': 'rosa', 'mesa-ripas': 'verde',
   'coroa-real': 'verde', 'numero-gigante': 'rosa', 'borboleta-rendada': 'lilas', 'letras-love': 'verde', 'lua-e-estrela': 'azul', 'nome-personalizado': 'salvia', 'nuvem': 'rosa',
+  'quadro-primeiro-ano': 'rosa', 'enfeite-primeiro-natal': 'verde', 'balao-cheguei-ao-mundo': 'salvia',
 };
+// o balão arranca em azul, como o modelo que a cliente mandou (o branco fica em primeiro na lista)
+const ARRANQUE = { 'balao-cheguei-ao-mundo': 'azul' };
 for (const prod of produtos) {
   if (prod.categoria === 'cenarios') continue;
   if (prod.combinacoes) {
@@ -307,7 +341,7 @@ for (const prod of produtos) {
     prod.cor = 'branco';
   } else if (prod.cores) {
     prod.cores = ['branco', ...prod.cores.filter((c) => c !== 'branco')];
-    prod.cor = 'branco';
+    prod.cor = ARRANQUE[prod.id] || 'branco';
   }
   if (FUNDOS_BRANCO[prod.id]) prod.fundo = FUNDOS_BRANCO[prod.id];
 }
