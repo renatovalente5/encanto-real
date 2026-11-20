@@ -242,7 +242,7 @@ function paginaProduto(ctx, prod) {
   </nav>
   <div class="ficha__grelha">
     <div class="ficha__galeria">
-      <div class="galeria" style="--fundo:${raw(fundoDe(prod))}">
+      <div class="galeria${prod.fundo === 'verde' ? ' galeria--escura' : ''}" style="--fundo:${raw(fundoDe(prod))}">
         <div class="galeria__principal" data-galeria>
           ${imgProduto(ctx, prod, { prioridade: true, sizes: '(min-width: 1000px) 54vw, 100vw', classe: 'galeria__imagem' })}
           <div class="visor3d visor3d--ficha" data-visor hidden></div>
