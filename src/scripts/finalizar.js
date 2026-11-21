@@ -1,6 +1,6 @@
 // Finalizar: dados, entrega (zona pelo código postal), data da festa, sinal ou tudo, forma de pagamento.
 // Na pré-visualização não se cobra nada: o «Pagar» abre uma janela que o explica e simula o pagamento.
-import { guardado, guardar, BASE, catalogo, ouvir } from './estado.js';
+import { guardado, guardar, BASE, catalogo, ouvir, escreverTexto, escreverHtml } from './estado.js';
 import { calcular, euros, zonaDoCodigoPostal, validarCodigoPostal, dataLonga, dataCurta, janelaAluguer } from './regras.js';
 import { escolherData } from './calendario.js';
 import { itens, festa, totaisHtml } from './carrinho.js';
@@ -44,7 +44,7 @@ async function recalcular() {
   // o que aparece consoante o carrinho
   raiz.querySelectorAll('[data-so-aluguer]').forEach((el) => { el.hidden = !r.temAluguer; });
   raiz.querySelectorAll('[data-so-compra]').forEach((el) => { el.hidden = r.temAluguer; });
-  raiz.querySelector('[data-n-pagamento]').textContent = r.temAluguer ? '4' : '3';
+  escreverTexto(raiz.querySelector('[data-n-pagamento]'), r.temAluguer ? '4' : '3');
   raiz.querySelector('[data-opcoes-sinal]').hidden = !r.sinalPossivel;
   if (!r.sinalPossivel && escolhido('pagamento') === 'sinal') form.querySelector('input[name="pagamento"][value="total"]').checked = true;
   raiz.querySelector('[data-morada]').hidden = !['entrega', 'montagem'].includes(ent.escolha);
@@ -52,19 +52,19 @@ async function recalcular() {
   const zonaEl = raiz.querySelector('[data-zona]');
   const cp = valor('codigo-postal');
   if (['entrega', 'montagem'].includes(ent.escolha) && validarCodigoPostal(cp)) {
-    if (ent.fora) { zonaEl.className = 'zona zona--fora'; zonaEl.textContent = 'Esta morada fica fora das nossas zonas. Escolha levantar em Esposende, ou fale connosco para um orçamento.'; }
-    else { const z = cat.entregas.zonas.find((x) => x.id === ent.zona); zonaEl.className = 'zona'; zonaEl.textContent = `${z.nome} (${z.descricao}): ${r.envio === 0 ? 'entrega grátis' : euros(r.envio)}${ent.montagem ? ', com montagem' : ''}.`; }
-  } else zonaEl.textContent = '';
+    if (ent.fora) { zonaEl.className = 'zona zona--fora'; escreverTexto(zonaEl, 'Esta morada fica fora das nossas zonas. Escolha levantar em Esposende, ou fale connosco para um orçamento.'); }
+    else { const z = cat.entregas.zonas.find((x) => x.id === ent.zona); zonaEl.className = 'zona'; escreverTexto(zonaEl, `${z.nome} (${z.descricao}): ${r.envio === 0 ? 'entrega grátis' : euros(r.envio)}${ent.montagem ? ', com montagem' : ''}.`); }
+  } else escreverTexto(zonaEl, '');
   // data
   const f = festa();
   if (r.temAluguer) {
-    raiz.querySelector('[data-data-texto]').textContent = f ? dataLonga(f) : 'Escolher a data';
+    escreverTexto(raiz.querySelector('[data-data-texto]'), f ? dataLonga(f) : 'Escolher a data');
     const j = f ? janelaAluguer(f) : null;
-    raiz.querySelector('[data-janela]').textContent = j ? `${ent.escolha === 'levantamento' ? 'Levanta' : 'Entregamos'} ${dataCurta(j.levantar)} · ${ent.escolha === 'levantamento' ? 'devolve' : 'recolhemos'} ${dataCurta(j.devolver)}` : 'Levanta na véspera e devolve no dia a seguir';
+    escreverTexto(raiz.querySelector('[data-janela]'), j ? `${ent.escolha === 'levantamento' ? 'Levanta' : 'Entregamos'} ${dataCurta(j.levantar)} · ${ent.escolha === 'levantamento' ? 'devolve' : 'recolhemos'} ${dataCurta(j.devolver)}` : 'Levanta na véspera e devolve no dia a seguir');
   }
   // sinal
-  raiz.querySelector('[data-valor-total]').textContent = euros(r.total, { semCentimosRedondos: false });
-  raiz.querySelector('[data-valor-sinal]').textContent = euros(Math.round((r.subtotalAluguer - r.desconto) * 50) / 100, { semCentimosRedondos: false });
+  escreverTexto(raiz.querySelector('[data-valor-total]'), euros(r.total, { semCentimosRedondos: false }));
+  escreverTexto(raiz.querySelector('[data-valor-sinal]'), euros(Math.round((r.subtotalAluguer - r.desconto) * 50) / 100, { semCentimosRedondos: false }));
   // resumo
   const entregaTexto = ent.escolha === 'levantamento' ? 'Levantamento' : ent.escolha === 'transportadora' ? 'Envio' : ent.montagem ? 'Entrega e montagem' : 'Entrega e recolha';
   const linhasHtml = r.linhas.map((l) => {
@@ -74,11 +74,11 @@ async function recalcular() {
   }).join('');
   const cupaoHtml = `<form class="cupao cupao--compacto" data-cupao-finalizar><label for="cupao-f" class="so-leitor">Código de desconto</label><div class="cupao__campo"><input class="campo" id="cupao-f" placeholder="Código de desconto" autocomplete="off" autocapitalize="characters" value="${esc(guardado('cupao', '') || '')}"><button type="submit" class="botao botao--contorno">Aplicar</button></div>${r.erroCupao ? `<p class="cupao__erro" role="alert">${esc(r.erroCupao)}</p>` : r.cupao && r.motivoDesconto === 'cupao' ? `<p class="cupao__certo">${esc(r.cupao.descricao)}.</p>` : ''}</form>`;
   const agora = r.aPagarAgora < r.total ? `<p class="totais__agora">Agora: <strong>${euros(r.aPagarAgora, { semCentimosRedondos: false })}</strong> · a ${f ? dataCurta(new Date(new Date(f).getTime() - 7 * 864e5).toISOString().slice(0, 10)) : '7 dias da festa'}: ${euros(r.total - r.aPagarAgora, { semCentimosRedondos: false })}</p>` : '';
-  resumoEl.innerHTML = `<h2 class="finalizar__resumo-titulo">A sua encomenda</h2><ul class="mini-linhas">${linhasHtml}</ul>${cupaoHtml}${totaisHtml(r, { comEntrega: true, entregaTexto })}${agora}`;
-  raiz.querySelector('[data-resumo-linhas-movel]').innerHTML = `<ul class="mini-linhas">${linhasHtml}</ul>${totaisHtml(r, { comEntrega: true, entregaTexto })}`;
-  raiz.querySelector('[data-total-movel]').textContent = euros(r.total, { semCentimosRedondos: false });
-  raiz.querySelector('[data-total-botao]').innerHTML = `<span>Total</span><strong>${euros(r.total, { semCentimosRedondos: false })}</strong>${r.aPagarAgora < r.total ? `<small>Agora ${euros(r.aPagarAgora, { semCentimosRedondos: false })}</small>` : ''}`;
-  raiz.querySelector('[data-pagar]').textContent = `Pagar ${euros(r.aPagarAgora, { semCentimosRedondos: false })}`;
+  escreverHtml(resumoEl, `<h2 class="finalizar__resumo-titulo">A sua encomenda</h2><ul class="mini-linhas">${linhasHtml}</ul>${cupaoHtml}${totaisHtml(r, { comEntrega: true, entregaTexto })}${agora}`);
+  escreverHtml(raiz.querySelector('[data-resumo-linhas-movel]'), `<ul class="mini-linhas">${linhasHtml}</ul>${totaisHtml(r, { comEntrega: true, entregaTexto })}`);
+  escreverTexto(raiz.querySelector('[data-total-movel]'), euros(r.total, { semCentimosRedondos: false }));
+  escreverHtml(raiz.querySelector('[data-total-botao]'), `<span>Total</span><strong>${euros(r.total, { semCentimosRedondos: false })}</strong>${r.aPagarAgora < r.total ? `<small>Agora ${euros(r.aPagarAgora, { semCentimosRedondos: false })}</small>` : ''}`);
+  escreverTexto(raiz.querySelector('[data-pagar]'), `Pagar ${euros(r.aPagarAgora, { semCentimosRedondos: false })}`);
   // métodos
   const m = escolhido('metodo');
   raiz.querySelector('[data-metodo-mbway]').hidden = m !== 'mbway';

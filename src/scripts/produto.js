@@ -1,6 +1,6 @@
 // A ficha de uma peça: alugar ou comprar, cores, tamanhos, número, nome, data da festa (com a disponibilidade),
 // o 3D ao vivo, juntar ao carrinho, vistos há pouco e partilhar.
-import { guardado, guardar, BASE, catalogo, aviso, ouvir } from './estado.js';
+import { guardado, guardar, BASE, catalogo, aviso, ouvir, escreverTexto } from './estado.js';
 import { precoUnitario, euros, disponiveis, janelaAluguer, dataLonga, dataCurta, eDiaDeSemana, DESCONTO_SEMANA, iso, deIso, primeiraDataPossivel } from './regras.js';
 import { escolherData } from './calendario.js';
 import { juntar } from './carrinho.js';
@@ -105,19 +105,19 @@ function iniciar() {
     for (const m of ['aluguer', 'compra']) {
       const el = form.querySelector(`[data-preco="${m}"]`);
       const p = precoUnitario(prod, m, e);
-      if (el && p != null) el.textContent = euros(p);
+      if (el && p != null) escreverTexto(el, euros(p));
     }
     form.querySelectorAll('[data-so-modo]').forEach((el) => { el.hidden = el.dataset.soModo !== e.modo; });
     const notaPreco = form.querySelector('[data-nota-preco]');
     if (notaPreco && prod.personalizavel && prod.venda?.porLetra) {
       const n = (e.texto || '').replace(/\s+/g, '').length;
-      notaPreco.textContent = n ? `com ${n} ${n === 1 ? 'letra' : 'letras'}` : '';
+      escreverTexto(notaPreco, n ? `com ${n} ${n === 1 ? 'letra' : 'letras'}` : '');
     }
     // cor
     const corInput = form.querySelector('input[name="cor"]:checked');
-    if (corInput) form.querySelector('[data-nome-cor]').textContent = corInput.dataset.nome;
+    if (corInput) escreverTexto(form.querySelector('[data-nome-cor]'), corInput.dataset.nome);
     const dig = form.querySelector('[data-nome-digito]');
-    if (dig && e.digito != null) dig.textContent = e.digito;
+    if (dig && e.digito != null) escreverTexto(dig, e.digito);
     // data da festa e disponibilidade
     const btnData = form.querySelector('[data-data-texto]');
     const disp = form.querySelector('[data-disponibilidade]');
@@ -125,21 +125,21 @@ function iniciar() {
     if (btnData) {
       if (f) {
         const j = janelaAluguer(f);
-        btnData.textContent = dataLonga(f);
-        form.querySelector('[data-janela]').textContent = `Levanta ${dataCurta(j.levantar)} · devolve ${dataCurta(j.devolver)}`;
+        escreverTexto(btnData, dataLonga(f));
+        escreverTexto(form.querySelector('[data-janela]'), `Levanta ${dataCurta(j.levantar)} · devolve ${dataCurta(j.devolver)}`);
         const n = disponiveis(prod, f);
         if (n <= 0) {
           disp.className = 'disponibilidade disponibilidade--esgotado';
-          disp.textContent = 'Esgotado nesse dia. Escolha outra data ou veja um cenário parecido.';
+          escreverTexto(disp, 'Esgotado nesse dia. Escolha outra data ou veja um cenário parecido.');
           podeReservar = false;
         } else {
           disp.className = 'disponibilidade disponibilidade--livre';
-          disp.textContent = `Livre nesse dia${n === 1 ? ': é a última unidade' : ''}.${eDiaDeSemana(f) ? ` E com −${DESCONTO_SEMANA} % por ser dia de semana.` : ''}`;
+          escreverTexto(disp, `Livre nesse dia${n === 1 ? ': é a última unidade' : ''}.${eDiaDeSemana(f) ? ` E com −${DESCONTO_SEMANA} % por ser dia de semana.` : ''}`);
         }
       } else {
-        btnData.textContent = 'Escolher a data';
-        form.querySelector('[data-janela]').textContent = 'Levanta na véspera e devolve no dia a seguir';
-        disp.textContent = '';
+        escreverTexto(btnData, 'Escolher a data');
+        escreverTexto(form.querySelector('[data-janela]'), 'Levanta na véspera e devolve no dia a seguir');
+        escreverTexto(disp, '');
       }
     }
     const qtd = form.querySelector('[name="qtd"]');
@@ -151,20 +151,20 @@ function iniciar() {
     if (tempo) {
       if (f && prod.venda) {
         const pronta = diasUteisDepois(prod.venda.prazo);
-        tempo.textContent = pronta <= f ? `Fica pronta a tempo da festa de ${dataCurta(f)}.` : `Não chega a tempo da festa de ${dataCurta(f)}${prod.aluguer ? ': alugue-a para esse dia' : ''}.`;
+        escreverTexto(tempo, pronta <= f ? `Fica pronta a tempo da festa de ${dataCurta(f)}.` : `Não chega a tempo da festa de ${dataCurta(f)}${prod.aluguer ? ': alugue-a para esse dia' : ''}.`);
         tempo.className = pronta <= f ? 'a-tempo' : 'fora-de-tempo';
-      } else tempo.textContent = '';
+      } else escreverTexto(tempo, '');
     }
     // botão
     const unit = precoUnitario(prod, e.modo, e) || 0;
     const total = unit * e.qtd;
     const botao = form.querySelector('[data-botao-juntar]');
-    botao.textContent = e.modo === 'aluguer'
+    escreverTexto(botao, e.modo === 'aluguer'
       ? (f ? (podeReservar ? `Reservar para ${dataCurta(f)} · ${euros(total)}` : 'Esgotado nesse dia') : 'Escolher a data e reservar')
-      : `Juntar ao carrinho · ${euros(total)}`;
+      : `Juntar ao carrinho · ${euros(total)}`);
     botao.disabled = e.modo === 'aluguer' && f && !podeReservar;
     const bp = document.querySelector('[data-barra-preco]');
-    if (bp) bp.textContent = `${euros(unit)}${e.modo === 'aluguer' ? ' por evento' : ''}`;
+    if (bp) escreverTexto(bp, `${euros(unit)}${e.modo === 'aluguer' ? ' por evento' : ''}`);
   }
 
   form.addEventListener('change', (e) => {

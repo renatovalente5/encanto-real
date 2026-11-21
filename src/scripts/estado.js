@@ -21,6 +21,25 @@ export function guardar(chave, valor) {
 
 export function ouvir(f) { ouvintes.add(f); return () => ouvintes.delete(f); }
 
+// Escrever num elemento só quando o texto muda, e no nó de texto que já lá está. Sair de um campo dispara «change»;
+// se isso reescrever o botão em que se está a tocar («Juntar ao carrinho», «Pagar»), o Safari (também no iPhone)
+// perde o clique: o nó por baixo do dedo saiu da página entre o toque e o largar, e era preciso tocar outra vez.
+export function escreverTexto(el, texto) {
+  if (!el) return;
+  const t = String(texto ?? '');
+  if (el.textContent === t) return;
+  if (el.childNodes.length === 1 && el.firstChild.nodeType === Node.TEXT_NODE) el.firstChild.data = t;
+  else el.textContent = t;
+}
+
+// O mesmo para blocos em HTML: só se refazem quando mudam (o resto do tempo ficam os mesmos nós).
+const htmlEscrito = new WeakMap();
+export function escreverHtml(el, html) {
+  if (!el || htmlEscrito.get(el) === html) return;
+  htmlEscrito.set(el, html);
+  el.innerHTML = html;
+}
+
 // outra aba mudou alguma coisa
 addEventListener('storage', (e) => {
   if (!e.key?.startsWith(PREFIXO)) return;
