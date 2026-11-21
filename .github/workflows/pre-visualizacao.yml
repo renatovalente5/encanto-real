@@ -1,9 +1,10 @@
-# A PRÉ-VISUALIZAÇÃO da loja Encanto Real, no GitHub Pages: https://renatovalente5.github.io/encanto-real/
+# A loja Encanto Real em https://encantoreal.pt (GitHub Pages; o domínio está na Hostinger, com os A/AAAA do Pages e o
+# www em CNAME para renatovalente5.github.io). O endereço antigo renatovalente5.github.io/encanto-real/ reencaminha.
 #
-# Cada envio para a main constrói o site com --base=/encanto-real (noindex, sem pagamentos ligados: o «Pagar»
-# abre uma janela de pré-visualização; a conta fica só no browser; os dados legais por escrever aparecem como
-# «[por confirmar: …]»). As três propostas da página inicial ficam em /propostas/a/, /b/ e /c/.
-# Quando houver domínio (encantoreal.pt), pagamentos e backoffice, o site passa para a Cloudflare.
+# Ainda é a PRÉ-VISUALIZAÇÃO (content/site.json → "preVisualizacao": true): noindex e robots.txt fechado, sem
+# pagamentos ligados (o «Pagar» abre uma janela de pré-visualização), a conta fica só no browser e os dados legais por
+# escrever aparecem como «[por confirmar: …]». As três propostas da página inicial ficam em /propostas/a/, /b/ e /c/.
+# Quando houver pagamentos e backoffice, o site passa para a Cloudflare.
 name: Pré-visualização
 
 on:
@@ -32,14 +33,16 @@ jobs:
       - name: Instalar o three.js e o opentype.js
         run: npm ci --no-audit --no-fund
       - name: Construir a pré-visualização
-        run: node src/build.mjs --base=/encanto-real --site=https://renatovalente5.github.io
+        run: node src/build.mjs --site=https://encantoreal.pt
       - name: Conferir o que sai
         run: |
           set -euo pipefail
           test -f _site/index.html || { echo "FALTA _site/index.html"; exit 1; }
           test -f _site/404.html   || { echo "FALTA _site/404.html"; exit 1; }
           grep -q 'name="robots" content="noindex' _site/index.html || { echo "a pré-visualização tem de ser noindex"; exit 1; }
-          grep -q 'data-base="/encanto-real"' _site/index.html || { echo "falta a base /encanto-real"; exit 1; }
+          grep -q 'data-base=""' _site/index.html || { echo "no domínio a base tem de ser vazia"; exit 1; }
+          grep -q '<link rel="canonical" href="https://encantoreal.pt/">' _site/index.html || { echo "o canónico tem de ser https://encantoreal.pt/"; exit 1; }
+          if grep -rl 'renatovalente5.github.io' _site --include='*.html' --include='*.xml' --include='*.txt' | head -1 | grep -q .; then echo "ainda há páginas com o endereço antigo"; exit 1; fi
           for p in loja loja/arco-triplo-real finalizar conta/entrar monta propostas/b; do test -f "_site/$p/index.html" || { echo "FALTA $p"; exit 1; }; done
           echo "ok: $(find _site -type f | wc -l | tr -d ' ') ficheiros"
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5

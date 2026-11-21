@@ -1,7 +1,8 @@
 # Encanto Real — loja online (pré-visualização)
 
 Aluguer e venda de peças de festa em MDF (arcos, painéis, cilindros, mesas, figuras), de Esposende.
-Pré-visualização: https://renatovalente5.github.io/encanto-real/ (noindex; propostas da capa em `/propostas/a|b|c/`).
+No ar em https://encantoreal.pt, ainda como pré-visualização (noindex; propostas da capa em `/propostas/a|b|c/`).
+O endereço antigo, renatovalente5.github.io/encanto-real/, reencaminha para o domínio.
 
 ## Como se trabalha
 
@@ -10,7 +11,7 @@ npm ci                                   # three.js e opentype.js
 node scripts/renders.mjs                 # fotografias das peças a partir dos modelos 3D (.cache/renders)
 node scripts/renders-cenas.mjs           # cenas da capa (palco com balões)
 python3 scripts/imagens.py               # WebP em media/produtos e media/cenas
-node src/build.mjs                       # _site/ (local); --base=/encanto-real para o GitHub Pages
+node src/build.mjs                       # _site/ (o mesmo para local e para o ar)
 ```
 
 - **Conteúdo:** `content/` (uma peça por ficheiro em `content/produtos/`, categorias, ocasiões, cupões, entregas,
@@ -21,5 +22,5 @@ node src/build.mjs                       # _site/ (local); --base=/encanto-real 
 - **Legal:** `legal-comum/` (cópia da biblioteca comum, v1.1.2).
 
 ## Falta para abrir a loja a sério
-Domínio encantoreal.pt + Cloudflare (Worker com contas, encomendas e cupões no D1), pagamentos (ifthenpay/Stripe),
+Cloudflare (Worker com contas, encomendas e cupões no D1), pagamentos (ifthenpay/Stripe),
 backoffice, dados da empresa (nome, NIF, morada, email, WhatsApp) e fotografias verdadeiras das peças.

@@ -1,6 +1,6 @@
 // Gerador do site da Encanto Real: lê content/ e escreve _site/ (páginas estáticas + assets).
-//   node src/build.mjs                       local (base vazia)
-//   node src/build.mjs --base=/encanto-real  pré-visualização no GitHub Pages
+//   node src/build.mjs                       local e no ar (https://encantoreal.pt, base vazia)
+//   node src/build.mjs --base=/pasta         se um dia o site estiver numa subpasta
 import { mkdir, rm, writeFile, readFile, cp, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
@@ -15,7 +15,7 @@ const RAIZ = resolve(fileURLToPath(import.meta.url), '../..');
 const arg = (n, padrao) => (process.argv.find((a) => a.startsWith(`--${n}=`)) || '').split('=')[1] ?? padrao;
 const BASE = arg('base', '');
 const SAIDA = join(RAIZ, arg('saida', '_site'));
-const SITE_URL = arg('site', 'https://renatovalente5.github.io');
+const SITE_URL = arg('site', 'https://encantoreal.pt');
 
 async function escrever(caminho, conteudo) {
   const f = join(SAIDA, caminho);
