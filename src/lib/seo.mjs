@@ -156,10 +156,13 @@ export const ldMigalhas = (site, itens) => ({
 
 /* Uma peça. O Offer é o da COMPRA (o que o Google Shopping entende): o preço mais baixo que se pode pagar, o mesmo que
    a ficha mostra quando abre. O aluguer fica no título e na descrição; um segundo Offer com o preço do aluguer
-   apareceria no Google como o preço da peça. Imagens: as vistas que a ficha mostra (WebP, que o Google lê). */
+   apareceria no Google como o preço da peça. Imagens: as vistas que a ficha mostra (WebP, que o Google lê).
+   Uma peça só de aluguer (o que o painel cria por omissão) não tem Product: sem um preço de compra, o Google só via um
+   Product incompleto (um erro na Search Console) ou um preço que não se pode pagar. A ficha fica com as migalhas. */
 export function ldPeca(site, entregas, prod, cat, imagens) {
   const url = `${site.url}/loja/${prod.id}/`;
   const pv = precoDesde(prod, 'compra');
+  if (pv == null) return null;
   const envio = entregas?.envioCompra;
   const portes = typeof envio?.preco === 'number' && pv != null ? (typeof envio.gratisAcima === 'number' && pv >= envio.gratisAcima ? 0 : envio.preco) : null;
   return {

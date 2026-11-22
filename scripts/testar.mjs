@@ -8,14 +8,15 @@
 // - o noindex: todas na pré-visualização; com a loja aberta, só as que estão fora do mapa;
 // - a partilha: cada página aponta para uma imagem que existe, com as medidas certas; as peças, as categorias e os
 //   artigos com o JPEG 1200×630 deles;
-// - os dados estruturados das peças: o preço do Offer é o que a ficha mostra;
+// - os dados estruturados das peças: cada peça que se compra tem o Product, com o preço do Offer que a ficha mostra;
+//   as só de aluguer não o têm;
 // - robots.txt aberto e a chave do IndexNow publicada.
 import { readFile, readdir } from 'node:fs/promises';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { INDEXNOW } from '../src/lib/seo.mjs';
-import { euros } from '../src/scripts/regras.js';
+import { euros, precoDesde } from '../src/scripts/regras.js';
 
 const RAIZ = resolve(fileURLToPath(import.meta.url), '../..');
 const SITE = resolve(RAIZ, process.argv.slice(2).find((a) => !a.startsWith('--')) || '_site');
@@ -86,6 +87,7 @@ for (const c of DESTINO) if (!noMapa.has(c)) falha(`página de destino fora do m
 
 // ── cada página ─────────────────────────────────────────────────────────────
 const titulos = new Map(), descricoes = new Map();
+const comProduct = new Set();
 let n = 0;
 for await (const f of paginasHtml(SITE)) {
   n++;
@@ -141,6 +143,7 @@ for await (const f of paginasHtml(SITE)) {
   if (/^\/propostas\//.test(caminho) && nos.length) falha(`${caminho}: uma proposta não repete os dados do início`);
   const peca = nos.find((x) => x['@type'] === 'Product');
   if (peca) {
+    comProduct.add(caminho);
     const preco = peca.offers?.price;
     if (preco == null) falha(`${caminho}: peça sem preço no Offer`);
     else if (!s.includes(euros(+preco))) falha(`${caminho}: o Offer diz ${preco} €, que a ficha não mostra (${euros(+preco)})`);
@@ -148,6 +151,12 @@ for await (const f of paginasHtml(SITE)) {
     for (const i of peca.image || []) if (!existsSync(join(SITE, i.replace(URL0, '')))) falha(`${caminho}: imagem do JSON-LD não existe: ${i}`);
     if (!tipos.includes('BreadcrumbList')) falha(`${caminho}: peça sem migalhas`);
   }
+}
+// as peças: as que se compram têm o Product; as só de aluguer não (o Google veria um preço que não se paga)
+const catalogo = JSON.parse(await readFile(join(SITE, 'assets/catalogo.json'), 'utf8'));
+for (const p of catalogo.produtos) {
+  const compra = precoDesde(p, 'compra') != null;
+  if (compra !== comProduct.has(`/loja/${p.id}/`)) falha(`/loja/${p.id}/: ${compra ? 'peça que se compra sem o Product' : 'peça só de aluguer com Product'}`);
 }
 for (const [t, cs] of titulos) if (cs.length > 1) falha(`título repetido «${t}»: ${cs.join(' ')}`);
 for (const [d, cs] of descricoes) if (cs.length > 1) falha(`descrição repetida «${d.slice(0, 50)}…»: ${cs.join(' ')}`);

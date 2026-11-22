@@ -556,4 +556,7 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .texto .contactos__lista h2 { margin: 0 0 2px; font-size: 18px; }
 .contactos__lista p { color: var(--tinta-2); }
 .contactos__empresa { margin-top: 22px; font-size: 14px; color: var(--tinta-2); }
+.contactos__lista li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 @media (max-width: 599px) { .contactos__lista { grid-template-columns: minmax(0, 1fr); } }
+/* a nota do custo da chamada junto do número (DL 59/2021), mais pequena do que ele */
+.nota-chamada { font-size: .82em; font-weight: 400; color: var(--tinta-2); }

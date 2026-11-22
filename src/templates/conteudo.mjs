@@ -5,7 +5,12 @@ import { icone } from './icones.mjs';
 import { u, pagina, cartao, imgProduto, imgCena, fundoDe, ogDaFotografia } from './base.mjs';
 import { grafo, ldArtigo, ldMigalhas, dataGit } from '../lib/seo.mjs';
 import { euros, DESCONTO_SEMANA } from '../scripts/regras.js';
-import { ralHtml, livroReclamacoes, destinatariosHtml, DIREITOS, CNPD_URL, LIVRE_RESOLUCAO, SEM_LIVRE_RESOLUCAO_PERSONALIZADO, GARANTIA_BENS } from '../../legal-comum/index.mjs';
+import { ralHtml, livroReclamacoes, destinatariosHtml, DIREITOS, CNPD_URL, LIVRE_RESOLUCAO, SEM_LIVRE_RESOLUCAO_PERSONALIZADO, GARANTIA_BENS, telefoneHtml, tipoDeLinha } from '../../legal-comum/index.mjs';
+
+/* O telefone da loja (Loja › Contactos no painel), com a nota do custo da chamada logo a seguir (DL 59/2021). Só um
+   número português que se sabe de que rede é (2…, 9…, 800…): sem a nota, não se mostra. */
+const telefoneDaLoja = (site) => (site.telefone && tipoDeLinha(site.telefone) !== 'desconhecido'
+  ? raw(telefoneHtml(site.telefone, { comIndicativo: false, frase: 'com-a' })) : null);
 
 const PC = (t) => h`<span class="por-confirmar">[por confirmar: ${t}]</span>`;
 const DATA = (s) => new Date(s + 'T12:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -185,9 +190,11 @@ function paginaSobre(ctx) {
 function paginaContactos(ctx) {
   const { site } = ctx.dados;
   const e = site.empresa;
+  const telefone = telefoneDaLoja(site);
   const corpo = h`<div class="contactos">
     <ul class="contactos__lista">
       <li>${icone('whatsapp', 'icone icone--circulo-claro')}<div><h2>WhatsApp</h2><p>${site.whatsapp ? h`<a href="https://wa.me/${site.whatsapp}">Enviar uma mensagem</a>` : PC('número')}</p></div></li>
+      ${telefone ? h`<li>${icone('telefone', 'icone icone--circulo-claro')}<div><h2>Telefone</h2><p>${telefone}</p></div></li>` : ''}
       <li>${icone('email', 'icone icone--circulo-claro')}<div><h2>Email</h2><p>${site.email ? h`<a href="mailto:${site.email}">${site.email}</a>` : PC('email')}</p></div></li>
       <li>${icone('instagram', 'icone icone--circulo-claro')}<div><h2>Instagram</h2><p>${site.instagram ? h`<a href="${site.instagram}" rel="noopener">${site.instagram.replace(/^https?:\/\/(www\.)?/, '')}</a>` : PC('conta')}</p></div></li>
       <li>${icone('pin', 'icone icone--circulo-claro')}<div><h2>Oficina</h2><p>${site.localidade}, com hora marcada. ${e.morada ? e.morada : PC('morada')}</p></div></li>
@@ -207,7 +214,7 @@ function paginaTermos(ctx) {
   const a = entregas.aluguer;
   const corpo = h`<p class="atualizado">Atualizado a 18 de novembro de 2026.</p>
   <h2>1. Quem vende e aluga</h2>
-  <p>${e.nome || PC('nome ou firma')}, NIF ${e.nif || PC('NIF')}, com sede em ${e.morada || PC('morada')}, ${e.localidade}. Email: ${site.email || PC('email')}.</p>
+  <p>${e.nome || PC('nome ou firma')}, NIF ${e.nif || PC('NIF')}, com sede em ${e.morada || PC('morada')}, ${e.localidade}. Email: ${site.email || PC('email')}.${telefoneDaLoja(site) ? h` Telefone: ${telefoneDaLoja(site)}.` : ''}</p>
   <h2>2. Preços e pagamento</h2>
   <p>Os preços incluem IVA à taxa legal. A entrega, a montagem e a caução mostram-se à parte antes de pagar. Aceitamos MB WAY, cartão e referência Multibanco. Nos alugueres pode pagar ${a.sinal} % ao reservar e o resto ${a.restoDiasAntes} dias antes da festa; se o resto não for pago, a reserva pode ser cancelada.</p>
   <h2>3. Como se faz a encomenda</h2>

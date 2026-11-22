@@ -4,7 +4,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { poupancaCenario } from '../scripts/regras.js';
+import { poupancaCenario, euros } from '../scripts/regras.js';
 import { FICHEIROS, PASTAS, validar, neutralizar, bloqueios, temTresD, noSite, fotosDe, ordemDe, corPrincipal } from './regras.mjs';
 
 const lerJson = async (f) => JSON.parse(await readFile(f, 'utf8'));
@@ -60,7 +60,12 @@ export async function carregar(raiz, { aberta = false, avisar = () => {} } = {})
   const produtos = todos.filter((p) => p._noSite);
   const ordemCat = Object.fromEntries(categorias.map((c, i) => [c.id, i]));
   produtos.sort((a, b) => (ordemCat[a.categoria] - ordemCat[b.categoria]) || (ordemDe(a) - ordemDe(b)) || (Number(!!b.destaque) - Number(!!a.destaque)) || a.nome.localeCompare(b.nome, 'pt'));
-  for (const p of produtos) if (p.categoria === 'cenarios') p.poupanca = poupancaCenario(p, porId);
+  for (const p of produtos) {
+    if (p.categoria !== 'cenarios') continue;
+    p.poupanca = poupancaCenario(p, porId);
+    // o selo «Poupa …» faz a conta com os preços de hoje: nunca diz outra poupança que a da ficha (sai sem poupança)
+    if (/^\s*poupa\b/i.test(p.selo || '')) p.selo = p.poupanca > 0 ? `Poupa ${euros(p.poupanca)}` : null;
+  }
   return { produtos, porId, categorias, ocasioes, cupoes, entregas, site, artigos, fotos, problemas };
 }
 

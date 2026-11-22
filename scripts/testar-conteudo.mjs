@@ -6,9 +6,15 @@
 // - uma fotografia que já não existe não aparece, e a peça fica;
 // - uma peça com 3D e uma fotografia: a fotografia entra na galeria a seguir às vistas do estúdio;
 // - a ordem (o arrastar do painel) muda a posição na categoria;
+// - uma peça só de aluguer (o que o painel cria por omissão) publica-se: sem Product nos dados estruturados, e as
+//   medidas sem a profundidade escrevem-se «L × A cm»;
+// - o selo «Poupa …» de um cenário faz a conta (um selo escrito com outra poupança não passa para o site);
+// - o telefone da loja aparece nos Contactos e nos Termos, com a nota do custo da chamada;
 // - um conteúdo que bloqueia (uma categoria sem nome) pára o build.
+// As peças do site em que as provas se apoiam publicam-se na cópia, seja qual for o «Publicado no site» de hoje.
 // Com PLAYWRIGHT=<pasta do playwright>, abre a ficha da peça nova no Chromium e no WebKit e junta-a ao carrinho.
 import { cp, mkdir, readFile, writeFile, symlink, rm, readdir } from 'node:fs/promises';
+import { euros } from '../src/scripts/regras.js';
 import { existsSync } from 'node:fs';
 import { join, resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,7 +39,7 @@ const gravarJ = (f, v) => writeFile(join(T, f), JSON.stringify(v, null, 2) + '\n
 await mkdir(join(T, 'media/fotos'), { recursive: true });
 execFileSync(PYTHON, ['-c', `
 from PIL import Image, ImageDraw
-for nome, cor, (w, h) in (('mesa-teste-1', (214, 190, 160), (1600, 1200)), ('mesa-teste-2', (190, 210, 200), (1200, 1600)), ('arco-na-festa', (240, 220, 215), (1500, 1000))):
+for nome, cor, (w, h) in (('mesa-teste-1', (214, 190, 160), (1600, 1200)), ('mesa-teste-2', (190, 210, 200), (1200, 1600)), ('arco-na-festa', (240, 220, 215), (1500, 1000)), ('arco-de-aluguer-1', (230, 214, 225), (1200, 1500))):
     im = Image.new('RGB', (w, h), cor); d = ImageDraw.Draw(im); d.ellipse((w*0.3, h*0.3, w*0.7, h*0.7), fill=(90, 100, 70))
     im.save('${join(T, 'media/fotos')}/' + nome + '.jpg', 'JPEG', quality=85)
 `]);
@@ -42,25 +48,41 @@ Object.assign(fotos, {
   'mesa-teste-1': { alt: 'Mesa de teste, de frente', foco: '50% 40%' },
   'mesa-teste-2': { alt: 'Mesa de teste, de lado', foco: '50% 50%' },
   'arco-na-festa': { alt: 'O arco triplo numa festa', foco: '50% 50%' },
+  'arco-de-aluguer-1': { alt: 'Arco de aluguer, de frente', foco: '50% 45%' },
 });
 await gravarJ('content/fotos.json', fotos);
 
-// a peça nova, só com fotografias
+// a peça nova, só com fotografias, à frente da categoria (a dona pode ter posto outra no lugar 0 ou 1 à mão)
+for (const f of await readdir(join(T, 'content/produtos'))) {
+  const p = await lerJ(`content/produtos/${f}`);
+  if (p.categoria === 'cilindros-e-mesas' && typeof p.ordem === 'number' && p.ordem < 1) await gravarJ(`content/produtos/${f}`, { ...p, ordem: 1 });
+}
 await gravarJ('content/produtos/mesa-teste.json', {
   nome: 'Mesa de Teste', resumo: 'Uma mesa só com fotografias, criada no painel.', categoria: 'cilindros-e-mesas',
   ocasioes: ['aniversario'], material: 'MDF', medidas: { l: 80, a: 75, p: 40 },
   aluguer: { preco: 25, caucao: 20, stock: 2 }, venda: { preco: 120, prazo: 10 },
-  fundo: 'areia', fotos: ['mesa-teste-1', 'mesa-teste-2'], ordem: 1,
+  fundo: 'areia', fotos: ['mesa-teste-1', 'mesa-teste-2'], ordem: 0,
 });
+// uma peça nova só de aluguer, com as medidas sem a profundidade
+await gravarJ('content/produtos/arco-de-aluguer.json', {
+  nome: 'Arco de Aluguer', resumo: 'Um arco que só se aluga, criado no painel com uma fotografia.', categoria: 'arcos-e-paineis',
+  ocasioes: ['batizado'], material: 'MDF lacado', medidas: { l: 120, a: 200 },
+  aluguer: { preco: 33, caucao: 30, stock: 1 }, fundo: 'rosa', fotos: ['arco-de-aluguer-1'],
+});
+// as peças em que as provas se apoiam publicam-se na cópia
+const publicar = async (id, mais = {}) => gravarJ(`content/produtos/${id}.json`, { ...(await lerJ(`content/produtos/${id}.json`)), publicado: true, ...mais });
 // uma peça escondida que um cenário usa
 const mesa = await lerJ('content/produtos/mesa-ripas.json');
 await gravarJ('content/produtos/mesa-ripas.json', { ...mesa, publicado: false });
+await publicar('cenario-encanto');
 // uma fotografia que já não existe, numa peça com 3D
-const arcoSimples = await lerJ('content/produtos/arco-simples.json');
-await gravarJ('content/produtos/arco-simples.json', { ...arcoSimples, fotos: ['nao-existe'] });
+await publicar('arco-simples', { fotos: ['nao-existe'] });
 // uma peça com 3D e uma fotografia verdadeira
-const arco = await lerJ('content/produtos/arco-triplo-real.json');
-await gravarJ('content/produtos/arco-triplo-real.json', { ...arco, fotos: ['arco-na-festa'] });
+await publicar('arco-triplo-real', { fotos: ['arco-na-festa'] });
+// um cenário com um selo «Poupa …» que já não bate com os preços
+await publicar('cenario-jardim', { selo: 'Poupa 99 €' });
+// o telefone da loja
+await gravarJ('content/site.json', { ...(await lerJ('content/site.json')), telefone: '253 000 000' });
 
 const correr = (cmd, args) => spawnSync(cmd, args, { cwd: T, encoding: 'utf8' });
 let r = correr(PYTHON, ['scripts/fotos.py']);
@@ -87,6 +109,27 @@ prova(existsSync(S('assets/fotos/miniatura-mesa-teste-1.webp')) && existsSync(S(
 // a ordem: a peça nova (ordem 1) é a primeira da categoria
 const ids = [...(await ler('loja/cilindros-e-mesas/index.html')).matchAll(/data-produto="([^"]+)"/g)].map((m) => m[1]);
 prova(ids[0] === 'mesa-teste', `a ordem do painel manda (primeira: ${ids[0]})`);
+
+// a peça só de aluguer
+const aluga = await ler('loja/arco-de-aluguer/index.html');
+prova(aluga.includes('<h1 class="ficha__titulo">Arco de Aluguer</h1>'), 'a peça só de aluguer tem página');
+const ldAluga = [...aluga.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].flatMap((m) => { const j = JSON.parse(m[1]); return j['@graph'] || [j]; });
+prova(!ldAluga.some((n) => n['@type'] === 'Product') && ldAluga.some((n) => n['@type'] === 'BreadcrumbList'), 'a peça só de aluguer não tem Product (só as migalhas)');
+prova(aluga.includes('120 × 200 cm (largura × altura)') && !aluga.includes('undefined'), 'as medidas sem a profundidade');
+const pAluga = cat.produtos.find((p) => p.id === 'arco-de-aluguer');
+prova(pAluga && !pAluga.venda && /\/evento$/.test(pAluga.precoTexto), `a peça só de aluguer está no catálogo com o preço por evento (${pAluga?.precoTexto})`);
+
+// o selo «Poupa …» de um cenário
+const jardim = cat.produtos.find((p) => p.id === 'cenario-jardim');
+const seloCerto = jardim ? `Poupa ${euros(jardim.poupanca)}` : '?';
+prova(jardim?.poupanca > 0 && jardim.selo === seloCerto, `o selo do cenário faz a conta (${jardim?.selo}; a poupança é ${seloCerto})`);
+prova((await ler('loja/cenario-jardim/index.html')).includes(seloCerto) && !(await ler('loja/cenario-jardim/index.html')).includes('Poupa 99'), 'a ficha do cenário mostra a poupança verdadeira');
+prova(!(await ler('loja/cenarios/index.html')).includes('Poupa 99'), 'e o cartão do cenário também');
+
+// o telefone da loja
+const contactos = await ler('contactos/index.html');
+prova(contactos.includes('href="tel:+351253000000"') && contactos.includes('(Chamada para a rede fixa nacional)'), 'o telefone nos Contactos, com a nota da chamada');
+prova((await ler('termos/index.html')).includes('href="tel:+351253000000"'), 'e nos Termos');
 
 // a peça escondida
 prova(!existsSync(S('loja/mesa-ripas/index.html')), 'a peça escondida não tem página');

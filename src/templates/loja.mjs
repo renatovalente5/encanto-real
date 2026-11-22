@@ -196,7 +196,7 @@ function compraHtml(ctx, prod) {
 function detalhesHtml(ctx, prod) {
   const m = prod.medidas;
   const linhas = [
-    m && ['Medidas', `${m.l} × ${m.a} × ${m.p} cm (largura × altura × profundidade)`],
+    m && ['Medidas', m.p ? `${m.l} × ${m.a} × ${m.p} cm (largura × altura × profundidade)` : `${m.l} × ${m.a} cm (largura × altura)`],
     prod.conteudo && ['Inclui', prod.conteudo.join(' · ')],
     ['Material', prod.material],
     prod.transporte && ['Transporte', prod.transporte],
