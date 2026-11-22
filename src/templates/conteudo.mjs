@@ -1,7 +1,9 @@
-// Inspiração (o blog), ajuda, sobre, contactos, páginas legais, 404, sitemap e robots.
+// Inspiração (o blog), ajuda, sobre, contactos, páginas legais e 404. O mapa do site e o robots.txt fazem-se no fim do
+// build (src/build.mjs), com as páginas que ficaram no Google.
 import { h, raw } from '../lib/html.mjs';
 import { icone } from './icones.mjs';
-import { u, pagina, cartao, imgProduto, imgCena, fundoDe } from './base.mjs';
+import { u, pagina, cartao, imgProduto, imgCena, fundoDe, ogDaFotografia } from './base.mjs';
+import { grafo, ldArtigo, ldMigalhas, dataGit } from '../lib/seo.mjs';
 import { euros, DESCONTO_SEMANA } from '../scripts/regras.js';
 import { ralHtml, livroReclamacoes, destinatariosHtml, DIREITOS, CNPD_URL, LIVRE_RESOLUCAO, SEM_LIVRE_RESOLUCAO_PERSONALIZADO, GARANTIA_BENS } from '../../legal-comum/index.mjs';
 
@@ -38,7 +40,7 @@ function paginaInspiracao(ctx) {
     </article>`)}
   </div>
 </div>`;
-  return pagina(ctx, { titulo: 'Inspiração para festas', descricao: 'Ideias, medidas e paletas para decorar festas com arcos, painéis e cilindros.', caminho: '/inspiracao/', corpo, atual: 'inspiracao', classe: 'pagina-inspiracao' });
+  return pagina(ctx, { titulo: 'Inspiração para festas', descricao: 'Ideias para decorar festas com arcos, painéis e cilindros em MDF: como escolher o arco, paletas que ficam bem nas fotografias e quando alugar ou comprar.', caminho: '/inspiracao/', corpo, atual: 'inspiracao', classe: 'pagina-inspiracao' });
 }
 
 function paginaArtigo(ctx, a) {
@@ -61,10 +63,19 @@ function paginaArtigo(ctx, a) {
   <div class="artigo__capa" style="--fundo:${raw(a.capa.cena ? 'var(--azulejo-champanhe)' : fundoDe(porId[a.capa.produto]))}">${a.capa.cena ? imgCena(ctx, a.capa.cena, 'largo', { sizes: '(min-width: 900px) 900px, 100vw', prioridade: true, alt: '' }) : capaArtigo(ctx, a, { sizes: '(min-width: 900px) 420px, 100vw', prioridade: true })}</div>
   <div class="texto texto--artigo">${blocos}</div>
 </article>`;
+  // partilha e imagem do artigo: a capa dele (uma peça numa cor, no fundo da peça); uma capa de cena usa o cartão geral
+  const capa = a.capa.produto && porId[a.capa.produto];
+  const og = capa ? ogDaFotografia(ctx, { produto: capa.id, cor: a.capa.cor || capa.cor, fundo: capa.fundo, alt: a.titulo })
+    : a.capa.cena ? ogDaFotografia(ctx, { cena: a.capa.cena, alt: a.titulo }) : null;
+  const imagem = og?.imagem || `${site.url}/media/marca/encanto-real-decoracao-de-festas-partilha.jpg`;
+  const modificado = dataGit(ctx.raiz, [`content/inspiracao/${a.id}.json`]);
   return pagina(ctx, {
     titulo: a.titulo, descricao: a.resumo, caminho: `/inspiracao/${a.id}/`, corpo, atual: 'inspiracao', classe: 'pagina-artigo',
-    og: { tipo: 'article' },
-    esquema: { '@context': 'https://schema.org', '@type': 'Article', headline: a.titulo, description: a.resumo, datePublished: a.data, author: { '@type': 'Organization', name: 'Encanto Real' }, publisher: { '@type': 'Organization', name: 'Encanto Real', logo: { '@type': 'ImageObject', url: `${site.url}/media/marca/icone-512.png` } } },
+    og: { ...(og || {}), tipo: 'article' },
+    esquema: grafo(
+      ldArtigo(site, a, imagem, modificado && modificado.slice(0, 10) > a.data ? modificado : null),
+      ldMigalhas(site, [['Início', '/'], ['Inspiração', '/inspiracao/'], [a.titulo, `/inspiracao/${a.id}/`]]),
+    ),
   });
 }
 
@@ -92,7 +103,10 @@ function paginaComoAlugar(ctx) {
     <div><dt>Comprar depois</dt><dd>Se gostar e comprar a mesma peça até 30 dias depois da festa, descontamos o que pagou pelo aluguer.</dd></div>
   </dl>
   <p class="nota-pre">${icone('info')}Regras propostas para a pré-visualização: a Encanto Real confirma os valores antes de abrir a loja.</p>`;
-  return paginaTexto(ctx, { caminho: '/ajuda/como-alugar/', titulo: 'Como funciona o aluguer', frase: 'Cinco passos, e as regras em linguagem simples.', corpo, classe: 'pagina-ajuda' });
+  return paginaTexto(ctx, {
+    caminho: '/ajuda/como-alugar/', titulo: 'Como funciona o aluguer', frase: 'Cinco passos, e as regras em linguagem simples.', corpo, classe: 'pagina-ajuda',
+    descricao: 'Como alugar decoração de festas na Encanto Real: escolha as peças e a data, pague no site e receba tudo montado. Caução, prazos e cancelamentos.',
+  });
 }
 
 function paginaEntregas(ctx) {
@@ -112,7 +126,8 @@ function paginaEntregas(ctx) {
     <li>${icone('pin')}<span><strong>Fora destas zonas:</strong> fale connosco e fazemos um orçamento.</span></li>
   </ul>
   <p class="nota-pre">${icone('info')}Zonas e preços de exemplo, a confirmar pela Encanto Real.</p>`;
-  return paginaTexto(ctx, { caminho: '/ajuda/entregas/', titulo: 'Entregas e montagem', frase: 'Levamos na véspera e vamos buscar no dia a seguir. Em Esposende, pode levantar.', corpo, classe: 'pagina-ajuda' });
+  // é a política de envios: fica no site e no rodapé, mas fora do Google (como os termos)
+  return paginaTexto(ctx, { caminho: '/ajuda/entregas/', titulo: 'Entregas e montagem', frase: 'Levamos na véspera e vamos buscar no dia a seguir. Em Esposende, pode levantar.', corpo, indexar: false, classe: 'pagina-ajuda' });
 }
 
 const PERGUNTAS = [
@@ -164,7 +179,7 @@ function paginaSobre(ctx) {
   </div>
   <p class="nota-pre">${icone('info')}Falta a história da Encanto Real e uma fotografia de quem faz as peças: entram quando nos enviarem.</p>
 </div>`;
-  return pagina(ctx, { titulo: 'A Encanto Real', descricao: `Peças de festa em MDF feitas em ${site.localidade}, para alugar ou comprar.`, caminho: '/sobre/', corpo, classe: 'pagina-sobre' });
+  return pagina(ctx, { titulo: 'A Encanto Real', descricao: `A Encanto Real desenha e faz em ${site.localidade} arcos, painéis, cilindros e figuras em MDF para festas, para alugar no dia da festa ou comprar.`, caminho: '/sobre/', corpo, classe: 'pagina-sobre' });
 }
 
 function paginaContactos(ctx) {
@@ -179,7 +194,10 @@ function paginaContactos(ctx) {
     </ul>
     <p class="contactos__empresa">${e.nome || PC('nome da empresa')} · NIF ${e.nif || PC('NIF')} · ${e.morada || PC('morada')}, ${e.codigoPostal || '[código postal]'} ${e.localidade || ''}</p>
   </div>`;
-  return paginaTexto(ctx, { caminho: '/contactos/', titulo: 'Contactos', frase: 'Respondemos no próprio dia, de segunda a sábado.', corpo, classe: 'pagina-contactos' });
+  return paginaTexto(ctx, {
+    caminho: '/contactos/', titulo: 'Contactos', frase: 'Respondemos no próprio dia, de segunda a sábado.', corpo, classe: 'pagina-contactos',
+    descricao: `Fale com a Encanto Real, em ${site.localidade}: datas livres, orçamentos de aluguer e de compra, entregas e montagem de decoração de festas no Norte.`,
+  });
 }
 
 // ------------------------------------------------------------------------------------------- legais
@@ -242,11 +260,6 @@ function pagina404(ctx) {
   return pagina(ctx, { titulo: 'Página não encontrada', caminho: '/404.html', corpo, indexar: false, classe: 'pagina-404' });
 }
 
-function sitemap(ctx, caminhos) {
-  const base = ctx.dados.site.url;
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${caminhos.map((c) => `  <url><loc>${base}${c}</loc></url>`).join('\n')}\n</urlset>\n`;
-}
-
 export function gerarConteudo(ctx) {
   const { artigos, produtos, categorias } = ctx.dados;
   const out = [
@@ -262,9 +275,5 @@ export function gerarConteudo(ctx) {
     ['/privacidade/', paginaPrivacidade(ctx)],
     ['404.html', pagina404(ctx)],
   ];
-  // sitemap e robots só com as páginas de destino (as legais ficam fora: noindex)
-  const caminhos = ['/', '/loja/', ...categorias.map((c) => `/loja/${c.id}/`), ...produtos.map((p) => `/loja/${p.id}/`), '/monta/', '/inspiracao/', ...artigos.map((a) => `/inspiracao/${a.id}/`), '/ajuda/como-alugar/', '/ajuda/entregas/', '/ajuda/perguntas/', '/sobre/', '/contactos/'];
-  out.push(['sitemap.xml', sitemap(ctx, caminhos)]);
-  out.push(['robots.txt', ctx.preVisualizacao ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${ctx.dados.site.url}/sitemap.xml\n`]);
   return out;
 }

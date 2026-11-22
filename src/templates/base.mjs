@@ -3,6 +3,9 @@ import { h, raw, attrs, json, esc } from '../lib/html.mjs';
 import { sprite, icone } from './icones.mjs';
 import { euros, precoDesde, podeAlugar, podeComprar } from '../scripts/regras.js';
 import { ACABAMENTOS } from '../3d/acabamentos.js';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import { partilhaFicheiro } from '../lib/seo.mjs';
 
 export const u = (ctx, caminho) => `${ctx.base}${caminho}`;
 export const ano = () => new Date().getFullYear();
@@ -45,6 +48,15 @@ export function imgCena(ctx, nome, formato, { sizes = '100vw', prioridade = fals
 // ------------------------------------------------------------------------------------------- cartão
 const FUNDOS = { rosa: 'var(--azulejo-rosa)', salvia: 'var(--azulejo-salvia)', lilas: 'var(--azulejo-lilas)', azul: 'var(--azulejo-azul)', champanhe: 'var(--azulejo-champanhe)', areia: 'var(--azulejo-areia)', verde: 'var(--azulejo-verde)' };
 export const fundoDe = (prod) => FUNDOS[prod.fundo] || FUNDOS.areia;
+
+// A imagem de partilha de uma página com fotografia (a peça, a capa da categoria, a capa do artigo): o JPEG 1200×630
+// feito pelo scripts/partilha.py; enquanto não existir, a fotografia WebP 1200×1500 (o testar.mjs avisa).
+export function ogDaFotografia(ctx, { produto, cor, fundo, cena, alt }) {
+  const jpg = partilhaFicheiro({ produto, cor, fundo, cena });
+  if (existsSync(join(ctx.raiz, jpg))) return { imagem: `${ctx.siteUrl}${ctx.base}${jpg}`, largura: 1200, altura: 630, alt };
+  if (cena) return { imagem: `${ctx.siteUrl}${ctx.base}/media/cenas/${cena}-largo-1600.webp`, largura: 1600, altura: 900, alt };
+  return { imagem: `${ctx.siteUrl}${ctx.base}/media/produtos/${produto}/principal-${cor}-1200.webp`, largura: 1200, altura: 1500, alt };
+}
 
 export function linhaInfo(prod) {
   if (prod.categoria === 'cenarios') return `${prod.componentes?.length || 0} peças a condizer`;
@@ -211,7 +223,10 @@ export function pagina(ctx, { titulo, descricao, caminho, corpo, atual, classe =
   const tituloCompleto = caminho === '/' ? titulo : `${titulo} | Encanto Real`;
   const url = `${ctx.siteUrl}${ctx.base}${caminho}`;
   const ogImg = og?.imagem || `${ctx.siteUrl}${ctx.base}/media/marca/encanto-real-decoracao-de-festas-partilha.jpg`;
-  const noindex = ctx.preVisualizacao || !indexar;
+  // Fora do Google: tudo na pré-visualização; com a loja aberta, as legais e as de utilidade (noindex, mas as ligações
+  // contam). As do Google deixam mostrar a imagem grande nos resultados.
+  const robots = ctx.preVisualizacao ? 'noindex, nofollow' : indexar ? 'max-image-preview:large' : 'noindex, follow';
+  ctx.paginas?.set(caminho, { indexar }); // para o mapa do site (as que ficam no Google com a loja aberta)
   return `<!doctype html>
 <html lang="pt-PT" data-base="${esc(ctx.base)}" data-v="${ctx.versao}">
 <head>
@@ -220,7 +235,7 @@ export function pagina(ctx, { titulo, descricao, caminho, corpo, atual, classe =
 <style>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>
 <title>${esc(tituloCompleto)}</title>
 <meta name="description" content="${esc(descricao || site.descricao)}">
-${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
+<meta name="robots" content="${robots}">
 <link rel="canonical" href="${esc(url)}">
 <meta property="og:type" content="${og?.tipo || 'website'}">
 <meta property="og:site_name" content="Encanto Real">
@@ -231,6 +246,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : ''}
 <meta property="og:image" content="${esc(ogImg)}">
 <meta property="og:image:width" content="${og?.largura || 1200}">
 <meta property="og:image:height" content="${og?.altura || 630}">
+<meta property="og:image:alt" content="${esc(og?.alt || 'Encanto Real, decoração de festas')}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#54603C">
 <link rel="icon" href="${u(ctx, '/media/marca/favicon.svg')}" type="image/svg+xml">

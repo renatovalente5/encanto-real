@@ -1,7 +1,7 @@
 # A loja Encanto Real em https://encantoreal.pt (GitHub Pages; o domínio está na Hostinger, com os A/AAAA do Pages e o
 # www em CNAME para renatovalente5.github.io). O endereço antigo renatovalente5.github.io/encanto-real/ reencaminha.
 #
-# Ainda é a PRÉ-VISUALIZAÇÃO (content/site.json → "preVisualizacao": true): noindex e robots.txt fechado, sem
+# Ainda é a PRÉ-VISUALIZAÇÃO (content/site.json → "preVisualizacao": true): noindex em todas as páginas, sem
 # pagamentos ligados (o «Pagar» abre uma janela de pré-visualização), a conta fica só no browser e os dados legais por
 # escrever aparecem como «[por confirmar: …]». As três propostas da página inicial ficam em /propostas/a/, /b/ e /c/.
 # Quando houver pagamentos e backoffice, o site passa para a Cloudflare.
@@ -27,6 +27,8 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
+          # o histórico todo: as datas do mapa do site saem do git (numa clonagem rasa saíam todas iguais)
+          fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
@@ -45,6 +47,12 @@ jobs:
           if grep -rl 'renatovalente5.github.io' _site --include='*.html' --include='*.xml' --include='*.txt' | head -1 | grep -q .; then echo "ainda há páginas com o endereço antigo"; exit 1; fi
           for p in loja loja/arco-triplo-real finalizar conta/entrar monta propostas/b; do test -f "_site/$p/index.html" || { echo "FALTA $p"; exit 1; }; done
           echo "ok: $(find _site -type f | wc -l | tr -d ' ') ficheiros"
+      - name: Provar o SEO (pré-visualização e loja aberta)
+        run: |
+          set -euo pipefail
+          node scripts/testar.mjs _site
+          node src/build.mjs --site=https://encantoreal.pt --ensaio-aberta --saida=.cache/aberta
+          node scripts/testar.mjs .cache/aberta --aberta
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
         with:

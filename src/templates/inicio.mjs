@@ -1,4 +1,5 @@
 // A página inicial. Três capas (as propostas A «Montra», B «Veludo», C «Palco»); o resto é comum.
+import { grafo, ldSite, ldLoja } from '../lib/seo.mjs';
 import { h, raw, attrs } from '../lib/html.mjs';
 import { icone } from './icones.mjs';
 import { u, cartao, imgProduto, imgCena, fundoDe, pagina } from './base.mjs';
@@ -215,7 +216,8 @@ function ocasioes(ctx) {
 </section>`;
 }
 
-export function paginaInicio(ctx, variante = 'a') {
+// `proposta`: as três propostas da capa ficam em /propostas/a|b|c/, fora do Google (repetem o início).
+export function paginaInicio(ctx, variante = 'a', { proposta = false } = {}) {
   const { produtos } = ctx.dados;
   const maisAlugados = produtos.filter((p) => p.destaque && p.categoria !== 'cenarios');
   const cenarios = produtos.filter((p) => p.categoria === 'cenarios');
@@ -226,20 +228,15 @@ ${categorias(ctx)}
 ${montaTeu(ctx)}
 ${fila(ctx, { id: 't-cenarios', titulo: 'Cenários completos', frase: 'Peças que já combinam, num só aluguer e mais em conta.', mais: ['Todos os cenários', '/loja/cenarios/'], produtos: cenarios })}
 ${ocasioes(ctx)}`;
-  const { site } = ctx.dados;
+  const { site, entregas } = ctx.dados;
   return pagina(ctx, {
-    titulo: 'Encanto Real — Aluguer e venda de decoração de festas no Norte',
+    titulo: 'Encanto Real — Decoração de festas: aluguer e venda no Norte',
     descricao: site.descricao,
-    caminho: '/',
+    caminho: proposta ? `/propostas/${variante}/` : '/',
+    indexar: !proposta,
     corpo,
     classe: `inicio inicio--${variante}`,
     scripts: variante === 'b' ? ['capa-3d.js'] : [],
-    esquema: {
-      '@context': 'https://schema.org',
-      '@graph': [
-        { '@type': 'WebSite', name: 'Encanto Real', alternateName: 'EncantoReal', url: `${site.url}/` },
-        { '@type': 'Store', name: 'Encanto Real', description: site.descricao, url: `${site.url}/`, logo: `${site.url}/media/marca/icone-512.png`, image: `${site.url}/media/marca/encanto-real-decoracao-de-festas-partilha.jpg`, address: { '@type': 'PostalAddress', addressLocality: site.localidade, addressCountry: 'PT' }, areaServed: 'Norte de Portugal' },
-      ],
-    },
+    esquema: proposta ? null : grafo(ldSite(site), ldLoja(site, entregas)),
   });
 }

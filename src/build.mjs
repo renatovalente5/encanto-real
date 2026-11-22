@@ -1,6 +1,8 @@
 // Gerador do site da Encanto Real: lê content/ e escreve _site/ (páginas estáticas + assets).
 //   node src/build.mjs                       local e no ar (https://encantoreal.pt, base vazia)
 //   node src/build.mjs --base=/pasta         se um dia o site estiver numa subpasta
+//   node src/build.mjs --ensaio-aberta --saida=.cache/aberta   como se a loja estivesse aberta, só para as provas
+//                                            (scripts/testar.mjs --aberta); não passa pela guarda dos dados legais
 import { mkdir, rm, writeFile, readFile, cp, readdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
@@ -10,14 +12,23 @@ import { paginaInicio } from './templates/inicio.mjs';
 import { PAGINAS } from './templates/paginas.mjs';
 import { ACABAMENTOS } from './3d/acabamentos.js';
 import { entradaCatalogo } from './lib/catalogo.mjs';
+import { INDEXNOW, dataGit, historicoRaso, fontesDaPagina, mapaDoSite } from './lib/seo.mjs';
 
 const RAIZ = resolve(fileURLToPath(import.meta.url), '../..');
 const arg = (n, padrao) => (process.argv.find((a) => a.startsWith(`--${n}=`)) || '').split('=')[1] ?? padrao;
 const BASE = arg('base', '');
 const SAIDA = join(RAIZ, arg('saida', '_site'));
 const SITE_URL = arg('site', 'https://encantoreal.pt');
+const ENSAIO_ABERTA = process.argv.includes('--ensaio-aberta');
+const avisosAbrir = new Set();
 
 async function escrever(caminho, conteudo) {
+  // com a loja aberta não pode ficar nada por confirmar nem as notas da pré-visualização (DL 7/2004, art. 10.º: quem
+  // vende identifica-se; e um preço ou uma regra «de exemplo» não se anuncia)
+  if (typeof conteudo === 'string' && caminho.endsWith('.html')) {
+    if (conteudo.includes('[por confirmar')) avisosAbrir.add(`«[por confirmar]» em ${caminho}`);
+    if (conteudo.includes('class="nota-pre"')) avisosAbrir.add(`nota da pré-visualização em ${caminho}`);
+  }
   const f = join(SAIDA, caminho);
   await mkdir(dirname(f), { recursive: true });
   await writeFile(f, conteudo);
@@ -45,7 +56,7 @@ async function copiarAssets(ctx) {
   }
   await cp(join(RAIZ, 'node_modules/opentype.js/dist/opentype.module.js'), join(SAIDA, 'assets/3d/opentype.module.js'));
   // media
-  for (const d of ['marca', 'fontes', 'fontes-3d', 'produtos', 'cenas']) await cp(join(RAIZ, 'media', d), join(SAIDA, 'media', d), { recursive: true });
+  for (const d of ['marca', 'fontes', 'fontes-3d', 'produtos', 'cenas', 'partilha']) await cp(join(RAIZ, 'media', d), join(SAIDA, 'media', d), { recursive: true });
 }
 
 function catalogoJson(ctx) {
@@ -64,7 +75,9 @@ async function main() {
   const t0 = Date.now();
   const dados = await carregar(RAIZ);
   const versao = Date.now().toString(36);
-  const ctx = { base: BASE, siteUrl: SITE_URL, dados, versao, preVisualizacao: dados.site.preVisualizacao !== false };
+  const ctx = { base: BASE, siteUrl: SITE_URL, raiz: RAIZ, dados, versao, preVisualizacao: !ENSAIO_ABERTA && dados.site.preVisualizacao !== false, paginas: new Map() };
+  // as datas do mapa vêm do git: no CI o histórico tem de vir todo (fetch-depth: 0), senão saem todas iguais
+  if (process.env.GITHUB_ACTIONS && historicoRaso(RAIZ)) throw new Error('clonagem rasa: o mapa do site precisa do histórico todo (fetch-depth: 0 no actions/checkout)');
   await rm(SAIDA, { recursive: true, force: true });
   await mkdir(SAIDA, { recursive: true });
   await copiarAssets(ctx);
@@ -73,7 +86,7 @@ async function main() {
   // página inicial (a variante escolhida) e as três propostas
   const variante = dados.site.variante || 'a';
   await escrever('index.html', paginaInicio(ctx, variante));
-  for (const v of ['a', 'b', 'c']) await escrever(`propostas/${v}/index.html`, paginaInicio(ctx, v));
+  for (const v of ['a', 'b', 'c']) await escrever(`propostas/${v}/index.html`, paginaInicio(ctx, v, { proposta: true }));
 
   // as outras páginas
   let n = 4;
@@ -83,7 +96,21 @@ async function main() {
       n++;
     }
   }
+  // o mapa do site: as páginas que ficam no Google com a loja aberta (as legais, as de utilidade e as propostas
+  // ficam fora), cada uma com a data do último commit dos ficheiros de que é feita
+  const noMapa = [...ctx.paginas].filter(([, p]) => p.indexar).map(([caminho]) => caminho);
+  await escrever('sitemap.xml', mapaDoSite(dados.site, noMapa.map((caminho) => ({ caminho, data: dataGit(RAIZ, fontesDaPagina(caminho, dados)) }))));
+  // robots.txt: aberto mesmo na pré-visualização; quem a fecha é o noindex de cada página (com «Disallow», o Google
+  // não lia o noindex e podia guardar os endereços que visse ligados de fora)
+  await escrever('robots.txt', `User-agent: *\nAllow: /\n${ctx.preVisualizacao ? '' : `\nSitemap: ${dados.site.url}/sitemap.xml\n`}`);
+  await escrever(`${INDEXNOW}.txt`, INDEXNOW);
   await escrever('.nojekyll', '');
+  // a guarda para abrir a loja: sem os dados da empresa e os contactos, ou com coisas por confirmar, não se publica
+  if (!ctx.preVisualizacao && !ENSAIO_ABERTA) {
+    const { site } = dados, e = site.empresa || {};
+    const falta = [['nome da empresa', e.nome], ['NIF', e.nif], ['morada', e.morada], ['código postal', e.codigoPostal], ['email', site.email], ['telefone ou WhatsApp', site.telefone || site.whatsapp]].filter(([, v]) => !String(v ?? '').trim()).map(([n]) => n);
+    if (falta.length || avisosAbrir.size) throw new Error(`a loja não pode abrir assim (content/site.json → "preVisualizacao": false):\n- falta: ${falta.join(', ') || 'nada'}\n- ${[...avisosAbrir].join('\n- ')}`);
+  }
   console.log(`ok: ${n} páginas em ${SAIDA.replace(RAIZ + '/', '')} (base «${BASE}») em ${Date.now() - t0} ms`);
 }
 

@@ -1,11 +1,14 @@
 // A loja (todas as peças e cada categoria) e a ficha de cada peça.
 import { h, raw, attrs, json } from '../lib/html.mjs';
 import { icone } from './icones.mjs';
-import { u, cartao, imgProduto, srcProduto, fundoDe, pagina, linhaInfo } from './base.mjs';
+import { u, cartao, imgProduto, srcProduto, fundoDe, pagina, linhaInfo, ogDaFotografia } from './base.mjs';
+import { grafo, ldMigalhas, ldPeca, tituloDaCategoria, descricaoDaCategoria, tituloDaPeca, descricaoDaPeca } from '../lib/seo.mjs';
 import { euros, precoDesde, precoUnitario, podeAlugar, podeComprar } from '../scripts/regras.js';
 import { ACABAMENTOS } from '../3d/acabamentos.js';
 import { opcoesDeCor } from '../lib/dados.mjs';
 import { entradaCatalogo } from '../lib/catalogo.mjs';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
 // ------------------------------------------------------------------------------------------- a loja
 function barraDaLoja(ctx, { categoria }) {
@@ -90,22 +93,19 @@ function paginaLoja(ctx, categoria = null) {
   var de = function () { if (!parar) repor(); }; document.addEventListener('DOMContentLoaded', de); addEventListener('load', de); if (document.fonts) document.fonts.ready.then(de);
 } catch (e) {} })();
 </script>`;
+  const { site, porId } = ctx.dados;
+  const capa = categoria && porId[categoria.capa];
   return pagina(ctx, {
-    titulo: categoria ? `${categoria.nome} para alugar ou comprar` : 'Loja: aluguer e venda de decoração de festas',
-    descricao: categoria ? `${categoria.frase} Aluguer para o dia da festa ou compra, com entrega e montagem no Norte.` : 'Arcos, painéis, cilindros, mesas e figuras em MDF para alugar ou comprar. Escolha a data da festa e veja o que está livre.',
+    titulo: categoria ? tituloDaCategoria(categoria, lista) : 'Loja: aluguer e venda de decoração de festas',
+    descricao: categoria ? descricaoDaCategoria(categoria, lista) : 'Arcos, painéis, cilindros, mesas e figuras em MDF para alugar ou comprar. Escolha a data da festa e veja o que está livre.',
     caminho: categoria ? `/loja/${categoria.id}/` : '/loja/',
     corpo,
     atual: categoria?.id === 'cenarios' ? 'cenarios' : 'loja',
     classe: 'pagina-loja',
     scripts: ['loja.js'],
-    esquema: {
-      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Início', item: `${ctx.dados.site.url}/` },
-        { '@type': 'ListItem', position: 2, name: 'Loja', item: `${ctx.dados.site.url}/loja/` },
-        ...(categoria ? [{ '@type': 'ListItem', position: 3, name: categoria.nome, item: `${ctx.dados.site.url}/loja/${categoria.id}/` }] : []),
-      ],
-    },
+    // a categoria partilha a fotografia da capa dela (a mesma do cartão da categoria no início)
+    og: capa ? ogDaFotografia(ctx, { produto: capa.id, cor: categoria.capaCor || capa.cor, fundo: categoria.fundo, alt: categoria.nome }) : undefined,
+    esquema: grafo(ldMigalhas(site, [['Início', '/'], ['Loja', '/loja/'], ...(categoria ? [[categoria.nome, `/loja/${categoria.id}/`]] : [])])),
   });
 }
 
@@ -231,7 +231,6 @@ function paginaProduto(ctx, prod) {
     : [...produtos.filter((p) => p.categoria !== prod.categoria && p.categoria !== 'cenarios' && (p.ocasioes || []).some((o) => (prod.ocasioes || []).includes(o))), ...produtos.filter((p) => p.categoria === 'cenarios' && p.componentes?.some((c) => c.id === prod.id))]
   ).slice(0, 8);
   const dadosFicha = entradaCatalogo(prod, { nomeCat: { [cat.id]: cat.nome } });
-  const precoOferta = podeComprar(prod) ? precoDesde(prod, 'compra') : precoDesde(prod, 'aluguer');
   const corpo = h`<div class="ficha contentor" data-ficha data-id="${prod.id}">
   <nav class="migalhas" aria-label="Está aqui">
     <ol>
@@ -305,31 +304,19 @@ function paginaProduto(ctx, prod) {
   <button type="button" class="botao botao--verde" data-barra-botao>${alugar ? 'Reservar' : 'Juntar'}</button>
 </div>
 <script type="application/json" id="dados-ficha">${json(dadosFicha)}</script>`;
-  const url = `${site.url}/loja/${prod.id}/`;
   return pagina(ctx, {
-    titulo: `${prod.nome}${alugar ? ' para alugar' : ''}${podeComprar(prod) && alugar ? ' ou comprar' : ''}`,
-    descricao: `${prod.resumo} ${alugar ? `Aluguer desde ${euros(precoDesde(prod, 'aluguer'))} por evento` : ''}${podeComprar(prod) ? `${alugar ? '; compra' : 'Compra'} ${euros(precoDesde(prod, 'compra'))}` : ''}.${alugar ? ' Entrega e montagem no Norte.' : ''}`,
+    titulo: tituloDaPeca(prod),
+    descricao: descricaoDaPeca(prod),
     caminho: `/loja/${prod.id}/`,
     corpo,
     atual: prod.categoria === 'cenarios' ? 'cenarios' : 'loja',
     classe: 'pagina-ficha',
     scripts: ['produto.js'],
-    og: { imagem: `${ctx.siteUrl}${ctx.base}/media/produtos/${prod.id}/principal-${prod.cor}-1200.webp`, largura: 1200, altura: 1500, tipo: 'product' },
-    esquema: {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Product', name: prod.nome, description: prod.resumo, sku: prod.id, brand: { '@type': 'Brand', name: 'Encanto Real' },
-          image: `${site.url}/media/produtos/${prod.id}/principal-${prod.cor}-1200.webp`, material: prod.material, category: cat.nome,
-          offers: { '@type': 'Offer', price: precoOferta, priceCurrency: 'EUR', availability: 'https://schema.org/InStock', url, itemCondition: 'https://schema.org/NewCondition' },
-        },
-        { '@type': 'BreadcrumbList', itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Loja', item: `${site.url}/loja/` },
-          { '@type': 'ListItem', position: 2, name: cat.nome, item: `${site.url}/loja/${cat.id}/` },
-          { '@type': 'ListItem', position: 3, name: prod.nome, item: url },
-        ] },
-      ],
-    },
+    og: { ...ogDaFotografia(ctx, { produto: prod.id, cor: prod.cor, fundo: prod.fundo, alt: prod.nome }), tipo: 'product' },
+    esquema: grafo(
+      ldPeca(site, ctx.dados.entregas, prod, cat, vistas.map(([v, c]) => `/media/produtos/${prod.id}/${v}-${c}-1200.webp`).filter((f) => existsSync(join(ctx.raiz, f)))),
+      ldMigalhas(site, [['Início', '/'], ['Loja', '/loja/'], [cat.nome, `/loja/${cat.id}/`], [prod.nome, `/loja/${prod.id}/`]]),
+    ),
   });
 }
 
