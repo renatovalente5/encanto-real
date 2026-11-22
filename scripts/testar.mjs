@@ -104,6 +104,9 @@ for await (const f of paginasHtml(SITE)) {
   if (h1 !== 1 && !/\/obrigado\/$/.test(caminho)) falha(`${caminho}: ${h1} h1`);
   const semAlt = (s.match(/<img(?![^>]*\balt=)[^>]*>/g) || []).length;
   if (semAlt) falha(`${caminho}: ${semAlt} imagens sem alt`);
+  // (22 nov 2026, o Renato) nada que empurre o cliente a desistir: nem «sem dar justificação», nem «Pode desistir até pagar»
+  const empurra = s.match(/sem dar justifica\S*|sem indicar (?:o |qualquer )?motivo|desistir até pagar/i);
+  if (empurra) falha(`${caminho}: «${empurra[0]}» empurra o cliente a desistir`);
   // noindex
   const noindex = /noindex/.test(robots);
   if (preVisualizacao && !noindex) falha(`${caminho}: pré-visualização sem noindex`);

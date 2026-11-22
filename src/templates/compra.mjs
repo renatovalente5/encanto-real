@@ -101,7 +101,7 @@ function paginaFinalizar(ctx) {
         <p class="campo-erro" data-erro-termos hidden>Para encomendar, aceite os termos.</p>
         <div class="finalizar__total-movel" data-total-botao></div>
         <button class="botao botao--verde botao--largo botao--grande" type="submit" data-pagar>Pagar</button>
-        <p class="finalizar__seguro">${icone('escudo')} Pagamento seguro. Pode desistir até pagar.</p>
+        <p class="finalizar__seguro">${icone('escudo')} Pagamento seguro.</p>
       </section>
     </form>
     <aside class="finalizar__resumo" aria-label="Resumo da encomenda" data-resumo-finalizar><p>A carregar…</p></aside>
