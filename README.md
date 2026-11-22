@@ -21,7 +21,7 @@ node scripts/testar.mjs                  # provas do SEO e das partilhas no _sit
 - **Regras** (preços, caução, dia de semana −15 %, sinal de 50 %, zonas pelo código postal, cupões):
   `src/scripts/regras.js`, a mesma cópia no gerador, no browser e (mais tarde) no Worker.
 - **3D:** `src/3d/pecas.js` (os modelos), `cena.js` (estúdio), `visor.js` (site), `estudio.js` (fotografias).
-- **Legal:** `legal-comum/` (cópia da biblioteca comum, v1.1.2).
+- **Legal:** `legal-comum/` (cópia da biblioteca comum, v1.1.3).
 
 ## SEO
 
