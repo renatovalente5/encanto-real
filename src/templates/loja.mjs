@@ -188,7 +188,7 @@ function compraHtml(ctx, prod) {
     <li>${icone('camiao')}<span>Levantamento grátis em ${ctx.dados.site.localidade}, ou entrega desde ${euros(primeiraZona)}. <a href="${u(ctx, '/ajuda/entregas/')}">Zonas e preços</a></span></li>
     ${alugar ? h`<li data-so-modo="aluguer">${icone('escudo')}<span>Caução de ${euros(prod.aluguer.caucao)}, devolvida depois da recolha. <a href="${u(ctx, '/ajuda/como-alugar/')}">Como funciona</a></span></li>` : ''}
     ${alugar && comprar ? h`<li data-so-modo="aluguer">${icone('etiqueta')}<span>Gostou? Se a comprar até 30 dias depois, desconta o aluguer.</span></li>` : ''}
-    ${comprar && !prod.personalizavel ? h`<li data-so-modo="compra"${attrs({ hidden: alugar })}>${icone('girar')}<span>14 dias para devolver. Garantia de 3 anos.</span></li>` : ''}
+    ${comprar && !prod.personalizavel ? h`<li data-so-modo="compra"${attrs({ hidden: alugar })}>${icone('girar')}<span>Tem 14 dias para desistir da compra. Garantia de 3 anos.</span></li>` : ''}
   </ul>
 </form>`;
 }
