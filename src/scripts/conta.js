@@ -3,6 +3,7 @@
 import { guardado, guardar, BASE, catalogo, aviso } from './estado.js';
 import { euros, dataLonga, dataCurta, janelaAluguer, iso } from './regras.js';
 import { juntar } from './carrinho.js';
+import { srcDaPeca, extraDaImagem } from './imagens.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const contas = () => guardado('contas', {});
@@ -142,7 +143,7 @@ async function desenharPainel(conta) {
           <strong>${euros(e.totais.total, { semCentimosRedondos: false })}</strong>
         </header>
         <ol class="estado-linha" aria-label="Estado">${passos.map((p, i) => `<li class="${i < atual ? 'feito' : i === atual ? 'atual' : ''}"${i === atual ? ' aria-current="step"' : ''}>${p}</li>`).join('')}</ol>
-        <ul class="festa-cartao__pecas">${e.linhas.map((l) => `<li><img src="${BASE}/media/produtos/${l.id}/principal-${l.cor || 'base'}-480.webp" alt="" width="48" height="60" style="--fundo:var(--azulejo-${cat.porId[l.id]?.fundo || 'areia'})"><span>${l.qtd} × ${esc(l.nome)}${l.corNome ? ` · ${esc(l.corNome)}` : ''}</span></li>`).join('')}</ul>
+        <ul class="festa-cartao__pecas">${e.linhas.map((l) => `<li><img src="${l.img || srcDaPeca(cat.porId[l.id] || { id: l.id, cor: l.cor || 'base' }, l.cor, 480)}"${extraDaImagem(cat.porId[l.id])} alt="" width="48" height="60" style="--fundo:var(--azulejo-${cat.porId[l.id]?.fundo || 'areia'})"><span>${l.qtd} × ${esc(l.nome)}${l.corNome ? ` · ${esc(l.corNome)}` : ''}</span></li>`).join('')}</ul>
         ${e.pagamento.falta > 0 ? `<p class="festa-cartao__nota">Sinal pago. Faltam ${euros(e.pagamento.falta, { semCentimosRedondos: false })} a 7 dias da festa.</p>` : ''}
         <div class="festa-cartao__accoes">
           <button type="button" class="botao botao--contorno botao--pequeno" data-repetir="${esc(e.numero)}">${aluguer ? 'Repetir esta festa' : 'Encomendar outra vez'}</button>

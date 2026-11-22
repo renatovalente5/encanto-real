@@ -93,10 +93,11 @@ export const partilhaFicheiro = ({ produto, cor, fundo, cena }) => (cena ? `/med
 
 export function partilhasPrecisas(dados) {
   const { produtos, categorias, artigos, porId } = dados;
+  const tresD = (id) => porId[id] && porId[id]._tresD !== false;
   const lista = [
-    ...produtos.map((p) => ({ produto: p.id, cor: p.cor, fundo: p.fundo })),
-    ...categorias.filter((c) => porId[c.capa]).map((c) => ({ produto: c.capa, cor: c.capaCor || porId[c.capa].cor, fundo: c.fundo })),
-    ...artigos.filter((a) => a.capa?.produto && porId[a.capa.produto]).map((a) => ({ produto: a.capa.produto, cor: a.capa.cor || porId[a.capa.produto].cor, fundo: porId[a.capa.produto].fundo })),
+    ...produtos.filter((p) => tresD(p.id)).map((p) => ({ produto: p.id, cor: p.cor, fundo: p.fundo })),
+    ...categorias.filter((c) => tresD(c.capa)).map((c) => ({ produto: c.capa, cor: c.capaCor || porId[c.capa].cor, fundo: c.fundo })),
+    ...artigos.filter((a) => a.capa?.produto && tresD(a.capa.produto)).map((a) => ({ produto: a.capa.produto, cor: a.capa.cor || porId[a.capa.produto].cor, fundo: porId[a.capa.produto].fundo })),
     ...artigos.filter((a) => a.capa?.cena).map((a) => ({ cena: a.capa.cena })),
   ];
   const vistos = new Set();

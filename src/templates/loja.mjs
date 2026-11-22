@@ -1,7 +1,7 @@
 // A loja (todas as peças e cada categoria) e a ficha de cada peça.
 import { h, raw, attrs, json } from '../lib/html.mjs';
 import { icone } from './icones.mjs';
-import { u, cartao, imgProduto, srcProduto, fundoDe, pagina, linhaInfo, ogDaFotografia } from './base.mjs';
+import { u, cartao, imgProduto, srcProduto, srcFoto, fundoDe, pagina, linhaInfo, ogDaFotografia } from './base.mjs';
 import { grafo, ldMigalhas, ldPeca, tituloDaCategoria, descricaoDaCategoria, tituloDaPeca, descricaoDaPeca } from '../lib/seo.mjs';
 import { euros, precoDesde, precoUnitario, podeAlugar, podeComprar } from '../scripts/regras.js';
 import { ACABAMENTOS } from '../3d/acabamentos.js';
@@ -224,7 +224,10 @@ function paginaProduto(ctx, prod) {
   const cat = categorias.find((c) => c.id === prod.categoria);
   const alugar = podeAlugar(prod);
   // as vistas da galeria; uma peça pode tirar uma («vistas»: { escala: false }) ou dar-lhe outro nome
-  const vistas = ['principal', 'frente', 'lado', 'escala'].filter((v) => prod.vistas?.[v] !== false).map((v) => [v, prod.cor]);
+  // numa peça sem 3D, só as fotografias (que se juntam no painel); numa com 3D, as fotografias vêm depois das vistas
+  const vistas = prod._tresD ? ['principal', 'frente', 'lado', 'escala'].filter((v) => prod.vistas?.[v] !== false).map((v) => [v, prod.cor]) : [];
+  const fotos = prod._fotos || [];
+  const miniaturas = vistas.length + fotos.length + (prod._tresD ? 1 : 0);
   const rotuloVista = (v) => prod.vistas?.[v]?.rotulo || { principal: 'Vista principal', frente: 'De frente', lado: 'De lado', escala: 'Ao lado de uma pessoa de 1,70 m' }[v];
   const relacionados = (prod.categoria === 'cenarios'
     ? produtos.filter((p) => p.categoria === 'cenarios' && p.id !== prod.id)
@@ -244,14 +247,15 @@ function paginaProduto(ctx, prod) {
       <div class="galeria${prod.fundo === 'verde' ? ' galeria--escura' : ''}" style="--fundo:${raw(fundoDe(prod))}">
         <div class="galeria__principal" data-galeria>
           ${imgProduto(ctx, prod, { prioridade: true, sizes: '(min-width: 1000px) 54vw, 100vw', classe: 'galeria__imagem' })}
-          <div class="visor3d visor3d--ficha" data-visor hidden></div>
+          ${prod._tresD ? h`<div class="visor3d visor3d--ficha" data-visor hidden></div>
           <button type="button" class="galeria__3d" data-ver-3d>${icone('cubo')}<span>Ver em 3D</span></button>
-          <p class="galeria__dica" data-dica-3d hidden>${icone('girar')} Arraste para rodar</p>
+          <p class="galeria__dica" data-dica-3d hidden>${icone('girar')} Arraste para rodar</p>` : ''}
         </div>
-        <ul class="galeria__miniaturas" aria-label="Fotografias">
+        ${miniaturas > 1 ? h`<ul class="galeria__miniaturas" aria-label="Fotografias">
           ${vistas.map(([v, c], i) => h`<li><button type="button" data-vista="${v}" aria-pressed="${i === 0 ? 'true' : 'false'}" aria-label="${rotuloVista(v)}"><img src="${srcProduto(ctx, prod.id, v, c, 480)}" alt="" loading="lazy" width="480" height="${v === 'escala' ? 384 : 600}"></button></li>`)}
-          <li><button type="button" data-vista="3d" aria-pressed="false" aria-label="Ver em 3D" class="miniatura-3d">${icone('cubo')}<span>3D</span></button></li>
-        </ul>
+          ${fotos.map((f, i) => h`<li><button type="button" data-vista="foto" data-foto="${f.nome}" data-src="${srcFoto(ctx, f, 800)}" data-srcset="${[480, 800, 1200].map((w) => `${srcFoto(ctx, f, w)} ${w}w`).join(', ')}" data-foco="${f.foco}" data-alt="${f.alt}" aria-pressed="${!vistas.length && i === 0 ? 'true' : 'false'}" aria-label="Fotografia: ${f.alt}"><img class="img-foto" src="${srcFoto(ctx, f, 480)}" alt="" loading="lazy" width="480" height="600" style="object-position:${f.foco}"></button></li>`)}
+          ${prod._tresD ? h`<li><button type="button" data-vista="3d" aria-pressed="false" aria-label="Ver em 3D" class="miniatura-3d">${icone('cubo')}<span>3D</span></button></li>` : ''}
+        </ul>` : ''}
       </div>
     </div>
     <div class="ficha__compra">
@@ -275,7 +279,9 @@ function paginaProduto(ctx, prod) {
         if (!p) return '';
         const nomeCor = p.combinacoes ? p.combinacoes.find((x) => x.id === c.cor)?.nome : ACABAMENTOS[c.cor]?.nome;
         const tam = c.tamanho ? p.tamanhos?.find((t) => t.id === c.tamanho)?.nome : null;
-        return h`<li><a class="componente" href="${u(ctx, `/loja/${p.id}/`)}"><span class="componente__imagem" style="--fundo:${raw(fundoDe(p))}">${imgProduto(ctx, p, { cor: c.cor, sizes: '120px', alt: '' })}</span><span><strong>${p.nome}</strong><small>${[nomeCor, tam].filter(Boolean).join(' · ')}</small></span>${icone('chevron')}</a></li>`;
+        const dentro = h`<span class="componente__imagem" style="--fundo:${raw(fundoDe(p))}">${imgProduto(ctx, p, { cor: c.cor, sizes: '120px', alt: '' })}</span><span><strong>${p.nome}</strong><small>${[nomeCor, tam].filter(Boolean).join(' · ')}</small></span>`;
+        // uma peça que saiu do site continua no cenário, mas sem ligação (a página dela não existe)
+        return p._noSite === false ? h`<li><span class="componente">${dentro}</span></li>` : h`<li><a class="componente" href="${u(ctx, `/loja/${p.id}/`)}">${dentro}${icone('chevron')}</a></li>`;
       })}
     </ul>
   </section>` : ''}
@@ -314,7 +320,10 @@ function paginaProduto(ctx, prod) {
     scripts: ['produto.js'],
     og: { ...ogDaFotografia(ctx, { produto: prod.id, cor: prod.cor, fundo: prod.fundo, alt: prod.nome }), tipo: 'product' },
     esquema: grafo(
-      ldPeca(site, ctx.dados.entregas, prod, cat, vistas.map(([v, c]) => `/media/produtos/${prod.id}/${v}-${c}-1200.webp`).filter((f) => existsSync(join(ctx.raiz, f)))),
+      ldPeca(site, ctx.dados.entregas, prod, cat, [
+        ...vistas.map(([v, c]) => `/media/produtos/${prod.id}/${v}-${c}-1200.webp`).filter((f) => existsSync(join(ctx.raiz, f))),
+        ...fotos.map((f) => `/assets/fotos/${f.ficheiros['1200']}`),
+      ]),
       ldMigalhas(site, [['Início', '/'], ['Loja', '/loja/'], [cat.nome, `/loja/${cat.id}/`], [prod.nome, `/loja/${prod.id}/`]]),
     ),
   });

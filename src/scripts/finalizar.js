@@ -4,6 +4,7 @@ import { guardado, guardar, BASE, catalogo, ouvir, escreverTexto, escreverHtml }
 import { calcular, euros, zonaDoCodigoPostal, validarCodigoPostal, dataLonga, dataCurta, janelaAluguer } from './regras.js';
 import { escolherData } from './calendario.js';
 import { itens, festa, totaisHtml } from './carrinho.js';
+import { srcDaPeca, extraDaImagem } from './imagens.js';
 
 const raiz = document.querySelector('[data-finalizar]');
 const form = raiz?.querySelector('[data-form-finalizar]');
@@ -70,7 +71,7 @@ async function recalcular() {
   const linhasHtml = r.linhas.map((l) => {
     const p = cat.porId[l.id];
     const corNome = p.combinacoes ? p.combinacoes.find((c) => c.id === l.cor)?.nome : (l.cor && l.cor !== 'base' ? cat.acabamentos[l.cor]?.nome : '');
-    return `<li class="mini-linha"><span class="mini-linha__imagem" style="--fundo:var(--azulejo-${p.fundo || 'areia'})"><img src="${BASE}/media/produtos/${p.id}/principal-${l.cor || p.cor}-480.webp" alt="" width="56" height="70"><b>${l.qtd}</b></span><span><strong>${esc(p.nome)}</strong><small>${[l.modo === 'aluguer' ? 'Aluguer' : 'Compra', corNome, l.texto ? `«${esc(l.texto)}»` : '', l.digito != null && p.digitos ? `n.º ${l.digito}` : ''].filter(Boolean).join(' · ')}</small></span><span>${euros(l.total)}</span></li>`;
+    return `<li class="mini-linha"><span class="mini-linha__imagem" style="--fundo:var(--azulejo-${p.fundo || 'areia'})"><img src="${srcDaPeca(p, l.cor, 480)}"${extraDaImagem(p)} alt="" width="56" height="70"><b>${l.qtd}</b></span><span><strong>${esc(p.nome)}</strong><small>${[l.modo === 'aluguer' ? 'Aluguer' : 'Compra', corNome, l.texto ? `«${esc(l.texto)}»` : '', l.digito != null && p.digitos ? `n.º ${l.digito}` : ''].filter(Boolean).join(' · ')}</small></span><span>${euros(l.total)}</span></li>`;
   }).join('');
   const cupaoHtml = `<form class="cupao cupao--compacto" data-cupao-finalizar><label for="cupao-f" class="so-leitor">Código de desconto</label><div class="cupao__campo"><input class="campo" id="cupao-f" placeholder="Código de desconto" autocomplete="off" autocapitalize="characters" value="${esc(guardado('cupao', '') || '')}"><button type="submit" class="botao botao--contorno">Aplicar</button></div>${r.erroCupao ? `<p class="cupao__erro" role="alert">${esc(r.erroCupao)}</p>` : r.cupao && r.motivoDesconto === 'cupao' ? `<p class="cupao__certo">${esc(r.cupao.descricao)}.</p>` : ''}</form>`;
   const agora = r.aPagarAgora < r.total ? `<p class="totais__agora">Agora: <strong>${euros(r.aPagarAgora, { semCentimosRedondos: false })}</strong> · a ${f ? dataCurta(new Date(new Date(f).getTime() - 7 * 864e5).toISOString().slice(0, 10)) : '7 dias da festa'}: ${euros(r.total - r.aPagarAgora, { semCentimosRedondos: false })}</p>` : '';
@@ -205,7 +206,7 @@ if (form) {
       entrega: { escolha: ent.escolha, zona: ent.zona, morada: valor('morada'), cp: valor('codigo-postal'), localidade: valor('localidade'), janela: escolhido('janela') },
       festa: r.temAluguer ? { data: festa(), nome: valor('nome-festa') || null } : null,
       pagamento: { metodo, modo: escolhido('pagamento') || 'total', pago: r.aPagarAgora, falta: Math.round((r.total - r.aPagarAgora) * 100) / 100 },
-      linhas: r.linhas.map((l) => ({ ...l, nome: cat.porId[l.id].nome, corNome: cat.porId[l.id].combinacoes ? cat.porId[l.id].combinacoes.find((c) => c.id === l.cor)?.nome : cat.acabamentos[l.cor]?.nome || null })),
+      linhas: r.linhas.map((l) => ({ ...l, img: srcDaPeca(cat.porId[l.id], l.cor, 480), nome: cat.porId[l.id].nome, corNome: cat.porId[l.id].combinacoes ? cat.porId[l.id].combinacoes.find((c) => c.id === l.cor)?.nome : cat.acabamentos[l.cor]?.nome || null })),
       totais: { subtotal: r.subtotal, desconto: r.desconto, motivoDesconto: r.motivoDesconto, cupao: r.motivoDesconto === 'cupao' ? r.cupao?.codigo : null, envio: r.envio, caucao: r.caucao, total: r.total },
       notas: valor('notas') || null,
       estado: r.aPagarAgora < r.total ? 'sinal' : 'paga',

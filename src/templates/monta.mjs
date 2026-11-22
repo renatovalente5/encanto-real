@@ -63,9 +63,11 @@ function grupoEscolha(ctx, { grupo, titulo, n, lista, atual, tipo = 'radio' }) {
 
 export function gerarMonta(ctx) {
   const P = ctx.dados.porId;
+  // as peças que saíram do site (no painel) também saem daqui
+  const ESC = Object.fromEntries(Object.entries(ESCOLHAS).map(([g, l]) => [g, l.filter((e) => !e.produto || P[e.produto]?._noSite)]));
   const config = {
-    escolhas: ESCOLHAS,
-    produtos: Object.fromEntries(Object.values(ESCOLHAS).flat().filter((e) => e.produto).map((e) => [e.produto, { cores: P[e.produto].cores, cor: P[e.produto].cor }])),
+    escolhas: ESC,
+    produtos: Object.fromEntries(Object.values(ESC).flat().filter((e) => e.produto).map((e) => [e.produto, { cores: P[e.produto].cores, cor: P[e.produto].cor }])),
   };
   const corpo = h`<div class="contentor monta" data-monta>
   <header class="pagina__cabeca">
@@ -87,13 +89,13 @@ export function gerarMonta(ctx) {
       </div>
     </div>
     <form class="monta__escolhas" data-monta-form>
-      ${grupoEscolha(ctx, { grupo: 'fundo', titulo: 'O fundo', n: 1, lista: ESCOLHAS.fundo, atual: 'arco-triplo' })}
+      ${grupoEscolha(ctx, { grupo: 'fundo', titulo: 'O fundo', n: 1, lista: ESC.fundo, atual: 'arco-triplo' })}
       <div class="monta__cor" data-cor-de="fundo">${amostras(ctx, 'fundo', 'arco-triplo-real', 'branco')}</div>
-      ${grupoEscolha(ctx, { grupo: 'pedestais', titulo: 'Os pedestais', n: 2, lista: ESCOLHAS.pedestais, atual: 'os-dois' })}
+      ${grupoEscolha(ctx, { grupo: 'pedestais', titulo: 'Os pedestais', n: 2, lista: ESC.pedestais, atual: 'os-dois' })}
       <div class="monta__cor" data-cor-de="pedestais">${amostras(ctx, 'pedestais', 'trio-cilindros', 'branco')}</div>
-      ${grupoEscolha(ctx, { grupo: 'mesa', titulo: 'A mesa', n: 3, lista: ESCOLHAS.mesa, atual: 'mesa-ripas' })}
+      ${grupoEscolha(ctx, { grupo: 'mesa', titulo: 'A mesa', n: 3, lista: ESC.mesa, atual: 'mesa-ripas' })}
       <div class="monta__cor" data-cor-de="mesa">${amostras(ctx, 'mesa', 'mesa-ripas', 'branco')}</div>
-      ${grupoEscolha(ctx, { grupo: 'detalhes', titulo: 'Os detalhes', n: 4, lista: ESCOLHAS.detalhes, atual: [], tipo: 'checkbox' })}
+      ${grupoEscolha(ctx, { grupo: 'detalhes', titulo: 'Os detalhes', n: 4, lista: ESC.detalhes, atual: [], tipo: 'checkbox' })}
       <div class="monta__total" data-monta-total>
         <div class="monta__soma"><span data-monta-pecas>4 peças</span><strong data-monta-preco>—</strong><small>aluguer por evento · caução <span data-monta-caucao>—</span></small></div>
         <button type="button" class="campo-data" data-abrir-calendario="monta">${icone('calendario')}<span><small>Data da festa</small><strong data-data-texto>Escolher</strong></span></button>

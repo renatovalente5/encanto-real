@@ -369,3 +369,9 @@ a.mosaico__azulejo:hover img { scale: 1.05; }
 ::view-transition-new(root) { animation: .3s ease-out .05s both vt-entra; }
 @keyframes vt-sai { to { opacity: 0; } }
 @keyframes vt-entra { from { opacity: 0; } }
+
+/* fotografias verdadeiras (as que se juntam no painel): cortadas à volta do ponto de foco nos cartões e nas miniaturas;
+   inteiras na galeria da ficha */
+.img-foto { object-fit: cover; }
+.galeria__imagem.img-foto { object-fit: contain; }
+.galeria__miniaturas img.img-foto { object-fit: cover; width: 100%; height: 100%; }

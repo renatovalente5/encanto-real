@@ -15,7 +15,22 @@ export function srcProduto(ctx, id, vista, cor, w) {
   return u(ctx, `/media/produtos/${id}/${vista}-${cor}-${w}.webp`);
 }
 
+// uma fotografia verdadeira (scripts/fotos.py): as versões 480, 800 e 1200 em /assets/fotos/
+export const srcFoto = (ctx, foto, w) => u(ctx, `/assets/fotos/${foto.ficheiros[String(w)]}`);
+export function imgFoto(ctx, foto, { sizes, prioridade = false, alt, classe } = {}) {
+  return h`<img${attrs({
+    class: ['img-foto', classe].filter(Boolean).join(' '),
+    src: srcFoto(ctx, foto, 800),
+    srcset: [480, 800, 1200].map((w) => `${srcFoto(ctx, foto, w)} ${w}w`).join(', '),
+    sizes, width: 800, height: Math.round(800 * foto.altura / foto.largura),
+    alt: alt ?? foto.alt, style: `object-position:${foto.foco}`,
+    loading: prioridade ? 'eager' : 'lazy', fetchpriority: prioridade ? 'high' : null, decoding: 'async',
+  })}>`;
+}
+
+// a imagem de uma peça: a do estúdio 3D (na cor pedida) ou, numa peça sem 3D, a primeira fotografia
 export function imgProduto(ctx, prod, { vista = 'principal', cor = prod.cor, sizes = '(min-width: 1000px) 25vw, 50vw', prioridade = false, alt, classe } = {}) {
+  if (prod._tresD === false && prod._fotos?.length) return imgFoto(ctx, prod._fotos[0], { sizes, prioridade, alt: alt ?? prod.nome, classe });
   const ws = [480, 800, 1200];
   const nomeCor = prod.combinacoes ? prod.combinacoes.find((c) => c.id === cor)?.nome : ACABAMENTOS[cor]?.nome;
   const texto = alt ?? (prod.categoria === 'cenarios' ? `${prod.nome}: ${prod.resumo}` : `${prod.nome}${nomeCor ? ', ' + nomeCor.toLowerCase() : ''}`);
@@ -52,6 +67,8 @@ export const fundoDe = (prod) => FUNDOS[prod.fundo] || FUNDOS.areia;
 // A imagem de partilha de uma página com fotografia (a peça, a capa da categoria, a capa do artigo): o JPEG 1200×630
 // feito pelo scripts/partilha.py; enquanto não existir, a fotografia WebP 1200×1500 (o testar.mjs avisa).
 export function ogDaFotografia(ctx, { produto, cor, fundo, cena, alt }) {
+  const p = produto && ctx.dados.porId[produto];
+  if (p && p._tresD === false && p._fotos?.length) return { imagem: `${ctx.siteUrl}${ctx.base}/assets/fotos/${p._fotos[0].ficheiros.partilha}`, largura: 1200, altura: 630, alt };
   const jpg = partilhaFicheiro({ produto, cor, fundo, cena });
   if (existsSync(join(ctx.raiz, jpg))) return { imagem: `${ctx.siteUrl}${ctx.base}${jpg}`, largura: 1200, altura: 630, alt };
   if (cena) return { imagem: `${ctx.siteUrl}${ctx.base}/media/cenas/${cena}-largo-1600.webp`, largura: 1600, altura: 900, alt };

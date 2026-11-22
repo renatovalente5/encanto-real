@@ -63,9 +63,11 @@ const mapa = await readFile(join(SITE, 'sitemap.xml'), 'utf8');
 const entradas = [...mapa.matchAll(/<url><loc>([^<]+)<\/loc>(?:<lastmod>([^<]+)<\/lastmod>)?<\/url>/g)].map((m) => ({ caminho: m[1].replace(URL0, ''), data: m[2] }));
 const noMapa = new Set(entradas.map((e) => e.caminho));
 if (!entradas.length) falha('o mapa do site está vazio');
+const semData = entradas.filter((e) => !e.data).length;
+if (semData) aviso(`${semData} páginas do mapa sem data (sem git?)`);
 for (const e of entradas) {
   if (!existsSync(join(SITE, e.caminho, 'index.html'))) falha(`no mapa sem página: ${e.caminho}`);
-  if (!e.data) aviso(`no mapa sem data (sem git?): ${e.caminho}`);
+  if (!e.data) continue;
   else if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z|[+-]\d{2}:\d{2})$/.test(e.data)) falha(`data do mapa estranha em ${e.caminho}: ${e.data}`);
 }
 // a regra de 13 nov 2026: as legais, as de política e as de utilidade ficam fora; as de destino ficam dentro
@@ -75,7 +77,9 @@ const conteudo = (pasta) => {
   const d = join(RAIZ, 'content', pasta);
   return existsSync(d) ? readdirSync(d).filter((f) => f.endsWith('.json')).map((f) => JSON.parse(readFileSync(join(d, f), 'utf8'))) : [];
 };
-const produtos = conteudo('produtos'), artigos = conteudo('inspiracao');
+// as peças que estão no site (as escondidas no painel e as que as regras tiram ficam fora do catálogo)
+const produtos = JSON.parse(readFileSync(join(SITE, 'assets/catalogo.json'), 'utf8')).produtos;
+const artigos = conteudo('inspiracao');
 const categorias = JSON.parse(readFileSync(join(RAIZ, 'content/categorias.json'), 'utf8'));
 const DESTINO = ['/', '/loja/', ...categorias.map((c) => `/loja/${c.id}/`), ...produtos.map((p) => `/loja/${p.id}/`), '/monta/', '/inspiracao/', ...artigos.map((a) => `/inspiracao/${a.id}/`), '/ajuda/como-alugar/', '/ajuda/perguntas/', '/sobre/', '/contactos/'];
 for (const c of DESTINO) if (!noMapa.has(c)) falha(`página de destino fora do mapa: ${c}`);
@@ -127,7 +131,7 @@ for await (const f of paginasHtml(SITE)) {
     if (!m || m.w !== ow || m.h !== oh) falha(`${caminho}: og:image diz ${ow}×${oh}, o ficheiro tem ${m ? `${m.w}×${m.h}` : '?'}`);
   }
   const comFotografia = /^\/loja\/[^/]+\/$/.test(caminho) || /^\/inspiracao\/[^/]+\/$/.test(caminho);
-  if (comFotografia && !/\/media\/partilha\/.+\.jpg$/.test(og)) aviso(`${caminho}: partilha sem o JPEG 1200×630 (python3 scripts/partilha.py): ${og.replace(URL0, '')}`);
+  if (comFotografia && !/\/media\/partilha\/.+\.jpg$|\/assets\/fotos\/.+-partilha\.jpg$/.test(og)) aviso(`${caminho}: partilha sem o JPEG 1200×630 (python3 scripts/partilha.py): ${og.replace(URL0, '')}`);
   if (!comFotografia && caminho !== '/loja/' && !/partilha\.jpg$|\/media\/partilha\//.test(og)) falha(`${caminho}: página geral sem o cartão com o logótipo: ${og}`);
   // JSON-LD
   const ld = um(s, /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g).map((j) => { try { return JSON.parse(j); } catch (e) { falha(`${caminho}: JSON-LD que não se lê (${e.message})`); return null; } }).filter(Boolean);

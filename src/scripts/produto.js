@@ -41,17 +41,30 @@ function iniciar() {
 
   // ----------------------------------------------------------------- imagem principal e miniaturas
   const srcDe = (vista, cor, w) => `${BASE}/media/produtos/${prod.id}/${vista}-${cor}-${w}.webp`;
-  function mostrarImagem(vista, cor) {
-    vistaAtual = vista;
-    const c = vista === 'principal' ? cor : prod.cor;
-    imagem.src = srcDe(vista, c, 800);
-    imagem.srcset = [480, 800, 1200].map((w) => `${srcDe(vista, c, w)} ${w}w`).join(', ');
+  const tresD = prod.tresD !== false; // as peças criadas no painel só têm fotografias
+  const esconder = (sel, sim) => { const el = ficha.querySelector(sel); if (el) el.hidden = sim; };
+  // vista: 'principal' | 'frente' | 'lado' | 'escala' (as do estúdio) | o botão de uma fotografia (data-vista="foto")
+  function mostrarImagem(vista, cor, botao = null) {
+    vistaAtual = botao ? `foto:${botao.dataset.foto}` : vista;
+    if (botao) {
+      imagem.src = botao.dataset.src;
+      imagem.srcset = botao.dataset.srcset;
+      imagem.alt = botao.dataset.alt || '';
+      imagem.classList.add('img-foto');
+      imagem.style.objectPosition = botao.dataset.foco || '';
+    } else if (tresD) {
+      const c = vista === 'principal' ? cor : prod.cor;
+      imagem.src = srcDe(vista, c, 800);
+      imagem.srcset = [480, 800, 1200].map((w) => `${srcDe(vista, c, w)} ${w}w`).join(', ');
+      imagem.classList.remove('img-foto');
+      imagem.style.objectPosition = '';
+    }
     imagem.classList.toggle('galeria__imagem--larga', vista === 'escala');
     imagem.hidden = false;
-    contentor3d.hidden = true;
-    ficha.querySelector('[data-dica-3d]').hidden = true;
-    ficha.querySelector('[data-ver-3d]').hidden = false;
-    ficha.querySelectorAll('[data-vista]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.vista === vista ? 'true' : 'false'));
+    if (contentor3d) contentor3d.hidden = true;
+    esconder('[data-dica-3d]', true);
+    esconder('[data-ver-3d]', !tresD);
+    ficha.querySelectorAll('[data-vista]').forEach((b) => b.setAttribute('aria-pressed', (botao ? b === botao : b.dataset.vista === vista) ? 'true' : 'false'));
   }
 
   // ----------------------------------------------------------------- 3D
@@ -62,6 +75,7 @@ function iniciar() {
   }
   let prod3d = null;
   async function abrir3d() {
+    if (!tresD) return;
     vistaAtual = '3d';
     ficha.querySelectorAll('[data-vista]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.vista === '3d' ? 'true' : 'false'));
     contentor3d.hidden = false;
@@ -93,7 +107,7 @@ function iniciar() {
 
   ficha.addEventListener('click', (e) => {
     const v = e.target.closest('[data-vista]');
-    if (v) { if (v.dataset.vista === '3d') abrir3d(); else mostrarImagem(v.dataset.vista, estado().cor); }
+    if (v) { if (v.dataset.vista === '3d') abrir3d(); else if (v.dataset.vista === 'foto') mostrarImagem('foto', estado().cor, v); else mostrarImagem(v.dataset.vista, estado().cor); }
     if (e.target.closest('[data-ver-3d]')) abrir3d();
   });
 
@@ -169,16 +183,16 @@ function iniciar() {
 
   form.addEventListener('change', (e) => {
     const n = e.target.name;
-    if (n === 'cor' && vistaAtual === 'principal') mostrarImagem('principal', e.target.value);
+    if (n === 'cor' && tresD && vistaAtual === 'principal') mostrarImagem('principal', e.target.value);
     // o número escolhido só se vê em 3D (as fotografias são do «1»)
-    if (n === 'digito' && vistaAtual !== '3d') abrir3d();
+    if (n === 'digito' && tresD && vistaAtual !== '3d') abrir3d();
     else if (['cor', 'tamanho', 'digito'].includes(n) && vistaAtual === '3d') atualizar3d(n !== 'cor');
     atualizar();
   });
   form.addEventListener('input', (e) => {
     if (e.target.name === 'texto') {
       atualizar();
-      if (vistaAtual !== '3d') abrir3d(); else atualizar3d(true);
+      if (!tresD) { /* sem 3D: o nome só se vê na encomenda */ } else if (vistaAtual !== '3d') abrir3d(); else atualizar3d(true);
     }
     if (e.target.name === 'qtd') atualizar();
   });

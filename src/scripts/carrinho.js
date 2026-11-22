@@ -2,6 +2,7 @@
 import { guardado, guardar, BASE, catalogo, aviso, ouvir } from './estado.js';
 import { calcular, euros, dataLonga, dataCurta, janelaAluguer, eDiaDeSemana, DESCONTO_SEMANA } from './regras.js';
 import { escolherData } from './calendario.js';
+import { srcDaPeca, extraDaImagem } from './imagens.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 export const chaveDe = (it) => [it.id, it.modo, it.cor, it.tamanho || '', it.digito ?? '', it.texto || ''].join('|');
@@ -53,10 +54,10 @@ function descricaoOpcoes(p, it, cat) {
 function linhaHtml(l, cat, { compacta }) {
   const p = cat.porId[l.id];
   const chave = chaveDe(l);
-  const img = `${BASE}/media/produtos/${p.id}/principal-${p.cor === 'base' ? 'base' : (l.cor || p.cor)}-480.webp`;
+  const img = srcDaPeca(p, l.cor, 480);
   const modo = l.modo === 'aluguer' ? 'Aluguer' : `Compra · pronto em ${p.venda?.prazo || 10} dias úteis`;
   return `<li class="linha" data-chave="${esc(chave)}">
-    <a class="linha__imagem" href="${BASE}/loja/${p.id}/" style="--fundo:var(--azulejo-${p.fundo || 'areia'})"><img src="${img}" alt="" width="96" height="120" loading="lazy"></a>
+    <a class="linha__imagem" href="${BASE}/loja/${p.id}/" style="--fundo:var(--azulejo-${p.fundo || 'areia'})"><img src="${img}"${extraDaImagem(p)} alt="" width="96" height="120" loading="lazy"></a>
     <div class="linha__corpo">
       <a class="linha__nome" href="${BASE}/loja/${p.id}/">${esc(p.nome)}</a>
       <p class="linha__opcoes">${esc(descricaoOpcoes(p, l, cat))}</p>

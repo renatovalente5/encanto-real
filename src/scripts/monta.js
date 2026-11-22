@@ -109,7 +109,7 @@ async function atualizar({ amostras = false } = {}) {
   let e = estado();
   if (amostras) { atualizarAmostras(e); e = estado(); }
   const lista = pecas(e);
-  const venda = lista.filter((p) => p.produto);
+  const venda = lista.filter((p) => p.produto && cat.porId[p.produto]); // uma peça fora do site não se reserva
   const festa = guardado('festa', null);
   const total = venda.reduce((s, p) => s + (precoUnitario(cat.porId[p.produto], 'aluguer', { tamanho: p.tamanho }) || 0), 0);
   const caucao = venda.reduce((s, p) => s + caucaoUnitaria(cat.porId[p.produto]), 0);

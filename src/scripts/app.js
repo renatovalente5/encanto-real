@@ -1,6 +1,7 @@
 // O que todas as páginas fazem: gavetas (menu, carrinho, procura), favoritos, contadores, carrossel da capa,
 // filas que deslizam, procura instantânea, menu da conta e as entradas ao descer.
 import { guardado, guardar, BASE, catalogo, aviso, ouvir } from './estado.js';
+import { srcDaPeca, extraDaImagem } from './imagens.js';
 
 // ------------------------------------------------------------------------------------------- gavetas
 const gavetas = Object.fromEntries([...document.querySelectorAll('[data-gaveta]')].map((d) => [d.dataset.gaveta, d]));
@@ -127,7 +128,7 @@ for (const form of document.querySelectorAll('[data-procura]')) {
     const cat = await catalogo();
     lista = cat.produtos.filter((p) => normalizar(`${p.nome} ${p.resumo} ${p.categoriaNome} ${(p.ocasioesNomes || []).join(' ')}`).includes(q)).slice(0, 6);
     caixa.innerHTML = lista.length
-      ? lista.map((p) => `<a class="procura__item" href="${BASE}/loja/${p.id}/"><img src="${BASE}/media/produtos/${p.id}/principal-${p.cor}-480.webp" alt="" style="--fundo:var(--azulejo-${p.fundo || 'areia'})" loading="lazy"><span><strong>${p.nome}</strong><small>${p.categoriaNome}</small></span><span>${p.precoTexto}</span></a>`).join('') + `<a class="procura__todos" href="${BASE}/loja/?q=${encodeURIComponent(campo.value.trim())}">Ver todos os resultados</a>`
+      ? lista.map((p) => `<a class="procura__item" href="${BASE}/loja/${p.id}/"><img src="${srcDaPeca(p, p.cor, 480)}"${extraDaImagem(p)} alt="" style="--fundo:var(--azulejo-${p.fundo || 'areia'})" loading="lazy"><span><strong>${p.nome}</strong><small>${p.categoriaNome}</small></span><span>${p.precoTexto}</span></a>`).join('') + `<a class="procura__todos" href="${BASE}/loja/?q=${encodeURIComponent(campo.value.trim())}">Ver todos os resultados</a>`
       : `<p class="procura__nada">Nada com «${campo.value.trim().replace(/[<>&]/g, '')}». Experimente «arco», «cilindro» ou «número».</p>`;
     caixa.hidden = false;
   };

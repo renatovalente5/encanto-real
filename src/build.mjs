@@ -4,7 +4,7 @@
 //   node src/build.mjs --ensaio-aberta --saida=.cache/aberta   como se a loja estivesse aberta, só para as provas
 //                                            (scripts/testar.mjs --aberta); não passa pela guarda dos dados legais
 import { mkdir, rm, writeFile, readFile, cp, readdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { carregar } from './lib/dados.mjs';
@@ -57,6 +57,9 @@ async function copiarAssets(ctx) {
   await cp(join(RAIZ, 'node_modules/opentype.js/dist/opentype.module.js'), join(SAIDA, 'assets/3d/opentype.module.js'));
   // media
   for (const d of ['marca', 'fontes', 'fontes-3d', 'produtos', 'cenas', 'partilha']) await cp(join(RAIZ, 'media', d), join(SAIDA, 'media', d), { recursive: true });
+  // as fotografias verdadeiras para a web (scripts/fotos.py: .cache/fotos), sem os originais nem o manifesto
+  const fotos = join(RAIZ, '.cache/fotos');
+  if (existsSync(fotos)) for (const f of await readdir(fotos)) if (/\.(webp|jpg)$/.test(f)) await cp(join(fotos, f), join(SAIDA, 'assets/fotos', f));
 }
 
 function catalogoJson(ctx) {
@@ -73,7 +76,10 @@ function catalogoJson(ctx) {
 
 async function main() {
   const t0 = Date.now();
-  const dados = await carregar(RAIZ);
+  // a loja está aberta? (as regras pedem então os dados legais; o --ensaio-aberta não, que é só para as provas do SEO)
+  const aberta = !ENSAIO_ABERTA && JSON.parse(readFileSync(join(RAIZ, 'content/site.json'), 'utf8')).preVisualizacao === false;
+  let avisos = 0;
+  const dados = await carregar(RAIZ, { aberta, avisar: (p) => { avisos++; if (!p.lembrete) console.log(`aviso: ${p.mensagem}${p.ficheiro ? ` (${p.ficheiro})` : ''}`); } });
   const versao = Date.now().toString(36);
   const ctx = { base: BASE, siteUrl: SITE_URL, raiz: RAIZ, dados, versao, preVisualizacao: !ENSAIO_ABERTA && dados.site.preVisualizacao !== false, paginas: new Map() };
   // as datas do mapa vêm do git: no CI o histórico tem de vir todo (fetch-depth: 0), senão saem todas iguais
@@ -111,7 +117,8 @@ async function main() {
     const falta = [['nome da empresa', e.nome], ['NIF', e.nif], ['morada', e.morada], ['código postal', e.codigoPostal], ['email', site.email], ['telefone ou WhatsApp', site.telefone || site.whatsapp]].filter(([, v]) => !String(v ?? '').trim()).map(([n]) => n);
     if (falta.length || avisosAbrir.size) throw new Error(`a loja não pode abrir assim (content/site.json → "preVisualizacao": false):\n- falta: ${falta.join(', ') || 'nada'}\n- ${[...avisosAbrir].join('\n- ')}`);
   }
-  console.log(`ok: ${n} páginas em ${SAIDA.replace(RAIZ + '/', '')} (base «${BASE}») em ${Date.now() - t0} ms`);
+  const lembretes = dados.problemas.filter((p) => p.lembrete).length;
+  console.log(`ok: ${n} páginas em ${SAIDA.replace(RAIZ + '/', '')} (base «${BASE}») em ${Date.now() - t0} ms${lembretes ? ` · ${lembretes} lembretes (o que falta para abrir a loja)` : ''}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
