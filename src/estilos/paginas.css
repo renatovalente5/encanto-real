@@ -554,7 +554,8 @@ select.campo, .filtros__ordem select { appearance: none; background: var(--branc
 .contactos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .contactos__lista li { display: flex; gap: 14px; align-items: flex-start; padding: 18px; border-radius: 20px; background: var(--branco); border: 1px solid var(--linha); }
 .texto .contactos__lista h2 { margin: 0 0 2px; font-size: 18px; }
-.contactos__lista p { color: var(--tinta-2); }
+.contactos__lista li > div { min-width: 0; }
+.contactos__lista p { color: var(--tinta-2); overflow-wrap: anywhere; }
 .contactos__empresa { margin-top: 22px; font-size: 14px; color: var(--tinta-2); }
 .contactos__lista li:last-child:nth-child(odd) { grid-column: 1 / -1; }
 @media (max-width: 599px) { .contactos__lista { grid-template-columns: minmax(0, 1fr); } }

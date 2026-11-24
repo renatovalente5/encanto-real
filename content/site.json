@@ -5,17 +5,19 @@
   "url": "https://encantoreal.pt",
   "localidade": "Esposende",
   "regiao": "Norte de Portugal",
-  "email": null,
-  "telefone": null,
-  "whatsapp": null,
-  "instagram": null,
+  "email": "encantorealfestas@gmail.com",
+  "telefone": "910 282 117",
+  "whatsapp": "351910282117",
+  "instagram": "https://www.instagram.com/encantorealfestas/",
   "facebook": null,
   "empresa": {
-    "nome": null,
-    "nif": null,
-    "morada": null,
-    "codigoPostal": null,
-    "localidade": "Esposende"
+    "nome": "Valdenir Theodoro, Unipessoal Lda",
+    "nif": "519229550",
+    "morada": "Avenida de Belinho, n.º 258",
+    "codigoPostal": "4740-161",
+    "localidade": "Esposende",
+    "conservatoria": "Conservatória do Registo Comercial de Vila Nova de Gaia",
+    "capital": 10000
   },
   "preVisualizacao": true,
   "variante": "b"

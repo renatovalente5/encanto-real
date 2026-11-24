@@ -13,6 +13,18 @@ const telefoneDaLoja = (site) => (site.telefone && tipoDeLinha(site.telefone) !=
   ? raw(telefoneHtml(site.telefone, { comIndicativo: false, frase: 'com-a' })) : null);
 
 const PC = (t) => h`<span class="por-confirmar">[por confirmar: ${t}]</span>`;
+/* A ligação sem o «https://www.» e com um ponto de quebra depois do domínio: num telemóvel estreito, a conta passa
+   inteira para a linha de baixo, em vez de sair do cartão. */
+const ligacaoVisivel = (url) => {
+  const [dominio, ...resto] = url.replace(/^https?:\/\/(www\.)?/, '').split('/');
+  return resto.length ? h`${dominio}/<wbr>${resto.join('/')}` : h`${dominio}`;
+};
+/* As menções de uma sociedade no site (CSC, art. 171.º): a conservatória, a matrícula (que é o NIPC) e o capital social.
+   Num empresário em nome individual não há nenhuma, e a frase não aparece. */
+const SOCIEDADE = /\b(lda|l\.da|limitada|unipessoal)\b|\bS\.?\s?A\.?\s*$/i;
+const registoDaSociedade = (e) => (e.conservatoria || e.capital || SOCIEDADE.test(e.nome || '')
+  ? h` Matriculada na ${e.conservatoria || PC('conservatória do registo comercial')} sob o número único de matrícula e de pessoa coletiva ${e.nif || PC('NIF')}, com o capital social de ${e.capital ? euros(e.capital) : PC('capital social')}.`
+  : '');
 const DATA = (s) => new Date(s + 'T12:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' });
 
 function paginaTexto(ctx, { caminho, titulo, frase, corpo, indexar = true, classe = '', atual, descricao }) {
@@ -196,7 +208,7 @@ function paginaContactos(ctx) {
       <li>${icone('whatsapp', 'icone icone--circulo-claro')}<div><h2>WhatsApp</h2><p>${site.whatsapp ? h`<a href="https://wa.me/${site.whatsapp}">Enviar uma mensagem</a>` : PC('número')}</p></div></li>
       ${telefone ? h`<li>${icone('telefone', 'icone icone--circulo-claro')}<div><h2>Telefone</h2><p>${telefone}</p></div></li>` : ''}
       <li>${icone('email', 'icone icone--circulo-claro')}<div><h2>Email</h2><p>${site.email ? h`<a href="mailto:${site.email}">${site.email}</a>` : PC('email')}</p></div></li>
-      <li>${icone('instagram', 'icone icone--circulo-claro')}<div><h2>Instagram</h2><p>${site.instagram ? h`<a href="${site.instagram}" rel="noopener">${site.instagram.replace(/^https?:\/\/(www\.)?/, '')}</a>` : PC('conta')}</p></div></li>
+      <li>${icone('instagram', 'icone icone--circulo-claro')}<div><h2>Instagram</h2><p>${site.instagram ? h`<a href="${site.instagram}" rel="noopener">${ligacaoVisivel(site.instagram)}</a>` : PC('conta')}</p></div></li>
       <li>${icone('pin', 'icone icone--circulo-claro')}<div><h2>Oficina</h2><p>${site.localidade}, com hora marcada. ${e.morada ? e.morada : PC('morada')}</p></div></li>
     </ul>
     <p class="contactos__empresa">${e.nome || PC('nome da empresa')} · NIF ${e.nif || PC('NIF')} · ${e.morada || PC('morada')}, ${e.codigoPostal || '[código postal]'} ${e.localidade || ''}</p>
@@ -212,9 +224,9 @@ function paginaTermos(ctx) {
   const { site, entregas } = ctx.dados;
   const e = site.empresa;
   const a = entregas.aluguer;
-  const corpo = h`<p class="atualizado">Atualizado a 18 de novembro de 2026.</p>
+  const corpo = h`<p class="atualizado">Atualizado a 24 de novembro de 2026.</p>
   <h2>1. Quem vende e aluga</h2>
-  <p>${e.nome || PC('nome ou firma')}, NIF ${e.nif || PC('NIF')}, com sede em ${e.morada || PC('morada')}, ${e.localidade}. Email: ${site.email || PC('email')}.${telefoneDaLoja(site) ? h` Telefone: ${telefoneDaLoja(site)}.` : ''}</p>
+  <p>${e.nome || PC('nome ou firma')}, NIF ${e.nif || PC('NIF')}, com sede em ${e.morada || PC('morada')}, ${e.codigoPostal ? `${e.codigoPostal} ` : ''}${e.localidade}.${registoDaSociedade(e)} Email: ${site.email || PC('email')}.${telefoneDaLoja(site) ? h` Telefone: ${telefoneDaLoja(site)}.` : ''}</p>
   <h2>2. Preços e pagamento</h2>
   <p>Os preços incluem IVA à taxa legal. A entrega, a montagem e a caução mostram-se à parte antes de pagar. Aceitamos MB WAY, cartão e referência Multibanco. Nos alugueres pode pagar ${a.sinal} % ao reservar e o resto ${a.restoDiasAntes} dias antes da festa; se o resto não for pago, a reserva pode ser cancelada.</p>
   <h2>3. Como se faz a encomenda</h2>
@@ -235,7 +247,7 @@ function paginaTermos(ctx) {
 function paginaPrivacidade(ctx) {
   const { site } = ctx.dados;
   const e = site.empresa;
-  const corpo = h`<p class="atualizado">Atualizado a 18 de novembro de 2026.</p>
+  const corpo = h`<p class="atualizado">Atualizado a 24 de novembro de 2026.</p>
   <h2>Quem trata os seus dados</h2>
   <p>${e.nome || PC('nome ou firma')}, NIF ${e.nif || PC('NIF')}, ${e.morada || PC('morada')}. Contacto: ${site.email || PC('email')}.</p>
   <h2>Que dados e para quê</h2>
