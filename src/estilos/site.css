@@ -53,6 +53,14 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--topo) + 16px); }
 body { margin: 0; background: var(--marfim); color: var(--tinta); font: 400 16.5px/1.6 var(--sans); font-variant-numeric: lining-nums; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: clip; }
+
+/* A página acaba na última linha do rodapé: nada de faixa nem espaço vazio por baixo dele. Nas páginas curtas o
+   rodapé fica no fundo do ecrã e o espaço que sobra fica dentro da página. */
+body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; }
+body > main { flex: 1 0 auto; }
+/* Em flex, a margem da nota do fim (Sobre e Ajuda) já não se junta à de cima do rodapé (que é maior): fica sem
+   ela, para o espaço antes do rodapé ser o mesmo. */
+body > main > :last-child > .nota-pre:last-child, body > main > :last-child > :last-child > .nota-pre:last-child { margin-bottom: 0; }
 img, svg, video, canvas { display: block; max-width: 100%; }
 img { height: auto; }
 a { color: inherit; }
